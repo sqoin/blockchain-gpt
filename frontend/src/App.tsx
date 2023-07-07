@@ -6,8 +6,11 @@ import Home from "./Home";
 import { SuperTokensConfig } from "./config";
 import Tester from "./tester";
 import ChartComponent from "./adapters/ChartComponent";
-SuperTokens.init(SuperTokensConfig);
+import ServiceNotAvailable from "./Service_Unavailable";
+import ServerErrorPage from "./Internal_Server_Error";
+import NotAuthorized from "./Unauthorized";
 
+SuperTokens.init(SuperTokensConfig);
 function App() {
     return (
         <SuperTokensWrapper>
@@ -44,8 +47,31 @@ function App() {
                                 element={
                                     <ChartComponent />
                                         
+                                } />
+                                <Route
+                                path="/ServiceUnavailable"
+
+                                element={
+                                    <ServiceNotAvailable />
+                                        
                                 } /> 
+                                <Route
+                                path="/InternalServerError"
+
+                                element={
+                                    <ServerErrorPage />
+                                        
+                                } /> 
+                                <Route
+                                path="notauthorized/"
+
+                                element={
+                                    <NotAuthorized  />
+                                        
+                                } /> 
+
                         </Routes>
+                        
                     </div>
                 </Router>
             </div>
