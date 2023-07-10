@@ -6,6 +6,7 @@ import Home from "./Home";
 import { SuperTokensConfig } from "./config";
 import Tester from "./tester";
 import ChartComponent from "./adapters/ChartComponent";
+import Wallet from "./components/Wallet";
 SuperTokens.init(SuperTokensConfig);
 
 function App() {
@@ -45,6 +46,13 @@ function App() {
                                     <ChartComponent />
                                         
                                 } /> 
+                                <Route
+                                path="/wallet"
+
+                                element={
+                                    <Wallet />
+                                        
+                                } />
                         </Routes>
                     </div>
                 </Router>
