@@ -1,132 +1,86 @@
-.wallet {
-  display: flex;
-  flex-direction: row;
-  width: 100vw;
-  height: 100vh;
-  background-color: #1b1a1a;
+*{
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
 }
 
-.imageContainer {
-  width: 40%;
-  display: flex;
-  border-top-right-radius: 20%;
-  border-bottom-right-radius: 20%;
-  justify-content: center;
-  align-items: center;
-  background-color: #ffffff;
-}
-
-.image {
-  max-width: 100%;
-  max-height: 100%;
-}
-.appForm {
-  width: 60%;
+.container{
   display: flex;
   flex-direction: row;
   justify-content: center;
-  align-items: center;
-}
-.qrCodeContainer {
-  width: 20%;
-  padding-bottom: 55px;
-}
-
-
-.formFields{
-  display: flex;
-  width: 60%;
-  flex-direction: column;
+  align-items: start;
+  margin: 0 auto;
+  gap: 40px;
+  margin-top: 60px;
 }
 
-
-.formCenter {
-  margin-bottom: 100px;
+.qr{
+  width: 240px;
+  height: 240px;
 }
 
-.formField {
+.form{
   display: flex;
   flex-direction: column;
-  margin-bottom: 40px;
+  justify-content: space-between;
+  align-items: start;
+  height: 220px;
 }
 
-.inputContainer {
+.inputs{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: start;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+-webkit-appearance: none;
+margin: 0;
+}
+
+.label{
+  font-weight: 700;
+}
+
+.info{
+  width: 520px;
+  height: 48px;
+  border: 2px solid rgb(204, 204, 204);
+  background-color: rgb(245, 245, 245);
+  padding: 0 10px;
+  outline: none;
+  font-weight: 700;
+  font-size: 1.2em;
+}
+
+.clickable-icon {
+  transform: translate(490px, -32px);
+  color: rgb(94, 94, 94);
+  cursor: pointer;
+}
+
+.copy{
+  font-weight: 400;
+  color: gray;
+  cursor: pointer;
+}
+
+.submit-btn{
   display: flex;
   flex-direction: row;
-}
-
-.copyButton {
-  background-color: transparent;
-  border-radius: 5px;
-  cursor:pointer;
-  font-size: 16px;
-  text-align: center;
-  display: flex;
   justify-content: center;
   align-items: center;
-  width: 50px;
-}  
-.formFieldLabel {
-  display: block;
-  text-transform: uppercase;
-  font-size: 0.9em;
+  height: 48px;
+  width: 200px;
+  border: 6px solid rgb(219, 77, 30);
+  font-weight: 700;
+  transition: 0.2s ease-in-out;
+}
+
+.submit-btn:hover{
+  background-color: rgb(219, 77, 30);
   color: white;
-}
-.formFieldInput {
-  width: 100%;
-  background-color: transparent;
-  border: none;
-  color: white;
-  outline: none;
-  border-bottom: 1px solid #445366;
-  font-size: 1em;
-  font-weight: 300;
-  padding-bottom: 10px;
-  margin-top: 10px;
-}
-
-.formFieldInput::placeholder {
-  color: #616e7f;
-}
-
-.formFieldButton {
-  background-color: #e7731f;
-  color: white;
-  border: none;
-  outline: none;
-  border-radius: 25px;
-  padding: 15px 70px;
-  font-size: 1em;
-  font-weight: 600;
-}
-
-.formFieldLink {
-  color: #66707d;
-  text-decoration: none;
-  display: inline-block;
-  border-bottom: 1.5px solid #6b5b95;
-  padding-bottom: 5px;
-}
-
-.formFieldCheckboxLabel {
-  color: #646f7d;
-  font-size: 0.9em;
-}
-
-.formFieldCheckbox {
-  position: relative;
-  top: 1.5px;
-}
-
-.formFieldTermsLink {
-  color: white;
-  border-bottom: 1px solid #6b5b95;
-  text-decoration: none;
-  display: inline-block;
-  padding-bottom: 2px;
-  margin-left: 5px;
-}
-
-.socialMediaButtons {
-  padding: 10px 100px 10px 0px;
+  
 }

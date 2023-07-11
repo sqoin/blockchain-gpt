@@ -1,7 +1,6 @@
 import React, { useRef, useState } from "react";
 import "./Wallet.css";
-import imgPath from "../assets/images/metamask.png";
-import { FaRegCopy } from "react-icons/fa";
+import { FaRegCopy } from 'react-icons/fa';
 import QRCode from "qrcode.react";
 import {
   _isConnectedToMetamask,
@@ -14,98 +13,37 @@ import {
 } from "../adapters/ethereum_fn";
 
 const Wallet: React.FC = () => {
+  const web3 = new window.Web3();
   async function sendTransactionFromMetaMask() {
     let address;
+    let balance;
     try {
       address = await _connectToMetaMask();
       console.log("address", address);
     } catch (error) {}
     try {
-      let balance = await _getBalance(address);
+      balance = await _getBalance(address);
       console.log("balance", balance);
     } catch (error) {
-       console.log(error)
+      console.log(error);
     }
+    if (Number(balance) < Number(amountValue)) {
+      console.log("Insufficient funds in MetaMask account");
+      return;
+    }
+    console.log("amountValue",  Number(web3.utils.toWei('0.009', 'ether')).toString(16))
+    let transactionParam = {
+      to: ethAdress,
+      from: address,
+        value : Number(web3.utils.toWei(amountValue, 'ether')).toString(16),
+    };
+    console.log("wei",transactionParam.value)
+    await window.ethereum
+      .request({ method: "eth_sendTransaction", params: [transactionParam] })
+      .then((txhash: any) => {
+        console.log(txhash);
+      });
   }
-  // async function sendTransactionFromMetaMask(): Promise<void> {
-  //   if (typeof window.ethereum === "undefined") {
-  //     console.log("Please install MetaMask to use this feature");
-  //     return;
-  //   }
-
-  //   try {
-  //     // Check if the wallet is already connected
-  //     if (window.ethereum.selectedAddress !== null) {
-  //       console.log("You are already connected to MetaMask");
-  //       await handleSendTransaction(window.ethereum.selectedAddress);
-  //       return;
-  //     }
-
-  //     // Request permission to access the user's accounts
-  //     const accounts = await window.ethereum.request({
-  //       method: "eth_requestAccounts",
-  //     });
-
-  //     const account = accounts[0];
-  //     await handleSendTransaction(account);
-  //   } catch (error: any) {
-  //     // Handle error gracefully
-  //     console.log("Failed to connect to MetaMask: " + error.message);
-  //   }
-  // }
-
-  // async function handleSendTransaction(account: any): Promise<void> {
-  //   try {
-  //     const recipientAddress = ethAdress;
-  //     const amountToSend = amountValue;
-  //     const ERC20 = window.ERC20;
-  //     let balance;
-  //     const type = "ether";
-  //     try {
-  //       if (type === "ether") {
-  //         // Retrieve the balance in ether
-  //         balance = await window.ethereum.request({
-  //           method: "eth_getBalance",
-  //           params: [account],
-  //         });
-
-  //         balance = window.Web3.utils.fromWei(balance, "ether");
-  //       } else {
-  //         // Retrieve the balance of a specific token
-  //         const web3 = new window.Web3(window.web3.currentProvider);
-
-  //         const contract = new web3.eth.Contract(ERC20.abi, type);
-
-  //         balance = await contract.methods.balanceOf(account).call();
-  //         balance = window.Web3.utils.fromWei(balance, "ether");
-  //         console.log("etherBalance", balance);
-  //       }
-  //     } catch (error: any) {
-  //       // Handle error gracefully
-  //       console.log("Failed to retrieve balance: " + error.message);
-  //     }
-
-  //     if (Number(balance) < Number(amountToSend)) {
-  //       console.log("Insufficient funds in MetaMask account");
-  //       return;
-  //     }
-
-  //     const transactionObject = {
-  //       from: account,
-  //       to: recipientAddress,
-  //       value: window.ethereum.utils.toWei(amountToSend, "ether"),
-  //     };
-
-  //     await window.ethereum.request({
-  //       method: "eth_sendTransaction",
-  //       params: [transactionObject],
-  //     });
-
-  //     console.log("Transaction sent successfully!");
-  //   } catch (error: any) {
-  //     console.error("Error sending transaction:", error);
-  //   }
-  // }
 
   const [ethAdress, setEthAdress] = useState<string>(
     "0x9c40e4849BEc1fb2f1fF6699c421714D825572fC"
@@ -123,56 +61,57 @@ const Wallet: React.FC = () => {
     }
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+  };
+  
   return (
-    <div className="wallet">
-      <div className="imageContainer">
-        <img src={imgPath} alt="Image description" className="image" />
-      </div>
-      <div className="appForm">
-        <div className="qrCodeContainer">
-          <QRCode value={ethAdress} />
-        </div>
-        <div className="formFields">
-          <div className="formField">
-            <label className="formFieldLabel">Send this amount</label>
-            <div className="inputContainer">
-              <input
-                className="formFieldInput"
-                placeholder="Enter your amount"
-                value={amountValue}
-                onChange={(e) => setAmountValue(e.target.value)}
-              />
-              <button className="copyButton" onClick={handleCopyAmount}>
-                <FaRegCopy color="white" size={20} />
-              </button>
-            </div>
-          </div>
-
-          <div className="formField">
-            <label className="formFieldLabel">To this ETH address</label>
-            <div className="inputContainer">
-              <input
-                className="formFieldInput"
-                placeholder="ETH address"
-                value={ethAdress}
-                onChange={(e) => setEthAdress(e.target.value)}
-              />
-              <button className="copyButton" onClick={handleCopyEth}>
-                <FaRegCopy color="white" size={20} />
-              </button>
-            </div>
-          </div>
-          <button
-            type="submit"
-            className="formFieldButton"
-            onClick={sendTransactionFromMetaMask}
-          >
-            Open METAMASK
-          </button>
-        </div>
-
-        <div className="formField"></div>
-      </div>
+    <div className="container">
+      <QRCode className="qr" value={ethAdress} size={200} />
+      <form action="" className="form" onSubmit={handleSubmit}>
+        <section className="inputs">
+          <label htmlFor="amount" className="label">
+            Send this amount{" "}
+            <span className="copy" onClick={handleCopyAmount}>
+              (click to copy)
+            </span>
+          </label>
+          <input
+            type="number"
+            name="amount"
+            id="amount"
+            className="info"
+            value={amountValue}
+            onChange={(e) => setAmountValue(e.target.value)}
+          />
+          <span className="clickable-icon" onClick={handleCopyAmount}>
+            <FaRegCopy />
+          </span>
+          <label htmlFor="address" className="label">
+            To this ETH address{" "}
+            <span className="copy" onClick={handleCopyEth}>
+              (click to copy)
+            </span>
+          </label>
+          <input
+            type="text"
+            name="address"
+            id="address"
+            className="info"
+            value={ethAdress}
+            onChange={(e) => setEthAdress(e.target.value)}
+          />
+          <span className="clickable-icon" onClick={handleCopyEth}>
+            <FaRegCopy />
+          </span>
+        </section>
+        <button type="submit" className="submit-btn" onClick={sendTransactionFromMetaMask}>
+          {/* <span>
+            <GiFoxHead />
+          </span> */}
+          Open METAMASK
+        </button>
+      </form>
     </div>
   );
 };
