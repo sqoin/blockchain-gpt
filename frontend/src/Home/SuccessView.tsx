@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { signOut } from "supertokens-auth-react/recipe/session";
+import React, { useEffect, useState } from "react";
 import {
   BlogsIcon,
   CelebrateIcon,
@@ -8,6 +9,7 @@ import {
   SignOutIcon,
 } from "../assets/images";
 import Terminal from "../components/Terminal"
+import axios from "axios";
 
 interface ILink {
   name: string;
@@ -19,6 +21,25 @@ export default function SuccessView(props: { userId: string }) {
   let userId = props.userId;
 
   const navigate = useNavigate();
+
+  
+  useEffect(() => {
+    sendUserIdToBackend();
+  }, [])
+
+
+  async function sendUserIdToBackend() {
+  try {
+    const response = await axios.post('http://localhost:3003/api/saveUserId', { userId });
+    if (response.data && response.data.message) {
+      alert(response.data.message); // Display the alert message from the backend response
+    }
+    console.log('User ID sent to the backend successfully!');
+  } catch (error) {
+    console.error('Error sending user ID to the backend:', error);
+  }
+}
+
 
   async function logoutClicked() {
     await signOut();
@@ -56,3 +77,5 @@ export default function SuccessView(props: { userId: string }) {
     </>
   );
 }
+
+
