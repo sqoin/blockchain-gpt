@@ -6,9 +6,21 @@ import Home from "./Home";
 import { SuperTokensConfig } from "./config";
 import Tester from "./tester";
 import ChartComponent from "./adapters/ChartComponent";
-SuperTokens.init(SuperTokensConfig);
+import ServiceNotAvailable from "./Service_Unavailable";
+import ServerErrorPage from "./Internal_Server_Error";
+import NotAuthorized from "./Unauthorized";
+import AccountDetails from "./Account_Details";
 
+SuperTokens.init(SuperTokensConfig);
 function App() {
+      const user = {
+        email: "example@example.com",
+        name: "John Doe",
+        password: "*********",
+        githubAccount: "john_doe_github",
+        googleAccount: "john_doe_google",
+        blockchainAccount: "john_doe_blockchain"
+      };
     return (
         <SuperTokensWrapper>
             <div className="App app-container">
@@ -44,8 +56,38 @@ function App() {
                                 element={
                                     <ChartComponent />
                                         
+                                } />
+                                <Route
+                                path="/ServiceUnavailable"
+
+                                element={
+                                    <ServiceNotAvailable />
+                                        
                                 } /> 
+                                <Route
+                                path="/InternalServerError"
+
+                                element={
+                                    <ServerErrorPage />
+                                        
+                                } /> 
+                                <Route
+                                path="/notauthorized"
+
+                                element={
+                                    <NotAuthorized  />
+                                        
+                                } /> 
+                                <Route
+                                path="/accountdetails"
+
+                                element={
+                                    <AccountDetails user={user}  />
+                                        
+                                } /> 
+                                
                         </Routes>
+                        
                     </div>
                 </Router>
             </div>
