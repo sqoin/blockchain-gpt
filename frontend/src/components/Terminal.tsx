@@ -2,6 +2,7 @@ import React, { useState, ChangeEvent, FormEvent } from "react";
 import "./Terminal.css";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
 import { Connection, PublicKey, Version } from "@solana/web3.js";
+import { SERVER_DOMAIN } from "../utils/constants";
 
 const request = require("superagent");
 
@@ -17,7 +18,7 @@ const Terminal: React.FC = () => {
   );
   const [connection, setConnection] = useState<any>(
     new window.solanaWeb3.Connection(solanaNetwork)
-  ); 
+  );
   const [solanaWallet, setSolanaWallet]: any = useState(undefined);
   const [rpcUrlInitial, setRpcUrlInitial] = useState<string>("https://test.novafi.xyz/blockchainnode2");
 
@@ -47,7 +48,7 @@ const Terminal: React.FC = () => {
         });
     });
   };
-  
+
   const _getCryptoCurrencyPrice = async (
     cryptoName: string,
     date?: string
@@ -436,9 +437,9 @@ const Terminal: React.FC = () => {
     }
   };
 
-  const _getSolanaNetworkInfo = async (rpcUrl:string): Promise<string | null> => {
+  const _getSolanaNetworkInfo = async (rpcUrl: string): Promise<string | null> => {
     try {
-      if(!rpcUrl) rpcUrl = rpcUrlInitial
+      if (!rpcUrl) rpcUrl = rpcUrlInitial
       let connection = new Connection(rpcUrl)
       let version: Version = await connection.getVersion()
       const epochInfo = await connection.getEpochInfo();
@@ -458,15 +459,15 @@ const Terminal: React.FC = () => {
     }
   };
 
- 
 
-  const _getSolanaBalance = async (address:string): Promise<null | number> => {
+
+  const _getSolanaBalance = async (address: string): Promise<null | number> => {
     try {
       let connection = new Connection(rpcUrlInitial)
-      const publicKey = address?new PublicKey(address):solanaWallet.publicKey;
+      const publicKey = address ? new PublicKey(address) : solanaWallet.publicKey;
       const balance = await connection.getBalance(publicKey);
-      if(!balance || typeof balance != 'number')
-      return null
+      if (!balance || typeof balance != 'number')
+        return null
       const lamportsToSol = balance / 1e9;
       handleOutput("Your balance is " + lamportsToSol)
       return lamportsToSol;
@@ -474,7 +475,7 @@ const Terminal: React.FC = () => {
       return null;
     }
   };
-  
+
   type CommandWriter = (message?: any, ...optionalParams: any[]) => void;
 
   const processServerResponse = async (
@@ -512,83 +513,86 @@ const Terminal: React.FC = () => {
   ): Promise<void> => {
     event.preventDefault();
     handleOutput(input);
-    let remainingResult = await remaining() ;
+    let remainingResult = await remaining();
     if (input.trim().toLowerCase() === "clear") {
       setOutput([]);
       setInput("");
     } else {
-      if(remainingResult < 3){
+      if (remainingResult < 3) {
         try {
-          let result;  
-         
-          setTimeout(async() => {
-          handleOutput(`Execution in progress ...\n Remaining requests: ${remainingResult}`);
-          if (remainingResult > 0){
-            const res = await getData(input);
-            result = await processServerResponse(res.text, handleOutput);
-            setInput("");
-            setRemainingRequests(remainingResult-1);
-          }else{
-            handleOutput(`Error: Maximum request limit reached !! Please upgrade to a paid account to continue using this feature.`);
-          }
+          let result;
+
+          setTimeout(async () => {
+            handleOutput(`Execution in progress ...\n Remaining requests: ${remainingResult}`);
+            if (remainingResult > 0) {
+              const res = await getData(input);
+              result = await processServerResponse(res.text, handleOutput);
+              setInput("");
+              setRemainingRequests(remainingResult - 1);
+            } else {
+              handleOutput(`Error: Maximum request limit reached !! Please upgrade to a paid account to continue using this feature.`);
+            }
           }, 2000);
-          
+
         } catch (error: any) {
           handleOutput(`Error: ${error.message}\n`);
         }
       }
-      
-    
+
+
     }
   };
- 
-  
-  const remaining = async () =>{
-     // Get the user type based on whether the user has paid or not
-     const userType = isUserPaid ? "free" : "paid";
-     // Get the current request count for the user
-     let requestCount = 0;
-  
-     // Calculate the remaining request count for the user
-    
-    if(userType === "free"){
-      setRemainingRequests(MAX_REQUESTS_FREE_USER - requestCount) ;
-    }else{
+
+
+  const remaining = async () => {
+    // Get the user type based on whether the user has paid or not
+    const userType = isUserPaid ? "free" : "paid";
+    // Get the current request count for the user
+    let requestCount = 0;
+
+    // Calculate the remaining request count for the user
+
+    if (userType === "free") {
+      setRemainingRequests(MAX_REQUESTS_FREE_USER - requestCount);
+    } else {
       setRemainingRequests(MAX_REQUESTS_PAID_USER - requestCount);
     }
 
-     if (remainingRequests <= 0) {
-       handleOutput(`Error: Maximum request limit reached ! \n`);
-       return remainingRequests;
-     } else {
+    if (remainingRequests <= 0) {
+      handleOutput(`Error: Maximum request limit reached ! \n`);
+      return remainingRequests;
+    } else {
       requestCount++;
       return remainingRequests;
-         
+
+    }
   }
-}
   const handleOutput = (new_output: string): void => {
     setOutput([...output, { command: new_output }]);
   };
- 
 
 
-  
+
+
   const _getStatics = async (
-    coinName: string  ,
-     vsCurrency: string , 
-    days: number 
+    coinName: string,
+    vsCurrency: string,
+    days: number
   ): Promise<string> => {
 
     const interfaceUrl = `/statics?coinName=${coinName}&vsCurrency=${vsCurrency}&days=${days}`;
     window.open(interfaceUrl, '_blank');
     return 'you will find your request on the statics page '
 
-   
+
   };
 
+  function redirectToAccDetails(){
+      window.open(SERVER_DOMAIN+"/accountdetails","_blank")
+  }
   return (
     <div className="terminal">
-      <div className="terminal-output" style={{ whiteSpace: "pre-wrap" , wordWrap: "break-word" }}>
+      <div className="terminal-output" style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
         {output.map((line, index) => (
           <div key={index}>
             <span className="terminal-prompt">$</span> {line.command}
@@ -606,6 +610,10 @@ const Terminal: React.FC = () => {
             disabled={remainingRequests > 2}
           />
         </div>
+        <div className="noselect" id="circle">
+          <button type="submit" id="btn" onClick={redirectToAccDetails}>Account Datails </button>
+        </div>
+
       </form>
     </div>
   );

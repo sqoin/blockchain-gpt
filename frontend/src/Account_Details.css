@@ -1,0 +1,181 @@
+body {
+  background: #f9f9f9;
+  font-family: "Roboto", sans-serif;
+  background: linear-gradient(90deg, #8e5dba 10%, #faacac);
+}
+
+.container {
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 800px;
+  margin: 0 auto;
+}
+
+.container h1 {
+  font-size: 32px;
+  font-weight: bold;
+  color: rgb(2, 2, 17);
+  font-family: 'Montserrat', sans-serif;
+}
+
+.shadow {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+
+.text-center {
+  text-align: center;
+}
+
+
+.tab-content {
+  padding: 20px;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+}
+
+
+/* .blockchain-account-details {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+} */
+
+.section-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.input-container {
+  margin-bottom: 10px;
+}
+
+.input-container label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.input-container input,
+.input-container select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+}
+
+.input-container select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-position: right 8px center;
+  background-size: 16px;
+  padding-right: 25px;
+}
+
+textarea.form-control {
+  resize: none;
+  height: auto;
+}
+
+.custom-radio {
+  /* Your custom styles here */
+  /* Example styles: */
+  appearance: none;
+  /* Hide the default radio button */
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  background-color: #fff;
+  transition: all 0.3s ease;
+}
+
+.radio-label {
+  margin-right: 10px; /* Adjust the margin value to your desired spacing */
+}
+
+
+.custom-radio:checked {
+  /* Custom styles when the radio button is checked */
+  background-color: rgb(3, 3, 14);
+  /* Example: change the background color */
+  border-color: rgb(3, 3, 16);
+}
+
+/* Styling for account links */
+.account-link {
+  display: inline-block;
+  margin-right: 10px;
+  text-decoration: none;
+  color: #333;
+}
+
+.account-link img {
+  height: 20px;
+  width: 20px;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+/* Styling for specific account links */
+.google-account-link {
+  color: black;
+  /* Add additional styles specific to Google account links */
+}
+
+.github-account-link {
+  color: black;
+  /* Add additional styles specific to GitHub account links */
+}
+
+/* .blockchain-account-link {
+  color: black;
+  /* Add additional styles specific to blockchain account links */
+
+
+/* Styling for the account links container */
+.account-links-container {
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.account-links-container .account-link {
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.account-links-container .account-link:not(:last-child) {
+  margin-right: 10px;
+}
+
+.account-links-container .account-link::after {
+  content: "|";
+  margin-left: 10px;
+}
+
+.account-links-container .account-link:last-child::after {
+  content: none;
+}
+
+.account-links-container .account-link:first-child {
+  border-left: none;
+}
+
+.account-links-container .account-link:last-child {
+  border-right: none;
+}
