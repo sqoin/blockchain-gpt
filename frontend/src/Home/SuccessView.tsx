@@ -32,7 +32,7 @@ export default function SuccessView(props: { userId: string }) {
   try {
     const response = await axios.post('http://localhost:3003/api/saveUserId', { userId });
     if (response.data && response.data.message) {
-      alert(response.data.message); // Display the alert message from the backend response
+      history.push("/paymentmode") // Display the alert message from the backend response
     }
     console.log('User ID sent to the backend successfully!');
   } catch (error) {
