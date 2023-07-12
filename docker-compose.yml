@@ -13,6 +13,7 @@ services:
       - /app/node_modules
     depends_on:
       -  authentification
+      -  stripe
 
   authentification:
     build: backend/auth
@@ -35,6 +36,17 @@ services:
     volumes:
       - ./backend/blockchain_gpt:/app
       - /app/node_modules
-  
 
- 
+  service-stripe:
+    build: backend/stripe
+    ports:
+      - 3002:3002
+    
+    container_name: stripe
+    volumes:
+      - ./backend/stripe:/app
+      - /app/node_modules
+    
+
+
+    
