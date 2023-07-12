@@ -1,10 +1,13 @@
-@import url('https://fonts.googleapis.com/css?family=Raleway&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Raleway&display=swap");
 
 :root {
   --light-grey: #F6F9FC;
   --dark-terminal-color: #0A2540;
   --accent-color: #635BFF;
   --radius: 3px;
+  
+
+  
 }
 
 body {
@@ -14,14 +17,19 @@ body {
   justify-content: center;
   font-size: 1.2em;
   color: var(--dark-terminal-color);
+  
+
 }
 
 main {
   width: 480px;
+  
 }
 
 form > * {
-  margin: 10px 0;
+  margin: 0px ;
+
+
 }
 
 button {
@@ -84,7 +92,7 @@ fieldset, input, select {
   height: 400px; 
   box-shadow: 0 30px 50px -20px rgb(50 50 93 / 25%), 0 30px 60px -30px rgb(0 0 0 / 30%);
   width: 500px; /* Adjusted width value */
-
+  margin-top:1px
 }
 
 #messages {
@@ -97,3 +105,10 @@ fieldset, input, select {
   border-radius: var(--radius);
   font-size:0.7em;
 }
+h1 {
+  text-align: center;
+  font-weight: normal;
+  margin-top: 0; /* Add this line to remove default top margin */
+  padding-top: 20px; /* Increase the padding value to move the heading higher */
+}
+
