@@ -45,8 +45,8 @@ export const SuperTokensConfig: TypeInput = {
           clientSecret: String(process.env.CLIENT_SECRET),
         }),
         ThirdPartyEmailPassword.Github({
-          clientId: String(process.env.L_GITHUB_CLIENT),
-          clientSecret: String(process.env.L_GITHUB_SECRET),
+          clientId: String(process.env.GITHUB_CLIENT),
+          clientSecret: String(process.env.GITHUB_SECRET),
         }),
       ],
     }),
