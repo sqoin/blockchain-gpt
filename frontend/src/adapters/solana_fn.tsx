@@ -112,3 +112,7 @@ export const _getSolanaBalance = async (address: string, rpcUrl: string): Promis
     return null;
   }
 };
+export function _sendSolana(recipientAddress:String,rpcUrl:String,senderAddress:PhantomWalletAdapter){
+
+  
+}

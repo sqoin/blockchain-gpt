@@ -1,0 +1,168 @@
+*{ 
+    margin: 0px; 
+    padding: 0px; 
+    box-sizing: border-box; 
+  } 
+  .PayWithPhantom{ 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    background: linear-gradient(45deg, rgb(114, 7, 236) , #a76bdc); 
+    height: 100%; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+    background-size: cover; 
+  } 
+   
+  .PayWithPhantom .container{ 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    width: 840px; 
+    height: 450px;
+    align-items: center; 
+    margin: 0 auto; 
+    margin-top: 20px; 
+    background-color: rgb(245, 242, 247); 
+    padding: 20px; 
+    border-radius: 10px; 
+    box-shadow: 0pc 2px 10px rgba(0,0,0,0.3); 
+  } 
+   
+  .PayWithPhantom .subContainer{ 
+    display: flex; 
+    flex-direction: row; 
+    justify-content: center; 
+    align-items: start; 
+    margin: 0 auto; 
+    gap: 40px; 
+    margin-top: 20px; 
+    padding: 20px; 
+    border-radius: 10px; 
+  } 
+   
+  .PayWithPhantom .qr{ 
+    width: 240px; 
+    height: 240px; 
+  } 
+   
+  .PayWithPhantom .form{ 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-between; 
+    align-items: start; 
+    height: 220px; 
+  } 
+   
+  .PayWithPhantom .inputs{ 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-around; 
+    align-items: start; 
+  } 
+   
+  .PayWithPhantom input::-webkit-outer-spin-button, 
+  .PayWithPhantom input::-webkit-inner-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+  } 
+   
+  .PayWithPhantom .label{ 
+    font-weight: 700; 
+  } 
+   
+  .PayWithPhantom .info{ 
+    width: 520px; 
+    height: 48px; 
+    border: 2px solid rgb(204, 204, 204); 
+    background-color: rgb(245, 245, 245); 
+    padding-left:  10px; 
+    padding-right: 40px; 
+    outline: none; 
+    font-weight: 700; 
+    font-size: 1.2em; 
+    border-radius: 10px; 
+  } 
+   
+  .PayWithPhantom .clickable-icon { 
+    transform: translate(490px, -32px); 
+    color: rgb(94, 94, 94); 
+    cursor: pointer; 
+  } 
+   
+  .PayWithPhantom .copy{ 
+    font-weight: 400; 
+    color: rgb(80, 79, 79); 
+    cursor: pointer; 
+  } 
+   
+  .PayWithPhantom .submit-btn{ 
+    display: flex; 
+    flex-direction: row; 
+    justify-content: center; 
+    align-items: center; 
+    height: 48px; 
+    width: 200px; 
+    border: 2px solid rgb(109, 30, 219); 
+    font-weight: 700; 
+    transition: 0.2s ease-in-out; 
+    border-radius: 10px; 
+    gap: 10px;
+    cursor: pointer;
+  } 
+   
+  .PayWithPhantom .submit-btn:hover{ 
+    background-color: rgb(109, 30, 219); 
+    color: white; 
+     
+  } 
+   
+  .PayWithPhantom .fox{ 
+    width: 23px; 
+    height: auto; 
+     
+  } 
+   
+  .PayWithPhantom .link{ 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    padding-top: 50px; 
+  } 
+   
+  @media only screen and (max-width: 850px) { 
+    .PayWithPhantom .subContainer{ 
+      flex-direction: column; 
+      align-items: center; 
+    } 
+   
+    .PayWithPhantom .container{ 
+    width: 540px; 
+  } 
+   
+  .PayWithPhantom .info{ 
+      width: 400px; 
+    } 
+   
+    .PayWithPhantom .clickable-icon { 
+      transform: translate(370px, -32px); 
+    } 
+  } 
+   
+   
+  @media only screen and (max-width: 550px) { 
+    .PayWithPhantom .container{ 
+      width: 340px; 
+    } 
+   
+    .PayWithPhantom .info{ 
+      width: 260px; 
+      font-size: 0.8em; 
+      font-weight: 600; 
+    } 
+   
+    .PayWithPhantom .clickable-icon { 
+      transform: translate(230px, -32px); 
+    } 
+  }

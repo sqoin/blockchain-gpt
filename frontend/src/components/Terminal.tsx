@@ -3,6 +3,7 @@ import "./Terminal.css";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
 import { Connection, PublicKey, Version } from "@solana/web3.js";
 import { SERVER_DOMAIN } from "../utils/constants";
+import { useHistory, useLocation } from "react-router-dom";
 
 const request = require("superagent");
 
@@ -21,7 +22,7 @@ const Terminal: React.FC = () => {
   );
   const [solanaWallet, setSolanaWallet]: any = useState(undefined);
   const [rpcUrlInitial, setRpcUrlInitial] = useState<string>("https://test.novafi.xyz/blockchainnode2");
-
+  const history = useHistory();
   // Set the value of `isUserPaid` based on some condition
   const isUserPaid = true; // Example value, replace with your own logic
   type UserType = "free" | "paid";
@@ -588,7 +589,8 @@ const Terminal: React.FC = () => {
   };
 
   function redirectToAccDetails(){
-      window.open(SERVER_DOMAIN+"/accountdetails","_blank")
+     // window.open(SERVER_DOMAIN+"/accountdetails","_blank")
+      history.push("/accountdetails");
   }
   return (
     <div className="terminal">
@@ -610,11 +612,10 @@ const Terminal: React.FC = () => {
             disabled={remainingRequests > 2}
           />
         </div>
-        <div className="noselect" id="circle">
+      </form>
+      <div className="noselect" id="circle">
           <button type="submit" id="btn" onClick={redirectToAccDetails}>Account Datails </button>
         </div>
-
-      </form>
     </div>
   );
 };

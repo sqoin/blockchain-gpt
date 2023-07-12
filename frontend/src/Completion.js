@@ -8,7 +8,7 @@ function Completion(props) {
   console.log(props);
 
   return (
-    <div>
+    <div className="Completion">
       <img id="verified-logo" src={tick} alt="Verified Logo"  />
     <h1>Payment succeeded</h1>
       <p> thanks for your purchase! A payment from Stripe Sticker Shop will appear on your statment </p>

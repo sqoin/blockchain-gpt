@@ -15,21 +15,22 @@ import { loadStripe } from '@stripe/stripe-js';
 import Payment from "./payment";
 import Completion from "./Completion";
 
-import Wallet from "./components/Wallet";
-import TestProp from "./components/TestProp";
+import PaymentMode from "./components/payment-mode/PaymentMode";
+import SendSol from "./components/pay-with-phantom/SendSol";
+import PayWithMetamask from "./components/pay-with-metamask/PayWithMetamask";
 SuperTokens.init(SuperTokensConfig);
 const stripePromise = loadStripe('YOUR_PUBLISHABLE_KEY');
 
 SuperTokens.init(SuperTokensConfig);
 function App() {
-      const user = {
+    const user = {
         email: "example@example.com",
         name: "John Doe",
         password: "*********",
         githubAccount: "john_doe_github",
         googleAccount: "john_doe_google",
         blockchainAccount: "john_doe_blockchain"
-      };
+    };
     return (
         <SuperTokensWrapper>
             <div className="App app-container">
@@ -50,74 +51,84 @@ function App() {
                                     </SessionAuth>
                                 }
                             />
-                             
+
 
                             <Route
                                 path="/test"
 
                                 element={
                                     <Tester />
-                                        
+
                                 } />
-                             <Route path="/payment" element={<Payment/>} />
-          <Route path="/completion" element={<Completion />} />
-                              
-      
-      
+                            <Route path="/paymentWithStripe" element={<Payment />} />
+                            <Route path="/completion" element={<Completion />} />
 
 
-                              <Route
+
+
+
+                            <Route
                                 path="/statics"
 
                                 element={
                                     <ChartComponent />
-                                        
+
                                 } />
-                                <Route
+                            <Route
                                 path="/ServiceUnavailable"
 
                                 element={
                                     <ServiceNotAvailable />
-                                        
-                                } /> 
-                                <Route
+
+                                } />
+                            <Route
                                 path="/InternalServerError"
 
                                 element={
                                     <ServerErrorPage />
-                                        
-                                } /> 
-                                <Route
+
+                                } />
+                            <Route
                                 path="/notauthorized"
 
                                 element={
-                                    <NotAuthorized  />
-                                        
-                                } /> 
-                                <Route
+                                    <NotAuthorized />
+
+                                } />
+                            <Route
                                 path="/accountdetails"
 
                                 element={
-                                    <AccountDetails user={user}  />
-                                        
-                                } /> 
-                                
-                                <Route
+                                    <AccountDetails user={user} />
+
+                                } />
+
+                            <Route
                                 path="/paywithmetamask"
 
                                 element={
-                                    <Wallet />
-                                        
+                                    <PayWithMetamask />
+
                                 } />
-                                <Route
-                                path="/testpop"
+                            
+
+                            <Route
+                                path="/paywithphantom"
 
                                 element={
-                                    <TestProp/>
-                                        
+                                    <SendSol />
+
                                 } />
+                            <Route
+                                path="/paymentmode"
+
+                                element={
+                                    <PaymentMode />
+
+                                } />
+
                         </Routes>
-                        
+
                     </div>
                 </Router>
             </div>

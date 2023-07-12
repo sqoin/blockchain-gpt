@@ -1,13 +1,13 @@
-h1 {
+.Completion h1 {
     color: #333;
 }
-p{
+.Completion .p{
     text-align: center;
     font-weight:300;
     color: #777777;
 
 }
-#verified-logo {
+.Completion #verified-logo {
     width: 100px;
     height: 100px;
     margin: 0 auto;

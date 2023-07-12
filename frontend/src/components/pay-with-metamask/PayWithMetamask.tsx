@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import "./Wallet.css";
+import "./PayWithMetamask.css";
 import { FaRegCopy } from "react-icons/fa";
-import fox from "../assets/images/fox.png";
+import fox from "../../assets/images/fox.png";
 import QRCode from "qrcode.react";
-import { _connectToMetaMask, _getBalance } from "../adapters/ethereum_fn";
+import { _connectToMetaMask, _getBalance } from "../../adapters/ethereum_fn";
 
-const Wallet: React.FC = () => {
+const PayWithMetamask: React.FC = () => {
   const [display, setDisplay] = useState("none");
 
   const web3 = new window.Web3();
@@ -78,7 +78,7 @@ const Wallet: React.FC = () => {
   };
 
   return (
-    <div className="wallet">
+    <div className="PayWithMetamask">
       <div className="container">
         <div className="subContainer">
           <QRCode className="qr" value={ethAdress} size={200} />
@@ -140,4 +140,4 @@ const Wallet: React.FC = () => {
   );
 };
 
-export default Wallet;
+export default PayWithMetamask;

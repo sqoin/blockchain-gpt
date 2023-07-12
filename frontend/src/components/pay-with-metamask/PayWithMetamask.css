@@ -3,7 +3,7 @@
   padding: 0px;
   box-sizing: border-box;
 }
-.wallet{
+.PayWithMetamask{
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -14,11 +14,12 @@
   background-size: cover;
 }
 
-.container{
+.PayWithMetamask .container{
   display: flex;
   flex-direction: column;
   justify-content: center;
   width: 840px;
+  height: 450px;
   align-items: center;
   margin: 0 auto;
   margin-top: 20px;
@@ -28,7 +29,7 @@
   box-shadow: 0pc 2px 10px rgba(0,0,0,0.3);
 }
 
-.subContainer{
+.PayWithMetamask .subContainer{
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -40,12 +41,12 @@
   border-radius: 10px;
 }
 
-.qr{
+.PayWithMetamask .qr{
   width: 240px;
   height: 240px;
 }
 
-.form{
+.PayWithMetamask .form{
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -53,24 +54,24 @@
   height: 220px;
 }
 
-.inputs{
+.PayWithMetamask .inputs{
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   align-items: start;
 }
 
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
+.PayWithMetamask input::-webkit-outer-spin-button,
+.PayWithMetamask input::-webkit-inner-spin-button {
 -webkit-appearance: none;
 margin: 0;
 }
 
-.label{
+.PayWithMetamask .label{
   font-weight: 700;
 }
 
-.info{
+.PayWithMetamask .info{
   width: 520px;
   height: 48px;
   border: 2px solid rgb(204, 204, 204);
@@ -83,19 +84,19 @@ margin: 0;
   border-radius: 10px;
 }
 
-.clickable-icon {
+.PayWithMetamask .clickable-icon {
   transform: translate(490px, -32px);
   color: rgb(94, 94, 94);
   cursor: pointer;
 }
 
-.copy{
+.PayWithMetamask .copy{
   font-weight: 400;
   color: rgb(80, 79, 79);
   cursor: pointer;
 }
 
-.submit-btn{
+.PayWithMetamask .submit-btn{
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -109,19 +110,19 @@ margin: 0;
   gap: 10px;
 }
 
-.submit-btn:hover{
+.PayWithMetamask .submit-btn:hover{
   background-color: rgb(219, 77, 30);
   color: white;
   
 }
 
-.fox{
+.PayWithMetamask .fox{
   width: 23px;
   height: auto;
   
 }
 
-.link{
+.PayWithMetamask .link{
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -130,37 +131,37 @@ margin: 0;
 }
 
 @media only screen and (max-width: 850px) {
-  .subContainer{
+  .PayWithMetamask .subContainer{
     flex-direction: column;
     align-items: center;
   }
 
-.container{
+.PayWithMetamask .container{
   width: 540px;
 }
 
-  .info{
+  .PayWithMetamask .info{
     width: 400px;
   }
 
-  .clickable-icon {
+  .PayWithMetamask .clickable-icon {
     transform: translate(370px, -32px);
   }
 }
 
 
 @media only screen and (max-width: 550px) {
-  .container{
+  .PayWithMetamask .container{
     width: 340px;
   }
 
-  .info{
+  .PayWithMetamask .info{
     width: 260px;
     font-size: 0.8em;
     font-weight: 600;
   }
 
-  .clickable-icon {
+  .PayWithMetamask .clickable-icon {
     transform: translate(230px, -32px);
   }
 }
