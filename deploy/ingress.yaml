@@ -34,4 +34,14 @@ spec:
             name: auth-service
             port:
               number: 3001
+      - path: /user-behaviour
+        pathType: Prefix
+        backend:
+          service:
+            name: service-user-behaviour
+            port:
+              number: 3033
+
+
+
 

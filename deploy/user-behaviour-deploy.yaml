@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-behaviour-deploy
+  labels:
+    app: deploy-user-behaviour
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deploy-user-behaviour
+
+  template:
+    metadata:
+      labels:
+        app: deploy-user-behaviour
+    spec:
+      containers:
+      - name: user-behaviour-containers
+        image: uk-london-1.ocir.io/lrqd49b08lgo/novateam:userbehaviour
+        ports:
+        - containerPort: 3033
+
