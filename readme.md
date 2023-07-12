@@ -20,6 +20,16 @@ Those links contain the process step-by-step
 
     * Github :  https://docs.github.com/en/apps/creating-github-apps/creating-github-apps/creating-a-github-app
 
+## Set up Google account sign in + sign up
+    * Go to https://console.cloud.google.com/
+    * In the dropdown up, select your project (Or create one if you do not have any)
+    * After selecting/creating your project open the menu on the left side of the page and select: APIs & Services > Credentials
+    * Click on: "Create credentials" and select "OAuth client ID" 
+    * select the application type (web application)
+    * in Authorized redirect URIs add the redirect URL (default: http://localhost:3000/auth/callback/google)
+    * click on create
+    * copy the client ID and the client secret and add them to the /blockchain-gpt/backend/auth/.env file.
+
 ## Edit environement files
 3. Go backend/auth and create .env file and set values 
     * URI=  /* Core connectionURI that you saved */
@@ -27,6 +37,9 @@ Those links contain the process step-by-step
 
     * CLIENT_ID= /* Google Client ID */
     * CLIENT_SECRET=/* Google Client Secret*/
+
+
+
 
     * GITHUB_CLIENT= /* Github Client */
     * GITHUB_SECRET= /* Github Secret */ 
