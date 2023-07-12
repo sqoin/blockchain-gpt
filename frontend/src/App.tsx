@@ -47,7 +47,7 @@ function App() {
                                         
                                 } /> 
                                 <Route
-                                path="/wallet"
+                                path="/paywithmetamask"
 
                                 element={
                                     <Wallet />
