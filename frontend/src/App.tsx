@@ -16,6 +16,7 @@ import Payment from "./payment";
 import Completion from "./Completion";
 
 import Wallet from "./components/Wallet";
+import TestProp from "./components/TestProp";
 SuperTokens.init(SuperTokensConfig);
 const stripePromise = loadStripe('YOUR_PUBLISHABLE_KEY');
 
@@ -106,6 +107,13 @@ function App() {
 
                                 element={
                                     <Wallet />
+                                        
+                                } />
+                                <Route
+                                path="/testpop"
+
+                                element={
+                                    <TestProp/>
                                         
                                 } />
                         </Routes>
