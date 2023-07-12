@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { signOut } from "supertokens-auth-react/recipe/session";
 import React, { useEffect, useState } from "react";
 import {
@@ -20,7 +20,7 @@ interface ILink {
 export default function SuccessView(props: { userId: string }) {
   let userId = props.userId;
 
-  const navigate = useNavigate();
+  const history = useHistory();
 
   
   useEffect(() => {
@@ -43,7 +43,7 @@ export default function SuccessView(props: { userId: string }) {
 
   async function logoutClicked() {
     await signOut();
-    navigate("/auth");
+    history.push("/auth");
   }
 
   function openLink(url: string) {

@@ -2,7 +2,7 @@ import "./App.css";
 import "./payment.css";
 import SuperTokens, { SuperTokensWrapper, getSuperTokensRoutesForReactRouterDom } from "supertokens-auth-react";
 import { SessionAuth } from "supertokens-auth-react/recipe/session";
-import { Routes, BrowserRouter as Router, Route } from "react-router-dom";
+import { Switch, BrowserRouter as Router, Route } from "react-router-dom";
 import Home from "./Home";
 import { SuperTokensConfig } from "./config";
 import Tester from "./tester";
@@ -36,98 +36,63 @@ function App() {
             <div className="App app-container">
                 <Router>
                     <div className="fill">
-                        <Routes>
+                    <Switch>
                             {/* This shows the login UI on "/auth" route */}
                             {getSuperTokensRoutesForReactRouterDom(require("react-router-dom"))}
 
-                            <Route
-                                path="/"
-                                element={
-                                    /* This protects the "/" route so that it shows
-                                  <Home /> only if the user is logged in.
-                                  Else it redirects the user to "/auth" */
-                                    <SessionAuth>
+                            
+                            <Route exact path="/">
+                                <SessionAuth>
                                         <Home />
-                                    </SessionAuth>
-                                }
-                            />
+                                </SessionAuth>
+                            </Route>
 
+
+                            <Route exact path="/test">
+                                <Tester />
+                            </Route>
+                             
+                            <Route path="/paymentWithStripe"><Payment /></Route>
+                            <Route path="/completion"><Completion /></Route>
+
+
+
+
+
+                            <Route path="/statics">
+                                <ChartComponent />
+                            </Route>
+                            <Route
+                                path="/ServiceUnavailable"><ServiceNotAvailable /></Route>
+
+                              
+                            <Route
+                                path="/InternalServerError"><ServerErrorPage /></Route>
+
+                               
+                            <Route
+                                path="/notauthorized"><NotAuthorized /></Route>
+
+                                
+                            <Route
+                                path="/accountdetails"><AccountDetails user={user} /></Route>
+
+                               
 
                             <Route
-                                path="/test"
+                                path="/paywithmetamask"><PayWithMetamask /></Route>
 
-                                element={
-                                    <Tester />
-
-                                } />
-                            <Route path="/paymentWithStripe" element={<Payment />} />
-                            <Route path="/completion" element={<Completion />} />
-
-
-
-
-
-                            <Route
-                                path="/statics"
-
-                                element={
-                                    <ChartComponent />
-
-                                } />
-                            <Route
-                                path="/ServiceUnavailable"
-
-                                element={
-                                    <ServiceNotAvailable />
-
-                                } />
-                            <Route
-                                path="/InternalServerError"
-
-                                element={
-                                    <ServerErrorPage />
-
-                                } />
-                            <Route
-                                path="/notauthorized"
-
-                                element={
-                                    <NotAuthorized />
-
-                                } />
-                            <Route
-                                path="/accountdetails"
-
-                                element={
-                                    <AccountDetails user={user} />
-
-                                } />
-
-                            <Route
-                                path="/paywithmetamask"
-
-                                element={
-                                    <PayWithMetamask />
-
-                                } />
+                               
                             
 
                             <Route
-                                path="/paywithphantom"
-
-                                element={
-                                    <SendSol />
-
-                                } />
+                                path="/paywithphantom"><SendSol /></Route>
                             <Route
-                                path="/paymentmode"
+                                path="/paymentmode"><PaymentMode /></Route>
 
-                                element={
-                                    <PaymentMode />
+                               
 
-                                } />
-
-                        </Routes>
+                    </Switch>
 
                     </div>
                 </Router>
