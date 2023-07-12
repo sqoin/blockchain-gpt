@@ -1,4 +1,5 @@
 import "./App.css";
+import "./payment.css";
 import SuperTokens, { SuperTokensWrapper, getSuperTokensRoutesForReactRouterDom } from "supertokens-auth-react";
 import { SessionAuth } from "supertokens-auth-react/recipe/session";
 import { Routes, BrowserRouter as Router, Route } from "react-router-dom";
@@ -10,6 +11,12 @@ import ServiceNotAvailable from "./Service_Unavailable";
 import ServerErrorPage from "./Internal_Server_Error";
 import NotAuthorized from "./Unauthorized";
 import AccountDetails from "./Account_Details";
+import { loadStripe } from '@stripe/stripe-js';
+import Payment from "./payment";
+import Completion from "./Completion";
+
+SuperTokens.init(SuperTokensConfig);
+const stripePromise = loadStripe('YOUR_PUBLISHABLE_KEY');
 
 SuperTokens.init(SuperTokensConfig);
 function App() {
@@ -41,6 +48,7 @@ function App() {
                                     </SessionAuth>
                                 }
                             />
+                             
 
                             <Route
                                 path="/test"
@@ -49,6 +57,12 @@ function App() {
                                     <Tester />
                                         
                                 } />
+                             <Route path="/payment" element={<Payment/>} />
+          <Route path="/completion" element={<Completion />} />
+                              
+      
+      
+
 
                               <Route
                                 path="/statics"
