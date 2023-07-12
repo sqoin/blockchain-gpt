@@ -15,6 +15,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import Payment from "./payment";
 import Completion from "./Completion";
 
+import Wallet from "./components/Wallet";
 SuperTokens.init(SuperTokensConfig);
 const stripePromise = loadStripe('YOUR_PUBLISHABLE_KEY');
 
@@ -100,6 +101,13 @@ function App() {
                                         
                                 } /> 
                                 
+                                <Route
+                                path="/paywithmetamask"
+
+                                element={
+                                    <Wallet />
+                                        
+                                } />
                         </Routes>
                         
                     </div>

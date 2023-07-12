@@ -1,0 +1,166 @@
+*{
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+.wallet{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: linear-gradient(45deg, rgb(236, 64, 7) , #dc956b);
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 840px;
+  align-items: center;
+  margin: 0 auto;
+  margin-top: 20px;
+  background-color: rgb(247, 242, 242);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0pc 2px 10px rgba(0,0,0,0.3);
+}
+
+.subContainer{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: start;
+  margin: 0 auto;
+  gap: 40px;
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.qr{
+  width: 240px;
+  height: 240px;
+}
+
+.form{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: start;
+  height: 220px;
+}
+
+.inputs{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: start;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+-webkit-appearance: none;
+margin: 0;
+}
+
+.label{
+  font-weight: 700;
+}
+
+.info{
+  width: 520px;
+  height: 48px;
+  border: 2px solid rgb(204, 204, 204);
+  background-color: rgb(245, 245, 245);
+  padding-left:  10px;
+  padding-right: 40px;
+  outline: none;
+  font-weight: 700;
+  font-size: 1.2em;
+  border-radius: 10px;
+}
+
+.clickable-icon {
+  transform: translate(490px, -32px);
+  color: rgb(94, 94, 94);
+  cursor: pointer;
+}
+
+.copy{
+  font-weight: 400;
+  color: rgb(80, 79, 79);
+  cursor: pointer;
+}
+
+.submit-btn{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 48px;
+  width: 200px;
+  border: 2px solid rgb(219, 77, 30);
+  font-weight: 700;
+  transition: 0.2s ease-in-out;
+  border-radius: 10px;
+  gap: 10px;
+}
+
+.submit-btn:hover{
+  background-color: rgb(219, 77, 30);
+  color: white;
+  
+}
+
+.fox{
+  width: 23px;
+  height: auto;
+  
+}
+
+.link{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 50px;
+}
+
+@media only screen and (max-width: 850px) {
+  .subContainer{
+    flex-direction: column;
+    align-items: center;
+  }
+
+.container{
+  width: 540px;
+}
+
+  .info{
+    width: 400px;
+  }
+
+  .clickable-icon {
+    transform: translate(370px, -32px);
+  }
+}
+
+
+@media only screen and (max-width: 550px) {
+  .container{
+    width: 340px;
+  }
+
+  .info{
+    width: 260px;
+    font-size: 0.8em;
+    font-weight: 600;
+  }
+
+  .clickable-icon {
+    transform: translate(230px, -32px);
+  }
+}
