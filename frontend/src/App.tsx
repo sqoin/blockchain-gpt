@@ -5,6 +5,8 @@ import { Routes, BrowserRouter as Router, Route } from "react-router-dom";
 import Home from "./Home";
 import { SuperTokensConfig } from "./config";
 import Tester from "./tester";
+import SendSol from "./SendSol"
+import PaymentMode from "./PaymentMode"
 import ChartComponent from "./adapters/ChartComponent";
 SuperTokens.init(SuperTokensConfig);
 
@@ -43,6 +45,20 @@ function App() {
 
                                 element={
                                     <ChartComponent />
+                                        
+                                } /> 
+                                <Route
+                                path="/paywithphantom"
+
+                                element={
+                                    <SendSol />
+                                        
+                                } /> 
+                                <Route
+                                path="/paymentmode"
+
+                                element={
+                                    <PaymentMode />
                                         
                                 } /> 
                         </Routes>
