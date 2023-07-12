@@ -16,3 +16,5 @@
  DB_PWD= /* your password */
  DB_CLUSTER=DB_CLUSTER (by default it should be "atlascluster.token" the token value changes from cluster to cluster)
 
+
+## to run this webservice: open the terminal in blockchain-gpt/backend/accountPayment/ and run the command: ts-node server.ts
