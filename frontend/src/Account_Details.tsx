@@ -13,7 +13,7 @@ interface AccountDetailsProps {
 
 const AccountDetails: React.FC<AccountDetailsProps> = ({ user }) => {
   return (
-    <div className="container">
+    <div className="accountdetails">
       <div className="bg-white shadow rounded-lg d-block d-sm-flex">
         <div className="tab-content p-4 p-md-5" id="v-pills-tabContent">
           <div
@@ -66,16 +66,6 @@ const AccountDetails: React.FC<AccountDetailsProps> = ({ user }) => {
                   </div>
                 </div>
               </div>
-              {/* <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="blockchainAccount">Blockchain Account</label>
-                  <div className="account-links-container">
-                    <a href={user.blockchainAccount} className="account-link blockchain-account-link">
-                      {user.blockchainAccount}
-                    </a>
-                  </div>
-                </div>
-              </div> */}
               <div className="col-md-6">
                 <div className="form-group">
                   <label htmlFor="radioOptions">Payment Options</label>
