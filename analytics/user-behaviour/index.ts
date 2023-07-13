@@ -27,16 +27,26 @@ app.use((req:any, res: any, next:any) => {
 
 
 
+function formatDate(date:any) {
+  // Convert the input date object to a string and remove all hyphens (-)
+  let formattedDate = date
+    .toISOString()
+    .replace(/-/g, "")
+    .replace(/:/g, "")
+    .replace(/\.000/g, "");
 
+  // Parse the formatted string back into a date object and return it
+  return formattedDate;
+}
 
 
 
 app.get("/user-behaviour/getUsersConnectedFirstTimePerMonth", (req:any, res:any) => {
 
       var date = new Date();
-      let result=[{account:2,date:new Date(date.getDate() - 8)},{account:2,date:new Date(date.getDate() - 7)},{account:2,date:new Date(date.getDate() - 6)},
-        {account:2,date:new Date(date.getDate() - 5)},{account:2,date:new Date(date.getDate() - 4)},{account:2,date:new Date(date.getDate() - 3)},
-        {account:2,date:new Date(date.getDate() - 2)},{account:10,date:new Date(date.getDate() - 1)},{account:15,date:new Date()}]
+      let result=[{account:3,date:"1688541367000"},{account:2,date:"1688627767000"},{account:2,date:"1688714167000"},
+        {account:2,date:"1688800567000"},{account:2,date:"1688886967000"},{account:2,date:"1688973367000"},
+        {account:2,date:"1689059767000"},{account:10,date:"1689146167000"},{account:15,date:"1689232567000"}]
       res.send(result);
 });
 
