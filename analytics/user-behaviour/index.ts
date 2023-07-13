@@ -50,6 +50,30 @@ app.get("/user-behaviour/getUsersConnectedFirstTimePerMonth", (req:any, res:any)
       res.send(result);
 });
 
+app.get("/user-behaviour/getRequestNumberPerDay", (req:any, res:any) => {
+
+  var date = new Date();
+  let result=[{number_of_requests:12,date:"20230704000000"},{number_of_requests:20,date:"20230705000000"},{number_of_requests:29,date:"20230706000000"},
+    {number_of_requests:25,date:"20230707000000"},{number_of_requests:27,date:"20230708000000"},{number_of_requests:29,date:"20230709000000"},
+    {number_of_requests:24,date:"20230710000000"},{number_of_requests:30,date:"20230711000000"},{number_of_requests:35,date:"20230712000000"}]
+  res.send(result);
+});
+
+app.get("/user-behaviour/PaidAccounts", (req:any, res:any) => {let result = [
+  { name: "freeAccounts", count: 15 },
+  { name: "PaidAccounts", count:30 }]
+
+  res.send(result);
+
+  
+
+});
+
+
+
+
+
+
 app.listen(PORT, () => {
   console.log('server is listening on port ' + PORT)
 })
