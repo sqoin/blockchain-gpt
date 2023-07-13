@@ -4,8 +4,12 @@ import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
 import { Connection, PublicKey, Version } from "@solana/web3.js";
 import { SERVER_DOMAIN } from "../utils/constants";
 import { useHistory, useLocation } from "react-router-dom";
-
+/// @ts-ignore
+import BitcoinChart from "../charts.tsx";
+/// @ts-ignore
+import PieChart from "../piecharts.tsx"
 const request = require("superagent");
+let showChart=false;
 
 interface Output {
   command: string;
@@ -526,6 +530,11 @@ const Terminal: React.FC = () => {
           setTimeout(async () => {
             handleOutput(`Execution in progress ...\n Remaining requests: ${remainingResult}`);
             if (remainingResult > 0) {
+            
+              
+              showChart= input === 'bitcoin prices evolution';
+              
+             
               const res = await getData(input);
               result = await processServerResponse(res.text, handleOutput);
               setInput("");
@@ -620,9 +629,14 @@ const Terminal: React.FC = () => {
             disabled={remainingRequests > 2}
           />
         </div>
+        <div className="bitcoin-chart">
+    {showChart ? <BitcoinChart/> : null}
+  </div>
+
       </form>
       <div className="noselect" id="circle">
           <button type="submit" id="btn" onClick={redirectToAccDetails}>Account Datails </button>
+          
         </div>
     </div>
   );
