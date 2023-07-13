@@ -16,7 +16,7 @@ const PayWithMetamask: React.FC = () => {
     "0x9c40e4849BEc1fb2f1fF6699c421714D825572fC"
   );
 
-  const [amountValue, setAmountValue] = useState<string>("");
+  const [amountValue, setAmountValue] = useState<string>("0.01");
   const [linkText, setLinkText] = useState<string>("");
   const [link, setLink] = useState<string>("https://etherscan.io/tx/");
 

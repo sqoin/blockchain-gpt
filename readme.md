@@ -71,4 +71,7 @@ Those links contain the process step-by-step
 6. Run in your terminal :
     * docker compose down 
 
+## Progress
+please visit the link: https://www.youtube.com/watch?v=Am5k-ZKzRt0
+
 

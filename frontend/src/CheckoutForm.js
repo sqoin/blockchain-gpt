@@ -3,6 +3,7 @@ import { useElements, useStripe } from "@stripe/react-stripe-js";
 import { PaymentElement } from "@stripe/react-stripe-js";
 import "./payment.css";
 import "./App.css";
+import { useHistory } from "react-router-dom";
 
 
 export default function CheckoutForm() {
@@ -10,7 +11,7 @@ export default function CheckoutForm() {
   const elements = useElements();
   const [message, setMessage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
-
+ const history = useHistory()
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -30,6 +31,7 @@ export default function CheckoutForm() {
       setMessage(error.message);
     }else if (paymentIntent && paymentIntent.status ==="succeeded"){
       setMessage ("Payment status : " + paymentIntent.status +"🎉");
+      //history.push("/completion")
     }
     setIsProcessing(false);
 

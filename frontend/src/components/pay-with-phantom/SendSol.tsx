@@ -18,7 +18,7 @@ const SendSol: React.FC = () => {
   const [rpcUrl, setRpcUrl] = useState<string>("https://api.mainnet-beta.solana.com");
 
   const [info, setInfo] = useState<Info>({
-    amount: 0,
+    amount: 0.01,
     address: "D1RXUnD61kb2r1JbaD4MVAMD5LJ9YbtZK8tLkPXQNHvd"
   });
 

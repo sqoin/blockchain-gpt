@@ -532,6 +532,8 @@ const Terminal: React.FC = () => {
               setRemainingRequests(remainingResult - 1);
             } else {
               handleOutput(`Error: Maximum request limit reached !! Please upgrade to a paid account to continue using this feature.`);
+              await sleep(10000)
+              history.push("/paymentmode")
             }
           }, 2000);
 
@@ -544,6 +546,10 @@ const Terminal: React.FC = () => {
     }
   };
 
+
+  const sleep = (ms: number) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+};
 
   const remaining = async () => {
     // Get the user type based on whether the user has paid or not
@@ -561,6 +567,8 @@ const Terminal: React.FC = () => {
 
     if (remainingRequests <= 0) {
       handleOutput(`Error: Maximum request limit reached ! \n`);
+      await sleep(10000)
+      history.push("/paymentmode")
       return remainingRequests;
     } else {
       requestCount++;
