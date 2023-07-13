@@ -42,8 +42,10 @@ const Terminal: React.FC = () => {
         .set("Access-Control-Allow-Origin", "*")
         .end((err: any, res: any) => {
           if (err) {
+            popLastItem();
             reject(err);
           } else {
+            popLastItem();
             resolve(res);
           }
         });
@@ -495,11 +497,14 @@ const Terminal: React.FC = () => {
         const originalConsoleLog: Console["log"] = console.log;
         console.log = commandWriter;
         const result: any = await eval(wrappedScript);
+        //popLastItem();
         return capturedOutput;
       } catch (error: any) {
+        //popLastItem();
         return `Error: ${error.message} \n script ${scriptContent}`;
       }
     } else {
+      //popLastItem();
       commandWriter("This input does not require any specific action.")
       return `${data}\n`;
     }
@@ -513,7 +518,6 @@ const Terminal: React.FC = () => {
     event: FormEvent<HTMLFormElement>
   ): Promise<void> => {
     event.preventDefault();
-    handleOutput(input);
     let remainingResult = await remaining();
     if (input.trim().toLowerCase() === "clear") {
       setOutput([]);
@@ -524,13 +528,18 @@ const Terminal: React.FC = () => {
           let result;
 
           setTimeout(async () => {
-            handleOutput(`Execution in progress ...\n Remaining requests: ${remainingResult}`);
+            handleOutput(input);
+            setInput("");
+            handleOutput(`Execution in progress ...`);
             if (remainingResult > 0) {
+              
               const res = await getData(input);
               result = await processServerResponse(res.text, handleOutput);
               setInput("");
               setRemainingRequests(remainingResult - 1);
+             //await handleOutput(`Remaining requests: ${remainingResult}`);
             } else {
+              popLastItem();
               handleOutput(`Error: Maximum request limit reached !! Please upgrade to a paid account to continue using this feature.`);
               await sleep(10000)
               history.push("/paymentmode")
@@ -577,10 +586,12 @@ const Terminal: React.FC = () => {
     }
   }
   const handleOutput = (new_output: string): void => {
-    setOutput([...output, { command: new_output }]);
+    setOutput((prevOutput: Output[]) => [...prevOutput, { command: new_output }]);
   };
 
-
+  const popLastItem = (): void => {
+    setOutput((prevOutput: Output[]) => prevOutput.slice(0, prevOutput.length - 1));
+  };
 
 
   const _getStatics = async (
