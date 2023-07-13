@@ -19,24 +19,22 @@ export default function CheckoutForm() {
       return ;
     }
     setIsProcessing(true);
-    const {error,paymentIntent}=await stripe.confirmPayment({
+    const { error }= await stripe.confirmPayment({
       elements,
       confirmParams: {
         return_url :`${window.location.origin}/completion`,
 
       },
-      redirect : "if_required",
     });
     if (error){
       setMessage(error.message);
-    }else if (paymentIntent && paymentIntent.status ==="succeeded"){
-      setMessage ("Payment status : " + paymentIntent.status +"🎉");
-      //history.push("/completion")
     }
     setIsProcessing(false);
 
+  
 
-  };
+
+  }; 
 
 
   return (

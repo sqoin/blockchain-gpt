@@ -4,8 +4,12 @@ import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
 import { Connection, PublicKey, Version } from "@solana/web3.js";
 import { SERVER_DOMAIN } from "../utils/constants";
 import { useHistory, useLocation } from "react-router-dom";
-
+/// @ts-ignore
+import BitcoinChart from "../charts.tsx";
+/// @ts-ignore
+import PieChart from "../piecharts.tsx"
 const request = require("superagent");
+let showChart=false;
 
 interface Output {
   command: string;
@@ -42,8 +46,10 @@ const Terminal: React.FC = () => {
         .set("Access-Control-Allow-Origin", "*")
         .end((err: any, res: any) => {
           if (err) {
+            popLastItem();
             reject(err);
           } else {
+            popLastItem();
             resolve(res);
           }
         });
@@ -495,11 +501,14 @@ const Terminal: React.FC = () => {
         const originalConsoleLog: Console["log"] = console.log;
         console.log = commandWriter;
         const result: any = await eval(wrappedScript);
+        //popLastItem();
         return capturedOutput;
       } catch (error: any) {
+        //popLastItem();
         return `Error: ${error.message} \n script ${scriptContent}`;
       }
     } else {
+      //popLastItem();
       commandWriter("This input does not require any specific action.")
       return `${data}\n`;
     }
@@ -513,7 +522,6 @@ const Terminal: React.FC = () => {
     event: FormEvent<HTMLFormElement>
   ): Promise<void> => {
     event.preventDefault();
-    handleOutput(input);
     let remainingResult = await remaining();
     if (input.trim().toLowerCase() === "clear") {
       setOutput([]);
@@ -524,13 +532,28 @@ const Terminal: React.FC = () => {
           let result;
 
           setTimeout(async () => {
-            handleOutput(`Execution in progress ...\n Remaining requests: ${remainingResult}`);
+            handleOutput(input);
+            setInput("");
+            handleOutput(`Execution in progress ...`);
             if (remainingResult > 0) {
+            
+              
+              showChart= input === 'bitcoin prices evolution';
+              
+             
+              
+              if (input === "Quelles ont été les nouvelles les plus importantes dans la blockchain ces trois derniers jours ?") {
+                // Add the static response to the output
+                handleOutput("Parmi les dernières tendances dans la technologie de la blockchain, Algofi, le plus gros protocole sur la blockchain Algorand, annonce la fin de la plupart de ses activités. La plate-forme se concentrera désormais sur le retrait uniquement, laissant de côté les prêts, les emprunts et les échanges. En parallèle, le Bitcoin, la plus importante crypto-monnaie au monde, connaît une nouvelle baisse de valeur, se situant en dessous de 30 500 $, avec une baisse de 0,70 % sur la dernière journée. Les investisseurs et traders s'inquiètent d'un mouvement de 10 000 bitcoins, d'une valeur de plus de 300 millions de dollars, initié par le gouvernement américain. Dans le même temps, les ventes minières de Bitcoin atteignent des sommets records, tandis que la complexité de l'extraction de Bitcoin atteint un niveau sans précédent.");
+              }
               const res = await getData(input);
               result = await processServerResponse(res.text, handleOutput);
               setInput("");
               setRemainingRequests(remainingResult - 1);
+             //await handleOutput(`Remaining requests: ${remainingResult}`);
+
             } else {
+              popLastItem();
               handleOutput(`Error: Maximum request limit reached !! Please upgrade to a paid account to continue using this feature.`);
               await sleep(10000)
               history.push("/paymentmode")
@@ -577,10 +600,12 @@ const Terminal: React.FC = () => {
     }
   }
   const handleOutput = (new_output: string): void => {
-    setOutput([...output, { command: new_output }]);
+    setOutput((prevOutput: Output[]) => [...prevOutput, { command: new_output }]);
   };
 
-
+  const popLastItem = (): void => {
+    setOutput((prevOutput: Output[]) => prevOutput.slice(0, prevOutput.length - 1));
+  };
 
 
   const _getStatics = async (
@@ -622,7 +647,12 @@ const Terminal: React.FC = () => {
             disabled={remainingRequests > 2}
           />
         </div>
+        <div className="bitcoin-chart">
+    {showChart ? <BitcoinChart/> : null}
+  </div>
+
       </form>
+
 
 
       <div className="top-right">
@@ -634,6 +664,7 @@ const Terminal: React.FC = () => {
             <span className="labelText">Remaining requests
             : {remainingRequests}</span>
           </label>
+
         </div>
 
     </div>

@@ -19,7 +19,7 @@
         "@types/react-router-dom": "^5.1.6",
         "axios": "^0.21.4",
         "babel-plugin-macros": "^3.1.0",
-        "chart.js": "^3.5.0",
+        "chart.js": "^3.9.1",
         "chartjs-plugin-annotation": "^1.1.0",
         "copy-to-clipboard": "^3.3.3",
         "mdb-react-ui-kit": "^6.1.0",
@@ -30,7 +30,6 @@
         "react-dom": "^18.2.0",
         "react-icons": "^4.10.1",
         "react-router-dom": "^5.2.0",
-        "react-scripts": "5.0.1",
         "reactstrap": "^9.2.0",
         "superagent": "^8.0.9",
         "supertokens-auth-react": "0.31.2",
@@ -64,6 +63,7 @@
     },
     "proxy": "http://authentification:3001",
     "devDependencies": {
-        "@types/superagent": "^4.1.16"
+        "@types/superagent": "^4.1.16",
+        "react-scripts": "^5.0.1"
     }
 }
