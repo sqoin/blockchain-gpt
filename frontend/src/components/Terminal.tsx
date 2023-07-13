@@ -631,10 +631,11 @@ const Terminal: React.FC = () => {
           </div>
           <div>
           <label htmlFor="labelle" className="labelContainer" >
-            <span className="labelText">Remaining request Nbr
+            <span className="labelText">Remaining requests
             : {remainingRequests}</span>
           </label>
         </div>
+
     </div>
 
     </div>
