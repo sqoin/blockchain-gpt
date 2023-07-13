@@ -44,9 +44,9 @@ function formatDate(date:any) {
 app.get("/user-behaviour/getUsersConnectedFirstTimePerMonth", (req:any, res:any) => {
 
       var date = new Date();
-      let result=[{account:3,date:"1688541367000"},{account:2,date:"1688627767000"},{account:2,date:"1688714167000"},
-        {account:2,date:"1688800567000"},{account:2,date:"1688886967000"},{account:2,date:"1688973367000"},
-        {account:2,date:"1689059767000"},{account:10,date:"1689146167000"},{account:15,date:"1689232567000"}]
+      let result=[{ccount:3,date:"20230704000000"},{ccount:2,date:"20230705000000"},{ccount:2,date:"20230706000000"},
+        {ccount:2,date:"20230707000000"},{ccount:2,date:"20230708000000"},{ccount:2,date:"20230709000000"},
+        {ccount:2,date:"20230710000000"},{ccount:10,date:"20230711000000"},{ccount:15,date:"20230712000000"}]
       res.send(result);
 });
 
