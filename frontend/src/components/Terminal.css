@@ -67,7 +67,7 @@
     }
   }
   
-  .terminal-output div { /* Update this selector */
+  .terminal-output div { 
     font-size: 24px;
     margin: 1px 0;
     overflow: hidden;
@@ -97,18 +97,19 @@
     font-family: "VT323", monospace;
     margin-right: 5px;
   }
-      
+
   
   #btn {
-    background: #222;
+    background-color: rgba(0, 0, 0, 0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 30px;
-    min-width: 150px;
     border: none;
     border-radius: 10px;
     color: #eee;
     font-size: 20px;
-    font-family: 'Cookie', cursive;
-    position: relative;
+    font-family: 'ariel';
     transition: 1s;
     -webkit-tap-highlight-color: transparent;
     display: flex;
@@ -116,22 +117,9 @@
     justify-content: center;
     cursor: pointer;
     padding-top: 5px;
-    position: absolute;
-    bottom: 40px;
-    left: 40px;
   }
   
-  #btn #circle {
-    width: 5px;
-    height: 5px;
-    background: transparent;
-    border-radius: 50%;
-    position: absolute;
-    top: 0;
-    left: 50%;
-    overflow: hidden;
-    transition: 500ms;
-  }
+ 
   
   .noselect {
     -webkit-touch-callout: none;
@@ -143,7 +131,7 @@
   }
   
   #btn:hover {
-    background: transparent;
+    text-decoration: underline;
   }
   
   #btn:hover #circle {
@@ -152,4 +140,40 @@
     left: 0;
     border-radius: 0;
     border-bottom: 2px solid #eee;
+  }
+
+  .labelContainer {
+
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  
+  .labelText {
+    margin-left: 16px;
+    color: white;
+    font-size: 20px;
+    font-family: 'ariel';
+    display: flex;
+    align-items: center;
+    padding-top: 5px;
+    
+  }
+  
+  .top-right{
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+    align-items: flex-start;
+    height: 140px;
+    width: 200px;
+    background-color: #b1803e;
+    border: 8px solid #7d5b2d;
+    border-radius: 25px;
+    box-shadow: inset 0 0 10rem #020202, inset 0 0 1rem black, 0 0 4rem black;
+
+    position: absolute;
+    top: 20px;
+    right: 20px;
   }

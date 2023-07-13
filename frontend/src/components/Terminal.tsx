@@ -549,7 +549,7 @@ const Terminal: React.FC = () => {
 
   const sleep = (ms: number) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
-};
+  };
 
   const remaining = async () => {
     // Get the user type based on whether the user has paid or not
@@ -596,10 +596,12 @@ const Terminal: React.FC = () => {
 
   };
 
-  function redirectToAccDetails(){
-     // window.open(SERVER_DOMAIN+"/accountdetails","_blank")
-      history.push("/accountdetails");
+  function redirectToAccDetails() {
+    // window.open(SERVER_DOMAIN+"/accountdetails","_blank")
+    history.push("/accountdetails");
   }
+
+  
   return (
     <div className="terminal">
       <div className="terminal-output" style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
@@ -621,9 +623,20 @@ const Terminal: React.FC = () => {
           />
         </div>
       </form>
-      <div className="noselect" id="circle">
-          <button type="submit" id="btn" onClick={redirectToAccDetails}>Account Datails </button>
+
+
+      <div className="top-right">
+          <div className="noselect" id="circle">
+            <button type="submit" id="btn" onClick={redirectToAccDetails}>Account Datails </button>
+          </div>
+          <div>
+          <label htmlFor="labelle" className="labelContainer" >
+            <span className="labelText">Remaining request Nbr
+            : {remainingRequests}</span>
+          </label>
         </div>
+    </div>
+
     </div>
   );
 };
