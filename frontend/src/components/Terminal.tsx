@@ -2,16 +2,18 @@ import React, { useState, ChangeEvent, FormEvent } from "react";
 import "./Terminal.css";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
 import { Connection, PublicKey, Version } from "@solana/web3.js";
+import { Console } from "console";
 
 const request = require("superagent");
-
+const MAX_REQUESTS_FREE_USER = 2;
+  const MAX_REQUESTS_PAID_USER = 10;
 interface Output {
   command: string;
 }
 const Terminal: React.FC = () => {
   const [input, setInput] = useState<string>("");
   const [output, setOutput] = useState<Output[]>([]);
-  const [remainingRequests, setRemainingRequests] = useState(2); // Define the remainingRequests variable
+  const [remainingRequests, setRemainingRequests] = useState(MAX_REQUESTS_FREE_USER); // Define the remainingRequests variable
   const [solanaNetwork, setSolanaNetwork] = useState<string>(
     "https://api.mainnet-beta.solana.com"
   );
@@ -25,8 +27,7 @@ const Terminal: React.FC = () => {
   const isUserPaid = true; // Example value, replace with your own logic
   type UserType = "free" | "paid";
 
-  const MAX_REQUESTS_FREE_USER = 2;
-  const MAX_REQUESTS_PAID_USER = 10;
+  
 
   let userRequestCount: Map<string, number> = new Map();
 
@@ -168,6 +169,23 @@ const Terminal: React.FC = () => {
     }
   };
 
+  
+
+  const sleep = (ms: number): Promise<void> => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  };
+  
+  //just call me in the terminal
+  const displayPublicKey = async (): Promise<void> => {
+    while (true) {
+     console.log('***********************')
+     await _getPublicKey();
+     await sleep( 60 * 100); // Attendre 5 minutes
+    }
+  };
+  
+  
+
   const _getNetworkInfo = async (): Promise<void | null | {
     chainId: string;
     networkId: number;
@@ -266,7 +284,7 @@ const Terminal: React.FC = () => {
       return null;
     }
   };
-
+  
   const _deployNewToken = async (
     supply: any,
     name: any
@@ -288,7 +306,6 @@ const Terminal: React.FC = () => {
     try {
       // Get the account address from MetaMask
       const account = await _getPublicKey();
-
       // Create the token contract instance
       const contract = new window.web3.eth.Contract(ERC20.abi);
 
@@ -310,7 +327,6 @@ const Terminal: React.FC = () => {
           arguments: [supply, name],
         })
         .estimateGas({ from: account });
-
       // Create the transaction object
       const transaction = {
         from: account,
@@ -347,6 +363,7 @@ const Terminal: React.FC = () => {
 
       const contractAddress = receipt.contractAddress;
       console.log(contractAddress, typeof contractAddress);
+
       return contractAddress;
     } catch (error: any) {
       // Handle error gracefully
@@ -603,7 +620,7 @@ const Terminal: React.FC = () => {
             className="terminal-input"
             value={input}
             onChange={handleInputChange}
-            disabled={remainingRequests > 2}
+            disabled={remainingRequests >2}
           />
         </div>
       </form>

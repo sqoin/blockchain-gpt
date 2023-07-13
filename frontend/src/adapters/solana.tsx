@@ -1,4 +1,14 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useState } from 'react';
+
+import {
+    Connection,
+    PublicKey,
+    Keypair,
+    Transaction,
+    SystemProgram,
+    TransactionInstruction,
+    sendAndConfirmTransaction,
+  } from '@solana/web3.js';
 import {_isConnectedToMetamask, _connectToMetaMask, _disconnectFromMetaMask , _getPublicKey , _getNetworkInfo , _getBalance , _deployNewToken } from "./ethereum_fn";
 import { _connectToPhantomWallet, _disconnectFromPhantomWallet, _getSolanaBalance, _getSolanaNetworkInfo, _getSolanaPublicKey } from "./solana_fn";
 
@@ -8,8 +18,7 @@ const Solana: React.FC = () => {
   const [network, setNetwork] = useState<{ endpoint: string, solanaCore: string|undefined, featureSet: number|undefined} | null>(null);
   const [connected , setConnected] = useState<boolean|undefined>(undefined);
   const [myWallet, setMyWallet]: any = useState(undefined);
-  const [rpcUrl, setRpcUrl] = useState<string | undefined>("https://test.novafi.xyz/blockchainnode2");
-
+  const [rpcUrl, setRpcUrl] = useState<string | undefined>("https://api.mainnet-beta.solana.com");
 
 
   const [token, setToken] = useState('');
@@ -93,6 +102,57 @@ const Solana: React.FC = () => {
    }
   };
 
+
+  const ConnectionConfig = {
+    cluster: 'mainnet-beta', // Or 'devnet', 'testnet'
+    rpcUrl: 'https://api.mainnet-beta.solana.com', // Or custom RPC URL
+  };
+  
+  const RecipientPublicKey = 'D1RXUnD61kb2r1JbaD4MVAMD5LJ9YbtZK8tLkPXQNHvd'; // Replace with the recipient's public key
+  
+    //const { wallet, connect } = useWallet();
+  
+    const [transactionSent, setTransactionSent] = useState<boolean>(false);
+  
+    const sendTransaction = async (event: React.FormEvent) => {
+      event.preventDefault();
+  
+     
+        const connection = new Connection(ConnectionConfig.rpcUrl);
+        const userPublicKey = myWallet.publicKey as PublicKey;
+        //const keypair = Keypair.fromSecretKey(wallet.secretKey as Uint8Array);
+    
+        const LamportsToSend = 0.01 * 1000000000; 
+        const transaction = new Transaction();
+                transaction.add(
+                    SystemProgram.transfer({
+                        fromPubkey: userPublicKey,
+                        toPubkey: new PublicKey(RecipientPublicKey),
+                        lamports: LamportsToSend,
+                    })
+                );
+                transaction.recentBlockhash = (
+                    await connection.getLatestBlockhash()
+                ).blockhash;
+                transaction.feePayer = userPublicKey;
+                let signed;
+                try {
+                    signed = await myWallet.signTransaction(transaction);
+                } catch (error:any) {
+                    console.log(error);
+                } 
+        let signature = await connection.sendRawTransaction(signed.serialize());
+        console.log("tr signature********", signature)
+        let res = await connection.confirmTransaction(signature, 'max');
+        
+    
+    };
+  /* 
+    useEffect(() => {
+      connect().catch((error:any) => console.error('Error connecting wallet:', error));
+    }, [connect]); */
+
+
   return (
     <div>
       <button onClick={(e:any)=>handleClick('connect')}>Connect to Phantom</button>
@@ -110,8 +170,26 @@ const Solana: React.FC = () => {
       <div>{network ? `${JSON.stringify(network)}` : "Click the button to get network "}</div>
 
       <button onClick={(e:any)=>handleClick('balance')}>Get your wallet balance</button>
-      <div>{balance ? `${balance}` : "Click the button to get balance "}</div>
- 
+      <div>{balance !== null ? `${balance}` : "Click the button to get balance "}</div>
+
+      <div>
+      
+       
+        {myWallet && (
+          <div>
+          
+            {!transactionSent ? (
+              <form onSubmit={sendTransaction}>
+                <button type="submit">Send Transaction</button>
+              </form>
+            ) : (
+              <p>Transaction sent successfully!</p>
+            )}
+          </div>
+        )}
+      </div>
+    
+
     </div>
   );
 };

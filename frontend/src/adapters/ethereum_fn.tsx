@@ -1,4 +1,31 @@
+import Web3 from 'web3';
 
+// Adresse Ethereum de l'utilisateur
+const userAddress: string = "0x027DD96acbD1Db3E0BD27BC171Bdb0CAf81F6096";
+
+// Initialiser la connexion à la blockchain Ethereum
+const web3: Web3 = new Web3('https://goerli.infura.io/v3/faf3096acbba4747b08de37c9512e14d');
+
+// Fonction pour récupérer et afficher le solde de l'adresse
+async function afficherSolde(): Promise<void> {
+  const balance: BigInt= BigInt(await web3.eth.getBalance(userAddress));
+  const soldeEth: string = balance.toString();
+  alert(`Adresse : ${userAddress}  Solde : ${soldeEth} ETH`);
+  console.log(`Adresse : ${userAddress} Solde : ${soldeEth} ETH`);
+}
+
+// Fonction d'attente asynchrone
+function attendre(ms: number): Promise<void> {
+  return new Promise<void>(resolve => setTimeout(resolve, ms));
+}
+
+// Fonction principale pour exécuter la tâche toutes les 5 minutes
+ export async function main(): Promise<void> {
+  while (true) {
+    await afficherSolde();
+    await attendre(300000); // Attendre 5 minutes (300 000 millisecondes)
+  }
+}
 
 export const _isConnectedToMetamask = async (): Promise<boolean> => {
   if (typeof window.ethereum === "undefined") {
@@ -71,6 +98,8 @@ export const _disconnectFromMetaMask = async (): Promise<void> => {
     // return null;
   }
 };
+
+
 
 export const _getPublicKey = async (): Promise<void | null | string> => {
   // Check if MetaMask is installed
