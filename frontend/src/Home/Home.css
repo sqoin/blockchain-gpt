@@ -141,10 +141,12 @@
     margin-inline-end: 68px;
     cursor: pointer;
     z-index: 999;
+    margin-top: 100px;
 }
 
 .bottom-links-container .link:last-child {
     margin-right: 0;
+    display: none;
 }
 
 .truncate {

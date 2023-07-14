@@ -24,12 +24,12 @@ const stripePromise = loadStripe('YOUR_PUBLISHABLE_KEY');
 SuperTokens.init(SuperTokensConfig);
 function App() {
     const user = {
-        email: "example@example.com",
-        name: "John Doe",
+        email: "gahlouzi.ameni@gmail.com",
+        name: "Ameni Gahlouzi",
         password: "*********",
-        githubAccount: "john_doe_github",
-        googleAccount: "john_doe_google",
-        blockchainAccount: "john_doe_blockchain"
+        githubAccount: "--",
+        googleAccount: "--",
+        blockchainAccount: "--"
     };
     return (
         <SuperTokensWrapper>

@@ -71,27 +71,32 @@
     font-size: 24px;
     margin: 1px 0;
     overflow: hidden;
-    color: #f6ff01;
+    color: white;
     font-family: "VT323", monospace;
     word-wrap: break-word;
   }
   
+  .terminal-output { 
+    margin-top: 65px;
+  }
   .terminal-input-container {
     display: flex;
     align-items: center;
   }
   
   .terminal-input-container input {
+    margin-top: 60px;
     flex-grow: 1;
     background-color: transparent;
     border: none;
     outline: none;
-    color: #f6ff01;
+    color: white;
     font-size: 24px;
     font-family: "VT323", monospace;
   }
   
   .terminal-prompt {
+    margin-top: 50px;
     color: #f6ff01;
     font-size: 24px;
     font-family: "VT323", monospace;
@@ -108,8 +113,8 @@
     border: none;
     border-radius: 10px;
     color: #eee;
-    font-size: 20px;
-    font-family: 'ariel';
+    font-size: 16px;
+    font-family: 'arial';
     transition: 1s;
     -webkit-tap-highlight-color: transparent;
     display: flex;
@@ -153,8 +158,8 @@
   .labelText {
     margin-left: 16px;
     color: white;
-    font-size: 20px;
-    font-family: 'ariel';
+    font-size: 16px;
+    font-family: 'arial';
     display: flex;
     align-items: center;
     padding-top: 5px;
@@ -166,7 +171,7 @@
     flex-direction: column-reverse;
     justify-content: center;
     align-items: flex-start;
-    height: 140px;
+    height: 90px;
     width: 225px;
     background-color: #b1803e;
     border: 8px solid #7d5b2d;
@@ -174,6 +179,6 @@
     box-shadow: inset 0 0 10rem #020202, inset 0 0 1rem black, 0 0 4rem black;
 
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: -7px;
+    right: -8px;
   }

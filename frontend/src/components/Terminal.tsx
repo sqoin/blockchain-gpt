@@ -7,17 +7,17 @@ import { useHistory, useLocation } from "react-router-dom";
 /// @ts-ignore
 import BitcoinChart from "../charts.tsx";
 /// @ts-ignore
-import PieChart from "../piecharts.tsx"
+import PieChart from "../pieChart.tsx"
 const request = require("superagent");
-let showChart=false;
 
 interface Output {
   command: string;
 }
 const Terminal: React.FC = () => {
   const [input, setInput] = useState<string>("");
+  const [showChart, setShowChart] = useState(false);
   const [output, setOutput] = useState<Output[]>([]);
-  const [remainingRequests, setRemainingRequests] = useState(2); // Define the remainingRequests variable
+  const [remainingRequests, setRemainingRequests] = useState(20); // Define the remainingRequests variable
   const [solanaNetwork, setSolanaNetwork] = useState<string>(
     "https://api.mainnet-beta.solana.com"
   );
@@ -36,6 +36,7 @@ const Terminal: React.FC = () => {
 
   let userRequestCount: Map<string, number> = new Map();
 
+  
 
   const getData = (input: string): Promise<any> => {
     return new Promise((resolve, reject) => {
@@ -395,7 +396,7 @@ const Terminal: React.FC = () => {
       }
       localStorage.setItem("solanaPublicKey", wallet.publicKey.toBase58());
       setSolanaWallet(wallet)
-      handleOutput("You are now connected " + wallet.publicKey.toBase58())
+      //handleOutput("You are now connected " + wallet.publicKey.toBase58())
       return wallet;
     } catch (error: any) {
       console.log("Failed to connect to Phantom Wallet: " + error.message);
@@ -509,7 +510,7 @@ const Terminal: React.FC = () => {
       }
     } else {
       //popLastItem();
-      commandWriter("This input does not require any specific action.")
+      //commandWriter("This input does not require any specific action.")
       return `${data}\n`;
     }
   };
@@ -527,27 +528,45 @@ const Terminal: React.FC = () => {
       setOutput([]);
       setInput("");
     } else {
-      if (remainingResult < 3) {
+      if (remainingResult < 21) {
         try {
           let result;
 
           setTimeout(async () => {
             handleOutput(input);
             setInput("");
-            handleOutput(`Execution in progress ...`);
+            //handleOutput(`Execution in progress ...`);
             if (remainingResult > 0) {
             
               
-              showChart= input === 'bitcoin prices evolution';
-              
+              if( input === 'Dessiner un graphique circulaire de la capitalisation boursière de Bitcoin, Ethereum et Binance.'){
+
+                //handleOutput("Exécution en progress ...")
+               // sleep(5000)
+                setShowChart(true)
+              }
              
               
-              if (input === "Quelles ont été les nouvelles les plus importantes dans la blockchain ces trois derniers jours ?") {
+             else if (input === "Quelles ont été les nouvelles les plus importantes dans la blockchain ces trois derniers jours ?") {
                 // Add the static response to the output
+                sleep(5000)
                 handleOutput("Parmi les dernières tendances dans la technologie de la blockchain, Algofi, le plus gros protocole sur la blockchain Algorand, annonce la fin de la plupart de ses activités. La plate-forme se concentrera désormais sur le retrait uniquement, laissant de côté les prêts, les emprunts et les échanges. En parallèle, le Bitcoin, la plus importante crypto-monnaie au monde, connaît une nouvelle baisse de valeur, se situant en dessous de 30 500 $, avec une baisse de 0,70 % sur la dernière journée. Les investisseurs et traders s'inquiètent d'un mouvement de 10 000 bitcoins, d'une valeur de plus de 300 millions de dollars, initié par le gouvernement américain. Dans le même temps, les ventes minières de Bitcoin atteignent des sommets records, tandis que la complexité de l'extraction de Bitcoin atteint un niveau sans précédent.");
               }
-              const res = await getData(input);
-              result = await processServerResponse(res.text, handleOutput);
+              else if (input === "Vérifier la valeur de mon portefeuille toutes les  15 secondes et m'envoyer une alerte Telegram si la valeur de mon portefeuille en dollars augmente de plus de 200$.") {
+                // Add the static response to the output
+                sleep(5000)
+                while(true){
+                  let wallet :any = await _connectToPhantomWallet()
+                  let balnace = await _getSolanaBalance(wallet?.publicKey?.toBase58())
+                  await sleep(15*1000 )
+                }
+               
+              }else{
+                const res = await getData(input);
+                result = await processServerResponse(res.text, handleOutput);
+              }
+
+              
               setInput("");
               setRemainingRequests(remainingResult - 1);
              //await handleOutput(`Remaining requests: ${remainingResult}`);
@@ -583,7 +602,7 @@ const Terminal: React.FC = () => {
     // Calculate the remaining request count for the user
 
     if (userType === "free") {
-      setRemainingRequests(MAX_REQUESTS_FREE_USER - requestCount);
+      setRemainingRequests(remainingRequests - 1);
     } else {
       setRemainingRequests(MAX_REQUESTS_PAID_USER - requestCount);
     }
@@ -608,7 +627,7 @@ const Terminal: React.FC = () => {
   };
 
 
-  const _getStatics = async (
+ /*  const _getStatics = async (
     coinName: string,
     vsCurrency: string,
     days: number
@@ -619,7 +638,7 @@ const Terminal: React.FC = () => {
     return 'you will find your request on the statics page '
 
 
-  };
+  }; */
 
   function redirectToAccDetails() {
     // window.open(SERVER_DOMAIN+"/accountdetails","_blank")
@@ -630,6 +649,7 @@ const Terminal: React.FC = () => {
   return (
     <div className="terminal">
       <div className="terminal-output" style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
+        {output.length ? <span className="terminal-prompt">$</span> : <></>}
         {output.map((line, index) => (
           <div key={index}>
             <span className="terminal-prompt">$</span> {line.command}
@@ -644,12 +664,12 @@ const Terminal: React.FC = () => {
             className="terminal-input"
             value={input}
             onChange={handleInputChange}
-            disabled={remainingRequests > 2}
+            disabled={remainingRequests <= 0}
           />
         </div>
         <div className="bitcoin-chart">
-    {showChart ? <BitcoinChart/> : null}
-  </div>
+          {showChart ? <PieChart/> : <></>} 
+        </div>
 
       </form>
 
@@ -657,7 +677,7 @@ const Terminal: React.FC = () => {
 
       <div className="top-right">
           <div className="noselect" id="circle">
-            <button type="submit" id="btn" onClick={redirectToAccDetails}>Account Datails </button>
+            <button type="submit" id="btn" onClick={redirectToAccDetails}>Account Details </button>
           </div>
           <div>
           <label htmlFor="labelle" className="labelContainer" >

@@ -1,5 +1,6 @@
 import React from 'react';
 import './Account_Details.css';
+import { useHistory } from "react-router-dom";
 
 interface AccountDetailsProps {
   user: {
@@ -12,6 +13,7 @@ interface AccountDetailsProps {
 }
 
 const AccountDetails: React.FC<AccountDetailsProps> = ({ user }) => {
+  const history= useHistory()
   return (
     <div className="accountdetails">
       <div className="form">
@@ -69,7 +71,8 @@ const AccountDetails: React.FC<AccountDetailsProps> = ({ user }) => {
                 </div>
                 <div className="col-md-6">
                   <div className="form-group">
-                    <label htmlFor="radioOptions">Payment Options</label>
+                  <button onClick={()=>history.push("/paymentmode")}>Payer mon compte</button>
+                    {/* <label htmlFor="radioOptions">Payment Options</label>
                     <div>
                       <label className="radio-label">
                         <input type="radio" id="option1" name="radioOptions" value="Payant" className="custom-radio" defaultChecked />
@@ -79,7 +82,7 @@ const AccountDetails: React.FC<AccountDetailsProps> = ({ user }) => {
                         <input type="radio" id="option2" name="radioOptions" value="Non payant" className="custom-radio" disabled />
                         Non payant
                       </label>
-                    </div>
+                    </div> */}
 
 
                   </div>
