@@ -22,23 +22,23 @@ export default function SuccessView(props: { userId: string }) {
 
   const history = useHistory();
 
-  
+
   useEffect(() => {
     sendUserIdToBackend();
   }, [])
 
 
   async function sendUserIdToBackend() {
-  try {
-    const response = await axios.post('http://localhost:3003/api/saveUserId', { userId });
-    if (response.data && response.data.message) {
-      history.push("/paymentmode") // Display the alert message from the backend response
+    try {
+      const response = await axios.post('http://localhost:3003/api/saveUserId', { userId });
+      if (response.data && response.data.message) {
+        history.push("/paymentmode") // Display the alert message from the backend response
+      }
+      console.log('User ID sent to the backend successfully!');
+    } catch (error) {
+      console.error('Error sending user ID to the backend:', error);
     }
-    console.log('User ID sent to the backend successfully!');
-  } catch (error) {
-    console.error('Error sending user ID to the backend:', error);
   }
-}
 
 
   async function logoutClicked() {
@@ -64,16 +64,7 @@ export default function SuccessView(props: { userId: string }) {
         <Terminal></Terminal>
       </div>
 
-      <div className="bottom-links-container">
-        {links.map((link) => (
-          <div className="link" key={link.name}>
-            <img className="link-icon" src={link.icon} alt={link.name} />
-            <div role={"button"} onClick={link.onClick}>
-              {link.name}
-            </div>
-          </div>
-        ))}
-      </div>
+      
     </>
   );
 }
