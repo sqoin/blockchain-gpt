@@ -8,9 +8,16 @@ import { useHistory, useLocation } from "react-router-dom";
 import BitcoinChart from "../charts.tsx";
 /// @ts-ignore
 import PieChart from "../piecharts.tsx"
-const request = require("superagent");
-let showChart=false;
+/// @ts-ignore
+import CryptomarketCapChart from "../cryptoMarketCapChart.tsx";
 
+
+import CryptoChart from "../cryptoCharts";
+const request = require("superagent");
+let showBitcoinChart=false;
+let showPieChart=false;
+let showCharts=false
+let showMarketCapCharts=false;
 interface Output {
   command: string;
 }
@@ -532,9 +539,10 @@ const Terminal: React.FC = () => {
             if (remainingResult > 0) {
             
               
-              showChart= input === 'bitcoin prices evolution';
-              
-             
+              showBitcoinChart= input.toLocaleLowerCase() === 'bitcoin prices evolution';
+              showPieChart = input.toLocaleLowerCase()==='bitcoin ethereum and binance market capitalization';
+              showCharts= input.toLocaleLowerCase()==='crypto currencies prices evolution'
+              showMarketCapCharts= input.toLocaleLowerCase()==='crypto market caps'
               const res = await getData(input);
               result = await processServerResponse(res.text, handleOutput);
               setInput("");
@@ -629,12 +637,29 @@ const Terminal: React.FC = () => {
             disabled={remainingRequests > 2}
           />
         </div>
-        <div className="bitcoin-chart">
-    {showChart ? <BitcoinChart/> : null}
-  </div>
 
+        
+        {showBitcoinChart ? <div className="bitcoin-chart">
+          <BitcoinChart /> </div>: null
+          }
+        
+
+        
+        {showPieChart ? <div className="pie-chart"> <PieChart apiEndpoint="https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,binancecoin" /> 
+        </div>: null}
+
+
+        {showCharts ? <div className="crypto-charts">
+            <CryptoChart/>
+          </div> : null}
+
+
+          {showMarketCapCharts ? <div className="marketcap-charts">
+            <CryptomarketCapChart/>
+          </div> : null}
+          
       </form>
-      <div className="noselect" id="circle">
+      <div className="noselect" id="circle" style={{zIndex: 0}}>
           <button type="submit" id="btn" onClick={redirectToAccDetails}>Account Datails </button>
           
         </div>

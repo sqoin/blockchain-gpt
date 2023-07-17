@@ -6,8 +6,10 @@ interface DataPoint {
   price: number;
 }
 
-function BitcoinChart (){
+function BitcoinChart() {
   const [bitcoinData, setBitcoinData] = useState<DataPoint[]>([]);
+  const [maxPrice, setMaxPrice] = useState<number | null>(null);
+  const [maxPriceDate, setMaxPriceDate] = useState<string | null>(null);
   const chartRef = useRef<Chart | null>(null);
 
   useEffect(() => {
@@ -25,6 +27,15 @@ function BitcoinChart (){
         });
 
         setBitcoinData(bitcoinPrices);
+
+        // Calculate the maximum price and its date
+        const maxPriceDataPoint = bitcoinPrices.reduce(
+          (max: DataPoint, dataPoint: DataPoint) => (dataPoint.price > max.price ? dataPoint : max),
+          bitcoinPrices[0]
+        );
+        setMaxPrice(maxPriceDataPoint.price);
+        const maxPriceDate = new Date(maxPriceDataPoint.timestamp).toLocaleDateString();
+        setMaxPriceDate(maxPriceDate);
       } catch (error) {
         console.error('Error fetching Bitcoin data:', error);
       }
@@ -47,8 +58,8 @@ function BitcoinChart (){
             data: bitcoinData.map((dataPoint) => dataPoint.price),
             borderColor: 'blue',
             fill: false,
-            
           },
+          
         ],
       };
 
@@ -68,10 +79,16 @@ function BitcoinChart (){
   }, [bitcoinData]);
 
   return (
-    <div style={{ position: 'relative', top: '175px', left: '5px', backgroundColor: 'white' }}>
-      <canvas id="bitcoinChart" width={300} height={100}></canvas>
+    <div style={{backgroundColor: 'white', borderRadius: '20px', padding: '10px'}}>
+      <canvas id="bitcoinChart"></canvas>
+      <h2>
+        Bitcoin Price (USD) - Maximum Price: {maxPrice !== null ? maxPrice.toFixed(2) : 'N/A'}
+      </h2>
+      <h2>Date: {maxPriceDate !== null ? maxPriceDate : 'N/A'}</h2>
     </div>
   );
-  };
+  
+  
+}
 
 export default BitcoinChart;
