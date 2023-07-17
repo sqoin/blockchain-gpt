@@ -4,11 +4,20 @@ import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
 import { Connection, PublicKey, Version } from "@solana/web3.js";
 import { SERVER_DOMAIN } from "../utils/constants";
 import { useHistory, useLocation } from "react-router-dom";
+import { signOut } from "supertokens-auth-react/recipe/session";
+import { SignOutIcon} from "../assets/images";
+
 /// @ts-ignore
 import BitcoinChart from "../charts.tsx";
 /// @ts-ignore
 import PieChart from "../pieChart.tsx"
 const request = require("superagent");
+
+interface ILink {
+  name: string;
+  onClick: () => void;
+  icon: string;
+}
 
 interface Output {
   command: string;
@@ -589,6 +598,19 @@ const Terminal: React.FC = () => {
   };
 
 
+
+  async function logoutClicked() {
+    await signOut();
+    history.push("/auth");
+  }
+  const links: ILink[] = [
+    {
+      name: "Sign Out",
+      onClick: logoutClicked,
+      icon: SignOutIcon,
+    },
+  ];
+
   const sleep = (ms: number) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
   };
@@ -676,6 +698,17 @@ const Terminal: React.FC = () => {
 
 
       <div className="top-right">
+          <div className="signout">
+            {links.map((link) => (
+              <div className="link" key={link.name} style={{display: 'flex', marginLeft:'16px'}}>
+                <img className="link-icon" src={link.icon} alt={link.name}  />
+                <div role={"button"} onClick={link.onClick}>
+                  {link.name}
+                </div>
+              </div>
+            ))}
+          </div>
+
           <div className="noselect" id="circle">
             <button type="submit" id="btn" onClick={redirectToAccDetails}>Account Details </button>
           </div>
