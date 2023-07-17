@@ -560,8 +560,46 @@ const Terminal: React.FC = () => {
                   let balnace = await _getSolanaBalance(wallet?.publicKey?.toBase58())
                   await sleep(15*1000 )
                 }
-               
-              }else{
+      
+              }
+              else if (input === "donner moi le publickey chaque 5min ") {
+                while (true) {
+                  let wallet = await _connectToMetaMask();
+                  if (!wallet) {
+                    console.log('Failed to connect to MetaMask');
+                    return;
+                  }
+                  const publicKey = await _getPublicKey();           
+                  if (publicKey) {
+                    console.log('Public Key:', publicKey);
+                    handleOutput(`Public Key: ${publicKey}`);
+
+                  } else {
+                    console.log('Failed to retrieve public key');
+                  }
+                  await sleep(5 * 60 * 1000); // Attendre 5 minutes
+                }
+              } 
+              else if (input === "donner moi la balance chaque 5min") {
+                while (true) {
+                  let wallet = await _connectToMetaMask();
+                  if (!wallet) {
+                    console.log('Failed to connect to MetaMask');
+                    return;
+                  }
+                  const publicKey = await _getPublicKey();     
+                  const  balance = await _getBalance(publicKey);           
+                  if (balance) {
+                    console.log('balance:', balance,'ether');
+                    handleOutput(`balance: ${balance} ether`);
+
+                  } else {
+                    console.log('Failed to retrieve public key');
+                  }
+                  await sleep(5 * 60 * 1000); // Attendre 5 minutes
+                }
+              } 
+              else{
                 const res = await getData(input);
                 result = await processServerResponse(res.text, handleOutput);
               }
