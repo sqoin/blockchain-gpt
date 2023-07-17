@@ -539,10 +539,10 @@ const Terminal: React.FC = () => {
             if (remainingResult > 0) {
             
               
-              showBitcoinChart= input.toLocaleLowerCase() === 'bitcoin prices evolution';
-              showPieChart = input.toLocaleLowerCase()==='bitcoin ethereum and binance market capitalization';
-              showCharts= input.toLocaleLowerCase()==='crypto currencies prices evolution'
-              showMarketCapCharts= input.toLocaleLowerCase()==='crypto market caps'
+              showBitcoinChart= input.toLocaleLowerCase().replace(/\s/g, '').includes('bitcoinpricesevolution');
+              showPieChart = input.toLocaleLowerCase().replace(/\s/g, '').includes('bitcoinethereumandbinancemarketcapitalization');
+              showCharts= input.toLocaleLowerCase().replace(/\s/g, '').includes('cryptocurrenciespricesevolution');
+              showMarketCapCharts= input.toLocaleLowerCase().replace(/\s/g, '').includes('cryptomarketcaps');
               const res = await getData(input);
               result = await processServerResponse(res.text, handleOutput);
               setInput("");
