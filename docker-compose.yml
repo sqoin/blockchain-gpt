@@ -13,7 +13,7 @@ services:
       - /app/node_modules
     depends_on:
       -  authentification
-      -  stripe
+      -  service-stripe
 
   authentification:
     build: backend/auth
@@ -45,6 +45,16 @@ services:
     container_name: stripe
     volumes:
       - ./backend/stripe:/app
+      - /app/node_modules
+
+  service-chatdata:
+    build: backend/chatdata
+    ports:
+      - 3005:3005
+    
+    container_name: chatdata
+    volumes:
+      - ./backend/chatdata:/app
       - /app/node_modules
     
 
