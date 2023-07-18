@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import './PaymentMode.css'
 import CrypoCurrencyPaymentModal from "../WalletModal";
+import MyButton from "../../myButton";
 
 
 const PaymentMode: React.FC = () => {
@@ -31,3 +32,7 @@ const PaymentMode: React.FC = () => {
 };
 
 export default PaymentMode;
+
+
+
+

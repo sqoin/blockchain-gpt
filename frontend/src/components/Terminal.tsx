@@ -642,18 +642,13 @@ const Terminal: React.FC = () => {
 
 
       <div className="top-right">
-        <div className="signout">
-          {links.map((link) => (
-            <div className="link" key={link.name} style={{display: 'flex', marginLeft:'16px'}}>
-              <img className="link-icon" src={link.icon} alt={link.name}  />
-              <div role={"button"} onClick={link.onClick}>
-                {link.name}
-              </div>
-            </div>
-          ))}
-        </div>
         <div className="noselect" id="circle">
-          <button type="submit" id="btn" onClick={redirectToAccDetails}>Account Details </button>
+          <button type="submit" id="btn" className="temp" onClick={redirectToAccDetails}>Account Details </button>
+        </div>
+        <div>
+            <label htmlFor="labelle" className="labelContainer" >
+              <span className="labelText">Email:gahlouzi.ameni@gmail.com </span>
+            </label>
         </div>
         <div>
           <label htmlFor="labelle" className="labelContainer" >
@@ -661,10 +656,18 @@ const Terminal: React.FC = () => {
               : {remainingRequests}</span>
           </label>
         </div>
-
+        <div className="signout">
+          {links.map((link) => (
+            <div className="link" key={link.name} style={{ display: 'flex', marginLeft: '16px' }}>
+              <img className="link-icon" src={link.icon} alt={link.name} />
+              <div role={"button"} onClick={link.onClick}>
+                {link.name}
+              </div>
+            </div>
+          ))}
+        </div>
 
       </div>
-
     </div>
   );
 };
