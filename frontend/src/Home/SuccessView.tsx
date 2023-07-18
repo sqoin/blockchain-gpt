@@ -64,7 +64,7 @@ export default function SuccessView(props: { userId: string }) {
         <Terminal></Terminal>
       </div>
 
-      <div className="bottom-links-container">
+      {/* <div className="bottom-links-container">
         {links.map((link) => (
           <div className="link" key={link.name}>
             <img className="link-icon" src={link.icon} alt={link.name} />
@@ -73,7 +73,7 @@ export default function SuccessView(props: { userId: string }) {
             </div>
           </div>
         ))}
-      </div>
+      </div> */}
     </>
   );
 }

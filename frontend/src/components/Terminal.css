@@ -1,4 +1,4 @@
-
+/* 
   
   @keyframes terminal-glitch {
     0% {
@@ -67,7 +67,7 @@
     }
   }
   
-  .terminal-output div { /* Update this selector */
+  .terminal-output div { 
     font-size: 24px;
     margin: 1px 0;
     overflow: hidden;
@@ -152,4 +152,71 @@
     left: 0;
     border-radius: 0;
     border-bottom: 2px solid #eee;
+  } */
+
+
+  
+  .terminal{
+
+    display: flex;
+    flex-direction: row;
+    background-color: var(--color3);
+    color: white;
   }
+
+  .terminal .input-output{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+  }
+
+  .terminal .cmd-line{
+    width: 90%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    padding: 16px;
+    justify-content: start;
+    align-items: star;
+    margin-left: 32px;
+  }
+
+  .terminal .output-result{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 5px;
+    margin-top: 10px;
+  }
+
+  .terminal .input-cmd{
+    display: flex;
+    justify-content: start;
+    align-items: flex-start;
+    flex-direction: column;
+    margin-left: 32px;
+  }
+
+  .terminal .line{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+    font-size: 1.1em;
+  }
+
+  .terminal .prompt{
+    background-color: rgba(0, 0, 0, 0);
+    width: 100%;
+    height: 40px;
+    color: white;
+    outline: none;
+    border: none;
+    font-size: 1.1em;
+  }
+
+
