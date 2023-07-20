@@ -762,7 +762,7 @@ const Terminal: React.FC = () => {
              //await handleOutput(`Remaining requests: ${remainingResult}`);
 
              setInput("");
-             setRemainingRequests(remainingResult);// - 1);
+             setRemainingRequests(remainingResult - 1);
             } else {
               popLastItem();
               handleOutput(`Error: Maximum request limit reached !! Please upgrade to a paid account to continue using this feature.`);
@@ -930,7 +930,7 @@ interface Output {
               className="prompt"
               value={input}
               onChange={handleInputChange}
-              disabled={remainingRequests > 2 || isTyping}
+              disabled={remainingRequests <= 0 || isTyping}
             />
           </div>
           <div className="bitcoin-chart">
