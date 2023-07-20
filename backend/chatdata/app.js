@@ -5,6 +5,29 @@ const app = express();
 
 app.use(express.json());
 
+function sendTelegramMessage(chatId, message) {
+  const botToken = '6357082334:AAGmKJY-OlGXbEjdfpmRWSp935ogpHCQW5g'; // Replace 'YOUR_BOT_TOKEN' with your actual bot token
+
+  // API endpoint to send a message using the bot
+  const apiUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+  // Payload to send the message
+  const payload = {
+    chat_id: chatId,
+    text: message,
+  };
+
+  // Make a POST request to the Telegram Bot API
+  axios.post(apiUrl, payload)
+    .then((response) => {
+      console.log('Message sent to Telegram:', response.data);
+    })
+    .catch((error) => {
+      console.error('Error sending message to Telegram:', error);
+    });
+}
+
+
 // Endpoint to receive and store the chat ID
 app.post('/api/telegram/chat', (req, res) => {
   const { chatId } = req.body;
@@ -22,6 +45,7 @@ app.post('/api/telegram/chat', (req, res) => {
     }
   });
 });
+
 
 
 
