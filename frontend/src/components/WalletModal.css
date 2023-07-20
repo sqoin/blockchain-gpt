@@ -1,4 +1,4 @@
-/* .modalContainer {
+ .modalContainer {
   position: fixed;
   top: 400px;
   left: 50%;
@@ -85,4 +85,4 @@
 }
 .modalContainer .redirect-btn:hover {
   background-color: rgb(70, 131, 217);
-} */
+} 

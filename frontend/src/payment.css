@@ -1,4 +1,4 @@
- /*@import url("https://fonts.googleapis.com/css?family=Raleway&display=swap");
+ @import url("https://fonts.googleapis.com/css?family=Raleway&display=swap");
 
 :root {
   --light-grey: #F6F9FC;
@@ -9,11 +9,14 @@
   
 }
 
-body {
+.payment {
   padding: 20px;
   font-family: 'Raleway';
   display: flex;
   justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap:20px;
   font-size: 1.2em;
   color: var(--dark-terminal-color);
   margin-top:1px;
@@ -21,20 +24,20 @@ body {
 
 }
 
-main {
+.payment main {
   width: 480px;
 }
 
-form > * {
+.payment form > * {
   margin: 10px ;
 
 }
 
-button {
+.payment button {
   background-color: var(--accent-color);
 }
 
-button {
+.payment button {
   background: var(--accent-color);
   border-radius: var(--radius);
   color: white;
@@ -46,43 +49,43 @@ button {
   transition: all 0.2s ease;
   display: block;
 }
-button:hover {
+.payment button:hover {
   filter: contrast(115%);
 }
-button:active {
+.payment button:active {
   transform: translateY(0px) scale(0.98);
   filter: brightness(0.9);
 }
-button:disabled {
+.payment button:disabled {
   opacity: 0.5;
   cursor: none;
 }
 
-input, select {
+.payment input, .payment select {
   display: block;
   font-size: 1.1em;
   width: 100%;
   margin-bottom: 10px;
 }
 
-label {
+.payment label {
   display: block;
 }
 
-a {
+.payment a {
   color: var(--accent-color);
   font-weight: 900;
 }
 
-small {
+.payment small {
   font-size: .6em;
 }
 
-fieldset, input, select {
+.payment fieldset, .payment input, .payment select {
   border: 1px solid #efefef;
 }
 
-#payment-form {
+.payment #payment-form {
   border: #F6F9FC solid 1px;
   border-radius: var(--radius);
   padding: 20px;
@@ -92,7 +95,7 @@ fieldset, input, select {
   width: 500px; 
 }
 
-#messages {
+.payment #messages {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New';
   display: none; 
   background-color: #0A253C;
@@ -102,10 +105,10 @@ fieldset, input, select {
   border-radius: var(--radius);
   font-size:0.7em;
 }
-h1 {
+.payment h1 {
   text-align: center;
   font-weight: normal;
   margin-top: 0; 
   padding-top: 20px; 
-}*/
+ }
 
