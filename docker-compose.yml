@@ -13,7 +13,7 @@ services:
       - /app/node_modules
     depends_on:
       -  authentification
-      -  stripe
+      -  service-stripe
 
   authentification:
     build: backend/auth
