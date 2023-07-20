@@ -1,0 +1,88 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: ingress-chatgpt
+  namespace: chatgpt
+  annotations:
+
+
+    cert-manager.io/cluster-issuer: letsencrypt-chatgpt
+
+
+spec:
+  tls: # < placing a host in the TLS config will determine what ends up in the cert's subjectAltNames
+  - hosts:
+    - blockchaingpt.app
+    secretName: myingress-cert-chatgpt
+  ingressClassName: nginx
+  rules:
+  - host: blockchaingpt.app
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend-service
+            port:
+              number: 80
+      - path: /auth
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-service
+            port:
+              number: 3001
+      - path: /api/auth
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-service
+            port:
+              number: 3001
+
+      - path: /user-behaviour
+        pathType: Prefix
+        backend:
+          service:
+            name: service-user-behaviour
+            port:
+              number: 3033
+      - path: /config
+        pathType: Prefix
+        backend:
+          service:
+            name: service-stripe
+            port:
+              number: 3002
+      - path: /create-payment-intent
+        pathType: Prefix
+        backend:
+          service:
+            name: service-stripe
+            port:
+              number: 3002
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: service-account-payment
+            port:
+              number: 3003
+
+      - path: /gpt-test
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-service
+            port:
+              number: 3001
+
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: service-blockchaingpt
+            port:
+              number: 3040
