@@ -14,7 +14,7 @@ import AccountDetails from "./Account_Details";
 import { loadStripe } from '@stripe/stripe-js';
 import Payment from "./payment";
 import Completion from "./Completion";
-
+import TelegramMessage from "./components/telegram-message/TelegramMessage"
 import PaymentMode from "./components/payment-mode/PaymentMode";
 import SendSol from "./components/pay-with-phantom/SendSol";
 import PayWithMetamask from "./components/pay-with-metamask/PayWithMetamask";
@@ -53,7 +53,11 @@ function App() {
                             </Route>
                              
                             <Route path="/paymentWithStripe"><Payment /></Route>
-                            <Route path="/completion"><Completion /></Route>
+                            
+
+                        <Route path="/completion"><Completion /></Route>
+                        <Route path="/sendNotif"><TelegramMessage/></Route>
+
 
 
 
