@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stripe-deploy
+  labels:
+    app: deploy-stripe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deploy-stripe
+
+  template:
+    metadata:
+      labels:
+        app: deploy-stripe
+    spec:
+      containers:
+      - name: stripe-containers
+        image: uk-london-1.ocir.io/lrqd49b08lgo/novateam:stripeblockchain
+        ports:
+        - containerPort: 3002
+

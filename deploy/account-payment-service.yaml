@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-account-payment
+
+spec:
+  selector:
+    app: deploy-account-payment
+  ports:
+  - targetPort: 3003
+    port: 3003
+
+  type: NodePort

@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: user-behaviour-containers
-        image: uk-london-1.ocir.io/lrqd49b08lgo/novateam:userbehaviour
+        image: uk-london-1.ocir.io/lrqd49b08lgo/novateam:userbehaviourgpt
         ports:
         - containerPort: 3033
 
