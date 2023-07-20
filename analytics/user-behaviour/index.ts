@@ -63,7 +63,56 @@ app.get("/user-behaviour/PaidAccounts", (req:any, res:any) => {let result = [
   { name: "freeAccounts", count: 15 },
   { name: "PaidAccounts", count:30 }]
 
+  
+
+    
+
   res.send(result);
+
+
+
+  
+
+});
+
+
+
+app.get("/user-behaviour/PaidAccountsYEAR", (req:any, res:any) => {
+  var date = new Date();
+  let result = [
+  { name: "freeAccounts", count: 2, date:"20220731000000"},
+  { name: "PaidAccounts", count:3 , date:"20220731000000"},
+  { name: "freeAccounts", count: 3, date:"20220831000000"},
+  { name: "PaidAccounts", count:7 , date:"20220831000000"},
+  { name: "freeAccounts", count: 4, date:"20220930000000"},
+  { name: "PaidAccounts", count:10 , date:"20220930000000"},
+  { name: "freeAccounts", count: 6, date:"20221031000000"},
+  { name: "PaidAccounts", count:11 , date:"20221031000000"},
+  { name: "freeAccounts", count: 7, date:"20221130000000"},
+  { name: "PaidAccounts", count:14 , date:"20221130000000"},
+  { name: "freeAccounts", count: 9, date:"20221231000000"},
+  { name: "PaidAccounts", count:17 , date:"20221231000000"},
+  { name: "freeAccounts", count: 10, date:"20230131000000"},
+  { name: "PaidAccounts", count:19 , date:"20230131000000"},
+  { name: "freeAccounts", count: 11, date:"20230228000000"},
+  { name: "PaidAccounts", count:21 , date:"20230228000000"},
+  { name: "freeAccounts", count: 11, date:"20230331000000"},
+  { name: "PaidAccounts", count:23 , date:"20230331000000"},
+  { name: "freeAccounts", count: 12, date:"20230430000000"},
+  { name: "PaidAccounts", count:25 , date:"20230430000000"},
+  { name: "freeAccounts", count: 13, date:"20230531000000"},
+  { name: "PaidAccounts", count:26 , date:"20230531000000"},
+  { name: "freeAccounts", count: 14, date:"20230630000000"},
+  { name: "PaidAccounts", count:28 , date:"20230630000000"}]
+  
+
+  
+
+    
+
+  res.send(result);
+
+
 
   
 
