@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import React, { useState, ChangeEvent, FormEvent ,useEffect} from "react";
 import "./Terminal.css";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
 import { Connection, PublicKey, Version } from "@solana/web3.js";
@@ -404,6 +404,79 @@ const Terminal: React.FC = () => {
       return null;
     }
   };
+  //////// tâches répétitives planifiées function
+  const userCommand = "donner moi le publickey refrech chaque 5min";
+  const userCommand1 = "donner moi la balance chaque 5min";
+
+
+  useEffect(() => {
+    const checkUserCommand = () => {
+      const storedCommand = localStorage.getItem('userCommand');
+
+      if (storedCommand === userCommand) {
+        getAndDisplayPublicKey();
+      }else if (storedCommand === userCommand1){
+        fetchBalanceFromMetaMask()
+      }else{
+        console.log('none none ');
+      }
+    };
+
+    checkUserCommand();
+  }, []); // Exécutez cette vérification une seule fois au chargement de la page
+
+  const getAndDisplayPublicKey = async () => {
+    while (true) {
+      let wallet = await _connectToMetaMask();
+      if (!wallet) {
+        console.log('Failed to connect to MetaMask');
+        return;
+      }
+
+      const publicKey = await _getPublicKey();
+      if (publicKey) {
+        console.log('Public Key:', publicKey);
+        handleOutput(`Public Key: ${publicKey}`);
+      } else {
+        console.log('Failed to retrieve public key');
+      }
+
+      await sleep(5 * 60 * 1000); // Attendre 5 minutes avant le prochain appel
+    }
+  };
+
+  async function fetchBalanceFromMetaMask() {
+    while (true) {
+      let wallet = await _connectToMetaMask();
+      if (!wallet) {
+        console.log('Failed to connect to MetaMask');
+        return;
+      }
+      
+      const publicKey = await _getPublicKey();     
+      const balance = await _getBalance(publicKey);
+      
+      if (balance) {
+        console.log('balance:', balance);
+        handleOutput(`balance: ${balance}`);
+      } else {
+        console.log('Failed to retrieve public key');
+      }
+      
+      await sleep(5 * 60 * 1000); // Attendre 5 minutes
+    }
+  }
+  
+  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value === userCommand) {
+      localStorage.setItem('userCommand', event.target.value);
+      getAndDisplayPublicKey();
+    } else {
+      handleOutput('');
+      localStorage.removeItem('userCommand');
+    }
+  };
+
 
   //solana functions
   const _connectToPhantomWallet = async (): Promise<null | PhantomWalletAdapter> => {
@@ -608,42 +681,12 @@ const Terminal: React.FC = () => {
                 }
       
               }
+              
               else if (input === "donner moi le publickey chaque 5min") {
-                while (true) {
-                  let wallet = await _connectToMetaMask();
-                  if (!wallet) {
-                    console.log('Failed to connect to MetaMask');
-                    return;
-                  }
-                  const publicKey = await _getPublicKey();           
-                  if (publicKey) {
-                    console.log('Public Key:', publicKey);
-                    handleOutput(`Public Key: ${publicKey}`);
-
-                  } else {
-                    console.log('Failed to retrieve public key');
-                  }
-                  await sleep(5 * 60 * 1000); // Attendre 5 minutes
-                }
-              } 
+                getAndDisplayPublicKey(); 
+              }
               else if (input === "donner moi la balance chaque 5min") {
-                while (true) {
-                  let wallet = await _connectToMetaMask();
-                  if (!wallet) {
-                    console.log('Failed to connect to MetaMask');
-                    return;
-                  }
-                  const publicKey = await _getPublicKey();     
-                  const  balance = await _getBalance(publicKey);           
-                  if (balance) {
-                    console.log('balance:', balance);
-                    handleOutput(`balance: ${balance}`);
-
-                  } else {
-                    console.log('Failed to retrieve public key');
-                  }
-                  await sleep(5 * 60 * 1000); // Attendre 5 minutes
-                }
+                fetchBalanceFromMetaMask();
               } 
               else if (input === "get network information every 5min") {
                 while (true) {
@@ -669,6 +712,8 @@ const Terminal: React.FC = () => {
                 while (true) {
                   const price = await _getCryptoCurrencyQuote("bitcoin" , "price");
                   handleOutput(`Bitcoin Price: ${price}`);
+                  console.log('Bitcoin Price: ',price);
+
                   await sleep(5 * 60 * 1000); // Attendre 5 minutes
                 }
                 
@@ -829,7 +874,7 @@ const Terminal: React.FC = () => {
       const lastOutput = prevOutput[prevOutput.length - 1];
       const isNewOutput = lastOutput?.input !== input.trim() || lastOutput?.command !== command;
       
-      if (isNewOutput) {
+      //if (isNewOutput) {
         return [
           ...prevOutput,
           {
@@ -837,9 +882,9 @@ const Terminal: React.FC = () => {
             command,
           },
         ];
-      } else {
+     /*  } else {
         return prevOutput;
-      }
+      } */
     });
   };
   
@@ -930,8 +975,8 @@ interface Output {
               className="prompt"
               value={input}
               onChange={handleInputChange}
-              disabled={remainingRequests > 2 || isTyping}
-            />
+              disabled={remainingRequests <= 0}
+              />
           </div>
           <div className="bitcoin-chart">
             {showChart ? <PieChart/> : <></>} 
@@ -956,8 +1001,7 @@ interface Output {
         </form>
 
       </div>
-
-
+      
     </div>
 
   )
