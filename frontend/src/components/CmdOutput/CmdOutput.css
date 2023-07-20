@@ -1,0 +1,11 @@
+.command-line{
+    width: 90%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    padding: 16px;
+    justify-content: start;
+    align-items: star;
+    margin-left: 32px;
+  }

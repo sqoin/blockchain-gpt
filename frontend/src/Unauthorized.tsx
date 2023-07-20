@@ -1,6 +1,6 @@
 import React from 'react';
 import './Service_Unavailable.css';
-import imageSrc from './assets/images/401.png';
+import imageSrc from './assets/images/no-passing.png';
 
 const NotAuthorized = () => {
   return (

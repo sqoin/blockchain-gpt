@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css?family=Raleway&display=swap");
+ /*@import url("https://fonts.googleapis.com/css?family=Raleway&display=swap");
 
 :root {
   --light-grey: #F6F9FC;
@@ -89,12 +89,12 @@ fieldset, input, select {
   margin:0 auto ;
   height: 360px; 
   box-shadow: 0 30px 50px -20px rgb(50 50 93 / 25%), 0 30px 60px -30px rgb(0 0 0 / 30%);
-  width: 500px; /* Adjusted width value */
+  width: 500px; 
 }
 
 #messages {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New';
-  display: none; /* hide initially, then show once the first message arrives */
+  display: none; 
   background-color: #0A253C;
   color: #00D924;
   padding: 20px;
@@ -105,7 +105,7 @@ fieldset, input, select {
 h1 {
   text-align: center;
   font-weight: normal;
-  margin-top: 0; /* Add this line to remove default top margin */
-  padding-top: 20px; /* Increase the padding value to move the heading higher */
-}
+  margin-top: 0; 
+  padding-top: 20px; 
+}*/
 

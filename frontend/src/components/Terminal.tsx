@@ -6,6 +6,8 @@ import { SERVER_DOMAIN } from "../utils/constants";
 import { useHistory, useLocation } from "react-router-dom";
 import { signOut } from "supertokens-auth-react/recipe/session";
 import { SignOutIcon} from "../assets/images";
+import SideBar from "./SideBar/SideBar"
+import CmdOutput from "./CmdOutput/CmdOutput";
 
 /// @ts-ignore
 import BitcoinChart from "../charts.tsx";
@@ -20,9 +22,11 @@ interface ILink {
 }
 
 interface Output {
+  input: string;
   command: string;
 }
 const Terminal: React.FC = () => {
+  const [isTyping, setIsTyping] = useState(false)
   const [input, setInput] = useState<string>("");
   const [showChart, setShowChart] = useState(false);
   const [output, setOutput] = useState<Output[]>([]);
@@ -56,9 +60,11 @@ const Terminal: React.FC = () => {
         .set("Access-Control-Allow-Origin", "*")
         .end((err: any, res: any) => {
           if (err) {
+            setIsTyping(false)
             popLastItem();
             reject(err);
           } else {
+            setIsTyping(false)
             popLastItem();
             resolve(res);
           }
@@ -502,6 +508,7 @@ const Terminal: React.FC = () => {
     const codeRegex: RegExp = /```(?:javascript)?\s*([\s\S]*?)\s*```/g;
     const codeMatch: RegExpExecArray | null = codeRegex.exec(data);
 
+
     if (codeMatch) {
       const scriptContent: string = codeMatch[1].trim();
       const wrappedScript: string = `(async () => { ${scriptContent} })();`;
@@ -518,9 +525,10 @@ const Terminal: React.FC = () => {
         return `Error: ${error.message} \n script ${scriptContent}`;
       }
     } else {
-      //popLastItem();
-      //commandWriter("This input does not require any specific action.")
-      return `${data}\n`;
+      //popLastItemInput();
+      commandWriter("This input does not require any specific action.")
+      
+      return `${data}`;
     }
   };
 
@@ -540,9 +548,12 @@ const Terminal: React.FC = () => {
       if (remainingResult < 21) {
         try {
           let result;
+          
+          setIsTyping(true)
 
           setTimeout(async () => {
-            handleOutput(input);
+            //handleOutput(input);
+            let newinput=input;
             setInput("");
             //handleOutput(`Execution in progress ...`);
             if (remainingResult > 0) {
@@ -580,6 +591,8 @@ const Terminal: React.FC = () => {
               setRemainingRequests(remainingResult - 1);
              //await handleOutput(`Remaining requests: ${remainingResult}`);
 
+             setInput("");
+             setRemainingRequests(remainingResult);// - 1);
             } else {
               popLastItem();
               handleOutput(`Error: Maximum request limit reached !! Please upgrade to a paid account to continue using this feature.`);
@@ -640,13 +653,36 @@ const Terminal: React.FC = () => {
 
     }
   }
-  const handleOutput = (new_output: string): void => {
-    setOutput((prevOutput: Output[]) => [...prevOutput, { command: new_output }]);
+  const handleOutput = (command: string): void => {
+    setOutput(prevOutput => {
+      const lastOutput = prevOutput[prevOutput.length - 1];
+      const isNewOutput = lastOutput?.input !== input.trim() || lastOutput?.command !== command;
+      
+      if (isNewOutput) {
+        return [
+          ...prevOutput,
+          {
+            input: input.trim(),
+            command,
+          },
+        ];
+      } else {
+        return prevOutput;
+      }
+    });
   };
+  
 
   const popLastItem = (): void => {
     setOutput((prevOutput: Output[]) => prevOutput.slice(0, prevOutput.length - 1));
   };
+
+interface Output {
+  input: string;
+  command: string;
+}
+
+
 
 
  /*  const _getStatics = async (
@@ -666,24 +702,22 @@ const Terminal: React.FC = () => {
     // window.open(SERVER_DOMAIN+"/accountdetails","_blank")
     history.push("/accountdetails");
   }
-
-  
-  return (
-    <div className="terminal">
-      <div className="terminal-output" style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
-        {output.length ? <span className="terminal-prompt">$</span> : <></>}
+  /*return (
+    <div >
+      
+      <div  style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
         {output.map((line, index) => (
           <div key={index}>
-            <span className="terminal-prompt">$</span> {line.command}
+            <span >$</span> {line.command}
           </div>
         ))}
       </div>
       <form onSubmit={handleInputSubmit}>
-        <div className="terminal-input-container">
-          <span className="terminal-prompt">$</span>
+        <div >
+          <span >$</span>
           <input
             type="text"
-            className="terminal-input"
+            
             value={input}
             onChange={handleInputChange}
             disabled={remainingRequests <= 0}
@@ -694,36 +728,48 @@ const Terminal: React.FC = () => {
         </div>
 
       </form>
-
-
-
-      <div className="top-right">
-          <div className="signout">
-            {links.map((link) => (
-              <div className="link" key={link.name} style={{display: 'flex', marginLeft:'16px'}}>
-                <img className="link-icon" src={link.icon} alt={link.name}  />
-                <div role={"button"} onClick={link.onClick}>
-                  {link.name}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="noselect" id="circle">
-            <button type="submit" id="btn" onClick={redirectToAccDetails}>Account Details </button>
-          </div>
-          <div>
-          <label htmlFor="labelle" className="labelContainer" >
-            <span className="labelText">Remaining requests
-            : {remainingRequests}</span>
-          </label>
-
+      <div  id="circle">
+          <button type="submit" id="btn" onClick={redirectToAccDetails}>Account Datails </button>
         </div>
 
     </div>
 
     </div>
-  );
+  );*/
+
+
+  return (
+    <div className="terminal">
+      <SideBar remaining={remainingRequests} />
+      <div className="input-output">
+        
+        <div className="output-result">
+        {output.map((line, index) => (
+            <CmdOutput oput={line} index={index}  />
+            ))}
+        </div>
+        <form onSubmit={handleInputSubmit} className="input-cmd">
+          <div className="line">
+            <span >{'>>>'}</span>
+            <input
+              type="text"
+              className="prompt"
+              value={input}
+              onChange={handleInputChange}
+              disabled={remainingRequests > 2 || isTyping}
+            />
+          </div>
+          <div className="bitcoin-chart">
+            {showChart ? <PieChart/> : <></>} 
+          </div>
+        </form>
+
+      </div>
+
+
+    </div>
+
+  )
 };
 
 export default Terminal;

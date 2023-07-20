@@ -28,11 +28,13 @@ function Payment(props) {
     });
  },[]);
 
+
+
+
+
   
-
-
-
-
+ console.log(stripePromise);
+ console.log(clientSecret);
 
  return (
   <>

@@ -30,23 +30,20 @@ const AccountDetails: React.FC<AccountDetailsProps> = ({ user }) => {
                 <div className="col-md-6">
                   <div className="form-group">
                     <label htmlFor="name">Name</label>
-                    <input
-                      type="text"
+                    <div
                       className="form-control"
                       id="name"
-                      value={user.name}
-                    />
+                    >{user.name}</div>
                   </div>
                 </div>
                 <div className="col-md-6">
                   <div className="form-group">
                     <label htmlFor="email">Email</label>
-                    <input
-                      type="text"
+                    <div
                       className="form-control"
                       id="email"
-                      value={user.email}
-                    />
+                    >{user.email}
+                    </div>
                   </div>
                 </div>
                 <div className="col-md-6">
