@@ -2,29 +2,31 @@ const express = require('express');
 const fs = require('fs');
 const cors = require("cors");
 const app = express();
-
+const axios= require("axios")
 app.use(express.json());
 
-function sendTelegramMessage(chatId, message) {
-  const botToken = '6357082334:AAGmKJY-OlGXbEjdfpmRWSp935ogpHCQW5g'; // Replace 'YOUR_BOT_TOKEN' with your actual bot token
+function sendHelloMessageToAll() {
+  // Read the stored chat IDs from the JSON file
+  fs.readFile('chatIds.json', 'utf8', (err, data) => {
+    if (err) {
+      console.error('Error reading chat IDs:', err);
+    } else {
+      const chatIds = data.split('\n').filter(Boolean);
+      console.log("start sending alerts..",chatIds)
 
-  // API endpoint to send a message using the bot
-  const apiUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
-
-  // Payload to send the message
-  const payload = {
-    chat_id: chatId,
-    text: message,
-  };
-
-  // Make a POST request to the Telegram Bot API
-  axios.post(apiUrl, payload)
-    .then((response) => {
-      console.log('Message sent to Telegram:', response.data);
-    })
-    .catch((error) => {
-      console.error('Error sending message to Telegram:', error);
-    });
+      // Send the "hello message" to each chat ID using the custom function
+      chatIds.forEach((chatId) => {
+        const telegramApiUrl = `https://api.telegram.org/bot5856888046:AAH4B7M6Rcei9RFvlyYlbmNWMscMjmKUuRs/sendMessage?chat_id=${chatId}&text=hello`;
+        axios.get(telegramApiUrl)
+          .then((response) => {
+            console.log('Message sent to Telegram:', response.data);
+          })
+          .catch((error) => {
+            console.error('Error sending message to Telegram:', error);
+          });
+      });
+    }
+  });
 }
 
 
@@ -42,6 +44,9 @@ app.post('/api/telegram/chat', (req, res) => {
     } else {
       console.log('Chat ID stored:', chatId);
       res.status(200).json({ message: 'Chat ID stored successfully' });
+      sendHelloMessageToAll();
+      console.log("message telegram recu ")
+
     }
   });
 });
