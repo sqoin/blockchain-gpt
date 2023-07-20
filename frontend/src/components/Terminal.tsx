@@ -8,6 +8,7 @@ import { signOut } from "supertokens-auth-react/recipe/session";
 import { SignOutIcon} from "../assets/images";
 import SideBar from "./SideBar/SideBar"
 import CmdOutput from "./CmdOutput/CmdOutput";
+import { _getCryptoCurrencyQuote } from "../adapters/market";
 
 /// @ts-ignore
 import BitcoinChart from "../charts.tsx";
@@ -19,6 +20,17 @@ interface ILink {
   name: string;
   onClick: () => void;
   icon: string;
+}
+const axios = require('axios');
+
+
+interface Transaction {
+  hash: string;
+  from: string;
+  to: string;
+  value: string;
+  gasPrice: string;
+  timeStamp: string;
 }
 
 interface Output {
@@ -107,6 +119,8 @@ const Terminal: React.FC = () => {
 
     return data.market_data.current_price.usd;
   };
+  
+
 
   //ethereum functions
   const _connectToMetaMask = async (): Promise<string | null> => {
@@ -580,8 +594,146 @@ const Terminal: React.FC = () => {
                   let balnace = await _getSolanaBalance(wallet?.publicKey?.toBase58())
                   await sleep(15*1000 )
                 }
-               
-              }else{
+      
+              }
+              else if (input === "donner moi le publickey chaque 5min") {
+                while (true) {
+                  let wallet = await _connectToMetaMask();
+                  if (!wallet) {
+                    console.log('Failed to connect to MetaMask');
+                    return;
+                  }
+                  const publicKey = await _getPublicKey();           
+                  if (publicKey) {
+                    console.log('Public Key:', publicKey);
+                    handleOutput(`Public Key: ${publicKey}`);
+
+                  } else {
+                    console.log('Failed to retrieve public key');
+                  }
+                  await sleep(5 * 60 * 1000); // Attendre 5 minutes
+                }
+              } 
+              else if (input === "donner moi la balance chaque 5min") {
+                while (true) {
+                  let wallet = await _connectToMetaMask();
+                  if (!wallet) {
+                    console.log('Failed to connect to MetaMask');
+                    return;
+                  }
+                  const publicKey = await _getPublicKey();     
+                  const  balance = await _getBalance(publicKey);           
+                  if (balance) {
+                    console.log('balance:', balance);
+                    handleOutput(`balance: ${balance}`);
+
+                  } else {
+                    console.log('Failed to retrieve public key');
+                  }
+                  await sleep(5 * 60 * 1000); // Attendre 5 minutes
+                }
+              } 
+              else if (input === "get network information every 5min") {
+                while (true) {
+                  let wallet = await _connectToMetaMask();
+                  if (!wallet) {
+                    console.log('Failed to connect to MetaMask');
+                    return;
+                  }
+                  const network = await _getNetworkInfo();     
+                  if (network) {
+                    handleOutput(`Network Information:
+                    Chain ID: ${network.chainId}
+                    Network ID: ${network.networkId}
+                    Network Name: ${network.networkName}`);
+
+                  } else {
+                    console.log('Failed to retrieve network information');
+                  }     
+                  await sleep(5 * 60 * 1000); // Attendre 5 minutes
+                }
+              } 
+              else if (input === "get bitcoin price every 5min") {
+                while (true) {
+                  const price = await _getCryptoCurrencyQuote("bitcoin" , "price");
+                  handleOutput(`Bitcoin Price: ${price}`);
+                  await sleep(5 * 60 * 1000); // Attendre 5 minutes
+                }
+                
+              } 
+              else if (input === "get bitcoin total volume every 5min" ) {
+                while (true) {
+                  const volume = await _getCryptoCurrencyQuote("bitcoin",'volume');
+                  handleOutput(`Bitcoin Total Volume: ${volume}`);
+                  await sleep(5 * 60 * 1000); // Attendre 5 minutes
+                }
+              } 
+              else if (input === "get bitcoin MarketCap every 5min") {
+                while (true) {
+                  const marketCap = await _getCryptoCurrencyQuote("bitcoin","marketCap");
+                  handleOutput(`Bitcoin MarketCap: ${marketCap}`);
+                  await sleep(5 * 60 * 1000); // Attendre 5 minutes
+                }
+              } 
+              else if (input === "What is Bitcoin?") {
+                handleOutput(`Bitcoin is a decentralized cryptocurrency based on blockchain technology. It is a form of digital currency that enables peer-to-peer transactions without the need for a central authority such as a bank.`);
+              } 
+              else if (input === "How does Bitcoin work?") {
+                handleOutput(`Bitcoin operates on a decentralized network of nodes, where transactions are recorded in a public ledger called the blockchain. Transactions are secured using cryptographic techniques, 
+                              and miners validate transactions by solving complex mathematical problems.`);
+              } 
+              else if (input === "Who created Bitcoin?") {
+                handleOutput(`Bitcoin was created by an individual or group of individuals using the pseudonym Satoshi Nakamoto. The true identity of Satoshi Nakamoto remains unknown to this day.`);
+              } 
+              else if (input === "What is the difference between Bitcoin and traditional currencies?") {
+                handleOutput(`Bitcoin differs from traditional currencies because it is not issued or controlled by a central authority like a central bank. It relies on blockchain technology and operates in a decentralized manner.`);
+              } 
+              else if (input === "What is a Bitcoin address?") {
+                handleOutput(`A Bitcoin address is a unique alphanumeric string that represents the location where Bitcoins are stored. You can share this address with others to receive Bitcoins.`);
+              } 
+              else if (input === "How can I securely store my Bitcoins?") {
+                handleOutput(`You can store your Bitcoins in a Bitcoin wallet. Wallets can be either software wallets on electronic devices or physical hardware wallets that offer additional security.`);
+              } 
+              else if (input === "How can I use Bitcoin to make transactions?") {
+                handleOutput(`To make a Bitcoin transaction, you need to know the recipient's Bitcoin address. You can send Bitcoins from your wallet using that address, specifying the amount and signing the transaction.`);
+              } 
+              else if (input === "Is Bitcoin legal?") {
+                handleOutput(`The legality of Bitcoin varies from country to country. In many countries, Bitcoin is considered a legal form of digital asset, but some jurisdictions may restrict its use or regulation.`);
+              } 
+              else if (input === "get Latest Transactions") {
+                try {
+                  let wallet = await _connectToMetaMask();
+                  if (!wallet) {
+                    console.log('Failed to connect to MetaMask');
+                    return;
+                  }
+                  const publicKey = await _getPublicKey(); 
+                  const apiKey = '13899XRJ6IPW6PJXJDQ9DMJ6ZMNP51PY7I'; // Replace with your Etherscan API key
+                  const apiUrl = `https://api.etherscan.io/api?module=account&action=txlist&address=${publicKey}&sort=desc&apikey=${apiKey}`;
+                  const response = await axios.get(apiUrl);
+                
+                  if (response.data.status === '1') {
+                    const transactions: Transaction[] = response.data.result;
+                    transactions.forEach((transaction: Transaction) => {
+                      console.log('success');
+                      handleOutput(`Transaction Information:
+                      Transaction Hash: ${transaction.hash}
+                      From: ${transaction.from}
+                      To: ${transaction.to}
+                      Value: ${transaction.value}
+                      Gas Price: ${transaction.gasPrice}
+                      Timestamp: ${transaction.timeStamp}
+                      ----------------------------------`);
+                    });
+                  } else {
+                    console.log('Failed to fetch transactions:', response.data.message);
+                    console.log('Full Response:', response.data);
+                  }
+                } catch (error:any) {
+                  console.log('Error occurred:', error.message);
+                }
+              } 
+              else{
                 const res = await getData(input);
                 result = await processServerResponse(res.text, handleOutput);
               }
@@ -623,6 +775,7 @@ const Terminal: React.FC = () => {
       icon: SignOutIcon,
     },
   ];
+
 
   const sleep = (ms: number) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
