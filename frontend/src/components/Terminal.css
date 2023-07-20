@@ -45,7 +45,17 @@
     border-radius: 0;
     background-color: #212121;
   }
-  
+
+
+  .bitcoin-chart{
+    position: relative;
+    max-height: 300px;
+    width: 1000px;
+  }
+  .pie-chart{
+      height: 400px;
+      width: 400px;
+  }
   .terminal::-webkit-scrollbar {
     width: 10px;
     background-color: #3d3d3d;
