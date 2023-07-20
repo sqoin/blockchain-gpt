@@ -1,6 +1,7 @@
 const { Configuration, OpenAIApi } = require("openai");
 const fs = require('fs');
 const dotenv = require('dotenv');
+const { log } = require("console");
 
 dotenv.config();
 
@@ -27,7 +28,7 @@ let callOpenAi = async (prompt) => {
       content: prompt },
     ],
   });
-
+ console.log(completion.data.choices[0].message.content);
 
   return completion.data.choices[0].message.content;
 }

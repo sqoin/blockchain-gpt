@@ -1,14 +1,11 @@
-*{
-  margin: 0px;
-  padding: 0px;
-  box-sizing: border-box;
-}
+
 .PayWithMetamask{
   display: flex;
   flex-direction: column;
   justify-content: center;
   background: linear-gradient(45deg, rgb(236, 64, 7) , #dc956b);
-  height: 100%;
+  height: 100vh;
+  width: 100vw;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -108,6 +105,7 @@ margin: 0;
   transition: 0.2s ease-in-out;
   border-radius: 10px;
   gap: 10px;
+  cursor: pointer;
 }
 
 .PayWithMetamask .submit-btn:hover{
@@ -137,6 +135,7 @@ margin: 0;
   }
 
 .PayWithMetamask .container{
+  height: 600px;
   width: 540px;
 }
 
@@ -152,6 +151,7 @@ margin: 0;
 
 @media only screen and (max-width: 550px) {
   .PayWithMetamask .container{
+    height: 600px;
     width: 340px;
   }
 

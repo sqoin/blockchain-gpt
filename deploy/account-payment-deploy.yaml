@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: account-payment-deploy
+  labels:
+    app: deploy-account-payment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deploy-account-payment
+
+  template:
+    metadata:
+      labels:
+        app: deploy-account-payment
+    spec:
+      containers:
+      - name: account-payment-containers
+        image: uk-london-1.ocir.io/lrqd49b08lgo/novateam:accpayblockchain
+        ports:
+        - containerPort: 3003
+

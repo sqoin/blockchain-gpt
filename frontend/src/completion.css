@@ -1,3 +1,11 @@
+.Completion{
+    transform: translateY(100px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .Completion h1 {
     color: #333;
 }
@@ -5,11 +13,8 @@
     text-align: center;
     font-weight:300;
     color: #777777;
-
 }
 .Completion #verified-logo {
-    width: 100px;
-    height: 100px;
-    margin: 0 auto;
-    display: block;
+    width: 200px;
+    height: 200px;
   }

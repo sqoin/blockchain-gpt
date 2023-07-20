@@ -28,14 +28,16 @@ function Payment(props) {
     });
  },[]);
 
+
+
+
+
   
-
-
-
-
+ console.log(stripePromise);
+ console.log(clientSecret);
 
  return (
-  <>
+  <div className="payment">
     <h1>Stripe  Payment  </h1>
   {stripePromise && clientSecret && (
 
@@ -45,7 +47,7 @@ function Payment(props) {
 </Elements>
 
   )}
-  </>
+  </div>
 );
 }
 

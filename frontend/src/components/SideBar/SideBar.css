@@ -1,0 +1,89 @@
+
+:root{
+    --color1: #453750;  
+    --color2: #73648A;
+    --color3: #9882AC;
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto';
+}
+
+body{
+    font-size: 1em;
+    
+}
+
+.sidebar{
+    display: flex;
+    color: white;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 24vw;
+    height: 100vh;
+    background-color: var(--color1);
+    gap: 4px;
+    padding: 4px 6px;
+    font-family: 'Rubik';
+    padding: 10px 0;
+}
+
+.sidebar .options, .sidebar .chats{
+    width: 95%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+}
+
+.sidebar .options{
+    border-top: 1px solid rgba(195, 195, 195, 0.56);
+    padding-top: 2px;
+}
+
+.sidebar .sidebar-btn, .sidebar .sidebar-text{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
+    height: 52px;
+    border: none;
+    background-color: rgba(0, 0, 0, 0);
+    padding-left: 10px;
+    color: white;
+    font-size: 1.1em;
+    border-radius: 10px;
+}
+
+.sidebar .sidebar-btn:hover{
+    cursor: pointer;
+    background-color: var(--color2);
+}
+
+.sidebar .add-chat{
+    border: 1px solid rgba(195, 195, 195, 0.56);
+    margin-bottom: 10px;
+}
+
+.sidebar .icons{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-right: 10px;
+}
+
+.sidebar .signout{
+    border: 1px solid rgba(195, 195, 195, 0.56);
+    margin-bottom: 10px;
+    background-color: var(--color2);
+    margin-top: 4px;
+}
+
+@media only screen and (max-width: 1200px) {
+    .sidebar{
+        width: 400px;
+    }
+}

@@ -1,0 +1,24 @@
+.TelegramMessage p {
+    text-align: center;
+    font-weight:300;
+    color: #333;
+}
+.TelegramMessage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .TelegramMessage button {
+    background-color: #0088cc;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  

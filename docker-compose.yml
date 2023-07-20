@@ -46,6 +46,16 @@ services:
     volumes:
       - ./backend/stripe:/app
       - /app/node_modules
+
+  service-chatdata:
+    build: backend/chatdata
+    ports:
+      - 3005:3005
+    
+    container_name: chatdata
+    volumes:
+      - ./backend/chatdata:/app
+      - /app/node_modules
     
 
 

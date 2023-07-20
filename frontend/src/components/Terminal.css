@@ -1,4 +1,4 @@
-
+/* 
   
   @keyframes terminal-glitch {
     0% {
@@ -19,7 +19,6 @@
     background: radial-gradient(ellipse at center, #8e4c37 0%, #f6ff01 100%);
     transform-origin: 50% 50%;
     transform: scale(1.03);
-    /* animation: terminal-glitch 0.1s linear infinite; */
     opacity: 0.4;
     position: fixed;
     z-index: -1;
@@ -46,7 +45,17 @@
     border-radius: 0;
     background-color: #212121;
   }
-  
+
+
+  .bitcoin-chart{
+    position: relative;
+    max-height: 300px;
+    width: 1000px;
+  }
+  .pie-chart{
+      height: 400px;
+      width: 400px;
+  }
   .terminal::-webkit-scrollbar {
     width: 10px;
     background-color: #3d3d3d;
@@ -71,27 +80,32 @@
     font-size: 24px;
     margin: 1px 0;
     overflow: hidden;
-    color: #f6ff01;
+    color: white;
     font-family: "VT323", monospace;
     word-wrap: break-word;
   }
   
+  .terminal-output { 
+    margin-top: 65px;
+  }
   .terminal-input-container {
     display: flex;
     align-items: center;
   }
   
   .terminal-input-container input {
+    margin-top: 60px;
     flex-grow: 1;
     background-color: transparent;
     border: none;
     outline: none;
-    color: #f6ff01;
+    color: white;
     font-size: 24px;
     font-family: "VT323", monospace;
   }
   
   .terminal-prompt {
+    margin-top: 50px;
     color: #f6ff01;
     font-size: 24px;
     font-family: "VT323", monospace;
@@ -108,8 +122,14 @@
     border: none;
     border-radius: 10px;
     color: #eee;
+
+    font-size: 16px;
+    font-family: 'arial';
+    transition: 1s;
+
     font-size: 20px;
     font-family: 'ariel';
+
     -webkit-tap-highlight-color: transparent;
     display: flex;
     align-items: center;
@@ -154,19 +174,111 @@
   .labelText {
     margin-left: 16px;
     color: white;
-    font-size: 20px;
-    font-family: 'ariel';
+    font-size: 16px;
+    font-family: 'arial';
     display: flex;
     align-items: center;
     padding-top: 5px;
   }
   
-  .signout {
+
+  .top-right{
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+    align-items: flex-start;
+    height: 90px;
+    width: 225px;
+    background-color: #b1803e;
+    border: 8px solid #7d5b2d;
+    border-radius: 25px;
+    box-shadow: inset 0 0 10rem #020202, inset 0 0 1rem black, 0 0 4rem black;
+
+    position: absolute;
+    top: -7px;
+    right: -8px;
+  }
+  .signout{
+
+  }
+
+   .signout {
     background-color: rgba(0, 0, 0, 0);
     border: none;
     cursor: pointer;
     color: white;
     font-size: 20px;
     font-family: 'ariel';
-  }
+  } 
+  */
+
+
   
+  .terminal{
+
+    display: flex;
+    flex-direction: row;
+    background-color: var(--color3);
+    color: white;
+  }
+
+  .terminal .input-output{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+  }
+
+  .terminal .cmd-line{
+    width: 90%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    padding: 16px;
+    justify-content: start;
+    align-items: star;
+    margin-left: 32px;
+  }
+
+  .terminal .output-result{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 5px;
+    margin-top: 10px;
+  }
+
+  .terminal .input-cmd{
+    display: flex;
+    justify-content: start;
+    align-items: flex-start;
+    flex-direction: column;
+    margin-left: 32px;
+  }
+
+  .terminal .line{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+    font-size: 1.1em;
+  }
+
+  .terminal .prompt{
+    background-color: rgba(0, 0, 0, 0);
+    width: 100%;
+    height: 40px;
+    color: white;
+    outline: none;
+    border: none;
+    font-size: 1.1em;
+  }
+
+
+ 
+  
+  
+ 
