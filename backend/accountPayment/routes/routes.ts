@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { Register, IRegister } from '../model';
 
+let tasksController = require("../controller/tasksController");
 const router: Router = Router();
 
 async function insertData(data: IRegister) {
@@ -44,5 +45,9 @@ router.post('/saveUserId', async (req: Request, res: Response) => {
     return res.sendStatus(500);
   }
 });
+
+
+router.post('/tasks', tasksController.createTask);
+router.get('/tasks/:userId', tasksController.getTasksByUserId);
 
 module.exports= router;
