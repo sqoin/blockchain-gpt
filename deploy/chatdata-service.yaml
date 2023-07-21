@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: chatdata-service
+
+spec:
+  selector:
+    app: deploy-chatdata
+  ports:
+  - targetPort: 3005
+    port: 3005
+
+  type: NodePort

@@ -1,0 +1,7 @@
+FROM node:16.10.0
+WORKDIR /app
+COPY . .
+RUN npm install
+
+EXPOSE 3003
+CMD [ "npm", "run", "prod" ]
