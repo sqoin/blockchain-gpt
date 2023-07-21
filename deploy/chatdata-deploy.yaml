@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chatdata-deploy
+  labels:
+    app: deploy-chatdata
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deploy-chatdata
+
+  template:
+    metadata:
+      labels:
+        app: deploy-chatdata
+    spec:
+      containers:
+      - name: chatdata-containers
+        image: uk-london-1.ocir.io/lrqd49b08lgo/novateam:chatdata21-07-2023_10-32-41
+        ports:
+        - containerPort: 3005

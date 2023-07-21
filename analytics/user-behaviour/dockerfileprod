@@ -8,4 +8,4 @@ RUN npm install -g ts-node
 
 RUN npm install
 
-CMD [ "npm", "run" , "start" ]
+CMD [ "npm", "run" , "prod" ]
