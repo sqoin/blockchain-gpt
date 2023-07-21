@@ -34,6 +34,14 @@ spec:
             name: auth-service
             port:
               number: 3001
+      - path: /api/auth
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-service
+            port:
+              number: 3001
+
       - path: /user-behaviour
         pathType: Prefix
         backend:
@@ -41,7 +49,48 @@ spec:
             name: service-user-behaviour
             port:
               number: 3033
+      - path: /config
+        pathType: Prefix
+        backend:
+          service:
+            name: service-stripe
+            port:
+              number: 3002
+      - path: /create-payment-intent
+        pathType: Prefix
+        backend:
+          service:
+            name: service-stripe
+            port:
+              number: 3002
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: service-account-payment
+            port:
+              number: 3003
 
+      - path: /gpt-test
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-service
+            port:
+              number: 3001
 
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: service-blockchaingpt
+            port:
+              number: 3040
 
-
+      - path: /api/telegram/chat
+        pathType: Prefix
+        backend:
+          service:
+            name: chatdata-service
+            port:
+              number: 3005

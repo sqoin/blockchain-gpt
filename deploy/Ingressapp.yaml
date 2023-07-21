@@ -86,3 +86,12 @@ spec:
             name: service-blockchaingpt
             port:
               number: 3040
+
+
+      - path: /api/telegram/chat
+        pathType: Prefix
+        backend:
+          service:
+            name: chatdata-service
+            port:
+              number: 3005
