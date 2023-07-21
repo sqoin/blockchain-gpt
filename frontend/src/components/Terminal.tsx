@@ -361,6 +361,7 @@ const Terminal: React.FC = () => {
         })
         .estimateGas({ from: account });
 
+
       // Create the transaction object
       const transaction = {
         from: account,
@@ -404,26 +405,7 @@ const Terminal: React.FC = () => {
       return null;
     }
   };
-  //////// tâches répétitives planifiées function
-  const userCommand = "donner moi le publickey refrech chaque 5min";
-  const userCommand1 = "donner moi la balance chaque 5min";
-
-
-  useEffect(() => {
-    const checkUserCommand = () => {
-      const storedCommand = localStorage.getItem('userCommand');
-
-      if (storedCommand === userCommand) {
-        getAndDisplayPublicKey();
-      }else if (storedCommand === userCommand1){
-        fetchBalanceFromMetaMask()
-      }else{
-        console.log('none none ');
-      }
-    };
-
-    checkUserCommand();
-  }, []); // Exécutez cette vérification une seule fois au chargement de la page
+  //////// tâches répétitives planifiées function  ////////////////////////
 
   const getAndDisplayPublicKey = async () => {
     while (true) {
@@ -466,17 +448,76 @@ const Terminal: React.FC = () => {
       await sleep(5 * 60 * 1000); // Attendre 5 minutes
     }
   }
-  
-  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value === userCommand) {
-      localStorage.setItem('userCommand', event.target.value);
-      getAndDisplayPublicKey();
-    } else {
-      handleOutput('');
-      localStorage.removeItem('userCommand');
-    }
-  };
 
+  async function getNetworkInfoEvery5Minutes() {
+  while (true) {
+    let wallet = await _connectToMetaMask();
+    if (!wallet) {
+      console.log('Failed to connect to MetaMask');
+      return;
+    }
+    const network = await _getNetworkInfo();
+    if (network) {
+      handleOutput(`Network Information:
+        Chain ID: ${network.chainId}
+        Network ID: ${network.networkId}
+        Network Name: ${network.networkName}`);
+    } else {
+      console.log('Failed to retrieve network information');
+    }
+    await sleep(5 * 60 * 1000); // Attendre 5 minutes
+  }
+}
+
+async function fetchAndDisplayTransactions() {
+  try {
+    let wallet = await _connectToMetaMask();
+    if (!wallet) {
+      console.log('Failed to connect to MetaMask');
+      return;
+    }
+
+    const publicKey = await _getPublicKey();
+    const apiKey = '13899XRJ6IPW6PJXJDQ9DMJ6ZMNP51PY7I'; // Replace with your Etherscan API key
+    const apiUrl = `https://api.etherscan.io/api?module=account&action=txlist&address=${publicKey}&sort=desc&apikey=${apiKey}`;
+    const response = await axios.get(apiUrl);
+
+    if (response.data.status === '1') {
+      const transactions = response.data.result;
+      transactions.forEach((transaction: Transaction) => {
+        console.log('success');
+        handleOutput(`Transaction Information:
+        Transaction Hash: ${transaction.hash}
+        From: ${transaction.from}
+        To: ${transaction.to}
+        Value: ${transaction.value}
+        Gas Price: ${transaction.gasPrice}
+        Timestamp: ${transaction.timeStamp}
+        ----------------------------------`);
+      });
+    } else {
+      console.log('Failed to fetch transactions:', response.data.message);
+      console.log('Full Response:', response.data);
+    }
+  } catch (error:any) {
+    console.log('Error occurred:', error.message);
+  
+  }
+}
+  const userCommand1 = "donner moi le publickey chaque 5min";
+  const userCommand2 = "donner moi la balance chaque 5min";
+  const userCommand3 = "donner moi la balance chaque 5min";
+  
+  useEffect(() => {
+    const storedCommand = localStorage.getItem('userCommand');
+    if (storedCommand === userCommand1) {
+      getAndDisplayPublicKey();
+    } else if (storedCommand === userCommand2) {
+      fetchBalanceFromMetaMask();
+    } else if (storedCommand === userCommand3) {
+      getNetworkInfoEvery5Minutes();
+    }
+  }, []); 
 
   //solana functions
   const _connectToPhantomWallet = async (): Promise<null | PhantomWalletAdapter> => {
@@ -683,30 +724,24 @@ const Terminal: React.FC = () => {
               }
               
               else if (input === "donner moi le publickey chaque 5min") {
-                getAndDisplayPublicKey(); 
+                getAndDisplayPublicKey();
+
               }
               else if (input === "donner moi la balance chaque 5min") {
                 fetchBalanceFromMetaMask();
+
+
               } 
               else if (input === "get network information every 5min") {
-                while (true) {
-                  let wallet = await _connectToMetaMask();
-                  if (!wallet) {
-                    console.log('Failed to connect to MetaMask');
-                    return;
-                  }
-                  const network = await _getNetworkInfo();     
-                  if (network) {
-                    handleOutput(`Network Information:
-                    Chain ID: ${network.chainId}
-                    Network ID: ${network.networkId}
-                    Network Name: ${network.networkName}`);
+                getNetworkInfoEvery5Minutes();
 
-                  } else {
-                    console.log('Failed to retrieve network information');
-                  }     
-                  await sleep(5 * 60 * 1000); // Attendre 5 minutes
-                }
+              } else if (
+                input === userCommand1 ||
+                input === userCommand2 ||
+                input === userCommand3
+              ) {
+                localStorage.setItem('userCommand', input);
+               handleOutput('');
               } 
               else if (input === "get bitcoin price every 5min") {
                 while (true) {
@@ -758,39 +793,10 @@ const Terminal: React.FC = () => {
                 handleOutput(`The legality of Bitcoin varies from country to country. In many countries, Bitcoin is considered a legal form of digital asset, but some jurisdictions may restrict its use or regulation.`);
               } 
               else if (input === "get Latest Transactions") {
-                try {
-                  let wallet = await _connectToMetaMask();
-                  if (!wallet) {
-                    console.log('Failed to connect to MetaMask');
-                    return;
-                  }
-                  const publicKey = await _getPublicKey(); 
-                  const apiKey = '13899XRJ6IPW6PJXJDQ9DMJ6ZMNP51PY7I'; // Replace with your Etherscan API key
-                  const apiUrl = `https://api.etherscan.io/api?module=account&action=txlist&address=${publicKey}&sort=desc&apikey=${apiKey}`;
-                  const response = await axios.get(apiUrl);
-                
-                  if (response.data.status === '1') {
-                    const transactions: Transaction[] = response.data.result;
-                    transactions.forEach((transaction: Transaction) => {
-                      console.log('success');
-                      handleOutput(`Transaction Information:
-                      Transaction Hash: ${transaction.hash}
-                      From: ${transaction.from}
-                      To: ${transaction.to}
-                      Value: ${transaction.value}
-                      Gas Price: ${transaction.gasPrice}
-                      Timestamp: ${transaction.timeStamp}
-                      ----------------------------------`);
-                    });
-                  } else {
-                    console.log('Failed to fetch transactions:', response.data.message);
-                    console.log('Full Response:', response.data);
-                  }
-                } catch (error:any) {
-                  console.log('Error occurred:', error.message);
-                }
+                fetchAndDisplayTransactions();
               } 
-              else{
+             
+               else{
                 const res = await getData(input);
                 result = await processServerResponse(res.text, handleOutput);
               }
