@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express';
-import { Register, IRegister } from '../model';
+import { Register, IRegister } from '../models/model';
 
 let tasksController = require("../controller/tasksController");
 const router: Router = Router();

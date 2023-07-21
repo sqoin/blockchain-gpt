@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import TaskModel from "../repetitivesTasks";
+import TaskModel from "../models/repetitivesTasks";
 
 exports.createTask = async (req: Request, res: Response) => {
   try {
