@@ -6,7 +6,7 @@ import { BiConversation } from "react-icons/bi"
 import { FaRegEnvelope } from "react-icons/fa"
 import { ImExit } from "react-icons/im"
 import { CiSquareQuestion } from "react-icons/ci"
-import { AiOutlineInfoCircle } from "react-icons/ai"
+import {AiOutlineBarChart, AiOutlineInfoCircle } from "react-icons/ai"
 
 const SideBar: React.FC<{ remaining: number }> = ({ remaining }) => {
 
@@ -22,6 +22,10 @@ const SideBar: React.FC<{ remaining: number }> = ({ remaining }) => {
     history.push("/auth");
   }
 
+  const toStatistic = () => {
+    window.location.href = "http://localhost:3000/statistic";
+  };
+
 
   return (
     <div className="sidebar">
@@ -36,6 +40,7 @@ const SideBar: React.FC<{ remaining: number }> = ({ remaining }) => {
         <p className="sidebar-text"><span className="icons"><CiSquareQuestion/></span>Remaining Requests: {remaining}</p>
         <p className="sidebar-text"><span className="icons"><FaRegEnvelope/></span>exemple@gmail.com</p>
         <button className="sidebar-btn" onClick={redirectToAccDetails}><span className="icons"><AiOutlineInfoCircle/></span>Account details</button>
+        <button className="sidebar-btn" onClick={toStatistic}><span className="icons"><AiOutlineBarChart/></span>Statistic</button>
         <button className="sidebar-btn signout" onClick={logoutClicked}><span className="icons"><ImExit/></span>Sign out</button>
       </div>
     </div>

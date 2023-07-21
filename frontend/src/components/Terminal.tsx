@@ -9,14 +9,14 @@ import { SignOutIcon} from "../assets/images";
 import SideBar from "./SideBar/SideBar"
 import CmdOutput from "./CmdOutput/CmdOutput";
 import { _getCryptoCurrencyQuote } from "../adapters/market";
-
+/// @ts-ignore
+import BarChart from "./Statistic/AccountChart.tsx";
 /// @ts-ignore
 import BitcoinChart from "../charts.tsx";
 /// @ts-ignore
 import PieChart from "../pieChart.tsx"
 /// @ts-ignore
 import CryptomarketCapChart from "../cryptoMarketCapChart.tsx";
-
 
 import CryptoChart from "../cryptoCharts";
 
@@ -45,6 +45,9 @@ let showBitcoinChart=false;
 let showPieChart=false;
 let showCharts=false
 let showMarketCapCharts=false;
+let showBarChart=false; 
+
+
 interface Output {
   input: string;
   command: string;
@@ -750,7 +753,7 @@ const Terminal: React.FC = () => {
                 result = await processServerResponse(res.text, handleOutput);
               }
 
-              
+              // showBarChart= input.toLocaleLowerCase().replace(/\s/g, '').includes('accountcountsevolution');
               showBitcoinChart= input.toLocaleLowerCase().replace(/\s/g, '').includes('bitcoinpricesevolution');
               showPieChart = input.toLocaleLowerCase().replace(/\s/g, '').includes('bitcoinethereumandbinancemarketcapitalization');
               showCharts= input.toLocaleLowerCase().replace(/\s/g, '').includes('cryptocurrenciespricesevolution');
@@ -916,7 +919,6 @@ interface Output {
     <div className="terminal">
       <SideBar remaining={remainingRequests} />
       <div className="input-output">
-        
         <div className="output-result">
         {output.map((line, index) => (
             <CmdOutput oput={line} index={index}  />
@@ -930,7 +932,7 @@ interface Output {
               className="prompt"
               value={input}
               onChange={handleInputChange}
-              disabled={remainingRequests > 2 || isTyping}
+              disabled={remainingRequests < 0 || isTyping}
             />
           </div>
           <div className="bitcoin-chart">
@@ -951,6 +953,11 @@ interface Output {
             {showMarketCapCharts ? <div className="marketcap-charts">
               <CryptomarketCapChart/>
             </div> : null}
+            
+
+            {/* {showBarChart ? <div className="bar-chart">
+              <BarChart/>
+            </div> : null} */}
 
           </div>
         </form>

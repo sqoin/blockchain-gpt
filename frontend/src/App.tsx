@@ -14,15 +14,16 @@ import AccountDetails from "./Account_Details";
 import { loadStripe } from '@stripe/stripe-js';
 import Payment from "./payment";
 import Completion from "./Completion";
-import ChartPage from "./ChartPage"
 
-import Charts from "./chart";
+
+
 
 
 import TelegramMessage from "./components/telegram-message/TelegramMessage"
 import PaymentMode from "./components/payment-mode/PaymentMode";
 import SendSol from "./components/pay-with-phantom/SendSol";
 import PayWithMetamask from "./components/pay-with-metamask/PayWithMetamask";
+import BarChart from "./components/Statistic/AccountChart";
 SuperTokens.init(SuperTokensConfig);
 const stripePromise = loadStripe('YOUR_PUBLISHABLE_KEY');
 
@@ -101,7 +102,7 @@ function App() {
                                 path="/paymentmode"><PaymentMode /></Route>
                             
                             <Route
-                                path="/chart"><ChartPage /></Route>
+                                path="/statistic"><BarChart /></Route>
                                
 
 
