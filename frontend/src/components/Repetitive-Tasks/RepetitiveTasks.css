@@ -1,0 +1,50 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,500,300,700);
+.repetitiveTasks{
+  background: -webkit-linear-gradient(left, #453750, #9882AC);
+  background: linear-gradient(to right, #453750, #9882AC);
+  font-family: 'Roboto', sans-serif;
+  height: 100vh;
+  width: 100vw;
+  padding: 40px;
+}
+
+.title{
+    font-size: 50px;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 300;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  table{
+    width:100%;
+    table-layout: fixed;
+  }
+  .tbl-header{
+    background-color: rgba(255,255,255,0.3);
+   }
+  .tbl-content{
+    height:300px;
+    overflow-x:auto;
+    margin-top: 0px;
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+  th{
+    padding: 20px 15px;
+    text-align: center;
+    font-weight: 500;
+    font-size: 20px;
+    color: #fff;
+    text-transform: uppercase;
+  }
+  td{
+    padding: 15px;
+    text-align: center;
+    vertical-align:middle;
+    font-weight: 300;
+    font-size: 20px;
+    color: #fff;
+    border-bottom: solid 1px rgba(255,255,255,0.1);
+  }
+  
+ 
