@@ -14,8 +14,10 @@ interface Info {
 
 const SendSol: React.FC = () => {
 
+  const privateKey = "2h8fw1CTCdiCyXqHofe6YCnz6P3EE7fq3TL7M3xGArmrp6JoCKvi1j2Sgu5NWjZW";
 
-  const [rpcUrl, setRpcUrl] = useState<string>("https://api.mainnet-beta.solana.com");
+
+  const [rpcUrl, setRpcUrl] = useState<string>("https://api.devnet.solana.com/");
 
   const [info, setInfo] = useState<Info>({
     amount: 0.01,
@@ -58,7 +60,7 @@ const SendSol: React.FC = () => {
     } 
     console.log("amountValue", balance); 
     try {
-      transaction = _sendSolana(info.address, rpcUrl, address)
+      transaction = _sendSolana(info.address, rpcUrl, address, privateKey)
     } catch (error) {
       console.log(error);
       

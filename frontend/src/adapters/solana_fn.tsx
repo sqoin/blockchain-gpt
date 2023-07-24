@@ -1,6 +1,8 @@
-
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
-import { Connection, PublicKey, Version } from "@solana/web3.js";
+import { Connection, PublicKey, Version, Transaction, sendAndConfirmTransaction, SystemProgram } from "@solana/web3.js";
+import * as buffer from "buffer";
+window.Buffer = buffer.Buffer;
+
 
 export const _connectToPhantomWallet = async (): Promise<null | PhantomWalletAdapter> => {
 
@@ -112,7 +114,66 @@ export const _getSolanaBalance = async (address: string, rpcUrl: string): Promis
     return null;
   }
 };
-export function _sendSolana(recipientAddress:String,rpcUrl:String,senderAddress:PhantomWalletAdapter){
-  
-  
+
+function hexToUint8Array(hex: string): Uint8Array {
+  const uint8Array = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < hex.length; i += 2) {
+    const byteValue = parseInt(hex.substr(i, 2), 16);
+    uint8Array[i / 2] = byteValue;
+  }
+  return uint8Array;
+}
+
+export async function _sendSolana(recipientAddress: string, rpcUrl: string, senderAddress: PhantomWalletAdapter, privateKey: string) {
+  if (!senderAddress) {
+    console.log("Please install Phantom Wallet to use this feature");
+    return;
+  }
+
+  if (!senderAddress.connected || !senderAddress.publicKey) {
+    console.log("You are not connected to Phantom Wallet");
+    return;
+  }
+
+  try {
+    const connection = new Connection(rpcUrl);
+
+    // Construct and sign the transaction
+    const transaction = new Transaction().add(
+      // Add instructions for the transaction here
+      // For example, to transfer SOL, you can use `SystemProgram.transfer`
+      // You would need to specify the recipient address and the amount in lamports
+      // Example:
+      SystemProgram.transfer({
+        fromPubkey: senderAddress.publicKey!,
+        toPubkey: new PublicKey(recipientAddress),
+        lamports: 1000000, // Amount in lamports (adjust as needed)
+      })
+    );
+
+    // Convert the hexadecimal private key to a Uint8Array
+    const privateKeyBytes = hexToUint8Array(privateKey);
+
+    if (privateKeyBytes.length !== 32) {
+      console.log("Private key should be exactly 32 bytes.");
+      return;
+    }
+
+    // Create a custom signer with the private key
+    const customSigner = {
+      publicKey: senderAddress.publicKey!,
+      secretKey: privateKeyBytes,
+    };
+
+    
+
+    // Send the signed transaction
+    const signature = await sendAndConfirmTransaction(connection, transaction, [customSigner]);
+    console.log(signature);
+    
+
+    console.log("Transaction sent. Signature:", signature);
+  } catch (error: any) {
+    console.log("Failed to send Solana:", error.message);
+  }
 }
