@@ -70,7 +70,7 @@ const Solana: React.FC = () => {
             
             let address = await _getSolanaPublicKey(myWallet);
             let result = null;
-            if(address && rpcUrl) result= await _getSolanaBalance(address,rpcUrl);
+            if(address && rpcUrl) result= await _getSolanaBalance(address);
             setBalance(result)
         }catch(error){
             console.error(error);

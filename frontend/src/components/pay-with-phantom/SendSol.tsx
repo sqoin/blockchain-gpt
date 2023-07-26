@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import QRCode from 'qrcode.react';
 import copy from "copy-to-clipboard";
-import { FaGhost, FaRegCopy } from 'react-icons/fa';
-import { Connection, PublicKey, Version, Transaction, TransactionInstruction, LAMPORTS_PER_SOL, SystemProgram } from "@solana/web3.js";
+import {  FaRegCopy } from 'react-icons/fa';
 import phantom from '../../assets/Phantom-Icon-Purple.png'
 import { _connectToPhantomWallet, _disconnectFromPhantomWallet, _getSolanaBalance, _getSolanaNetworkInfo, _getSolanaPublicKey, _sendSolana } from "../../adapters/solana_fn";
 import './SendSol.css';
@@ -13,11 +12,6 @@ interface Info {
 }
 
 const SendSol: React.FC = () => {
-
-  const privateKey = "2h8fw1CTCdiCyXqHofe6YCnz6P3EE7fq3TL7M3xGArmrp6JoCKvi1j2Sgu5NWjZW";
-
-
-  const [rpcUrl, setRpcUrl] = useState<string>("https://api.devnet.solana.com/");
 
   const [info, setInfo] = useState<Info>({
     amount: 0.01,
@@ -34,33 +28,39 @@ const SendSol: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   
-    let address:any; 
-    let key:any;
+    let wallet:any; 
+    let publicKey:any;
     let balance; 
     let transaction:any;
 
     try {
-      address = await _connectToPhantomWallet();
+      wallet = await _connectToPhantomWallet();
     } catch (error) {
       console.log(error); 
     }
     try {
-      key = await _getSolanaPublicKey(address);
+      publicKey = await _getSolanaPublicKey(wallet);
     } catch (error) {
       console.log(error); 
     }
     try {
-      balance = await _getSolanaBalance(key,rpcUrl);
+      balance = await _getSolanaBalance(publicKey);
     } catch (error) {
       console.log(error); 
     }
+
     if (Number(balance) < Number(info.amount)) { 
-      console.log("Insufficient funds in MetaMask account"); 
+      console.log("Insufficient funds in Phantom account"); 
+      console.log("balance: ", balance, " || ", "amount to send: ",  info.amount); 
       return; 
     } 
-    console.log("amountValue", balance); 
+
+
     try {
-      transaction = _sendSolana(info.address, rpcUrl, address, privateKey)
+
+      let amount = info.amount * Math.pow(10, 9) 
+
+      transaction = _sendSolana(info.address, wallet, amount)
     } catch (error) {
       console.log(error);
       
