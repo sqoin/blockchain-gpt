@@ -852,7 +852,25 @@ interface Output {
   input: string;
   command: string;
 }
+interface Task {
+  userId: string;
+  task: string;
+  duration: number;
+}
+const [task, setTask] = useState<Task>({
+  userId: '0cd644c9-776d-4c1e-aa2b-853fbeeafe62',
+  task: 'Solana Price',
+  duration: 600000,
+});
 
+const addTask = async () => {
+  try {
+    await axios.post('http://localhost:3003/api/tasks', task);
+    alert('Task saved successfully!');
+  } catch (error) {
+    alert('Failed to save task');
+  }
+};
 
 
 
