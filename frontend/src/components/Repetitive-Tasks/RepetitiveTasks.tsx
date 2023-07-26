@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import "./RepetitiveTasks.css";
 import axios from 'axios';
+import { useSessionContext } from "supertokens-auth-react/recipe/session";
 
 interface Task {
     _id: string;
@@ -9,20 +10,25 @@ interface Task {
     duration: number;
 }
 
-const RepetitiveTasks: React.FC<{ userId: string }> = ({ userId }) => {
+const RepetitiveTasks: React.FC = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
+    const sessionContext = useSessionContext();
 
+    
+    const fetchTasksByUserId = async () => {
+        if (sessionContext.loading === true) {
+            return null;
+        }
+        try {
+            const response = await axios.get(`http://localhost:3003/api/tasks/${sessionContext.userId}`);
+            setTasks(response.data);
+        } catch (error) {
+            console.error('Error fetching tasks:', error);
+        }
+    }
     useEffect(() => {
-        const fetchTasksByUserId = async () => {
-            try {
-                const response = await axios.get(`http://localhost:3003/api//tasks/${userId}`);
-                setTasks(response.data);
-            } catch (error) {
-                console.error('Error fetching tasks:', error);
-            }
-        };
         fetchTasksByUserId();
-    }, [userId])
+    }, [])
 
     const convertMillisecondsToMinutes = (milliseconds: number): number => {
         return Math.floor(milliseconds / 60000);
