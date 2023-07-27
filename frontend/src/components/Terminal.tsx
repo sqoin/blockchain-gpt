@@ -49,7 +49,7 @@ interface Output {
   input: string;
   command: string;
 }
-const Terminal: React.FC = () => {
+const Terminal: React.FC <{idUser:string}> = ({ idUser }) => {
   const [isTyping, setIsTyping] = useState(false)
   const [input, setInput] = useState<string>("");
   const [showChart, setShowChart] = useState(false);
@@ -78,7 +78,7 @@ const Terminal: React.FC = () => {
   const getData = (input: string): Promise<any> => {
     return new Promise((resolve, reject) => {
       request
-        .post("/gpt-test")
+        .post("http://localhost:3040/gpt-test")
         .send({ command: input })
         .set("Accept", "application/json")
         .set("Access-Control-Allow-Origin", "*")
@@ -580,6 +580,12 @@ const Terminal: React.FC = () => {
           setTimeout(async () => {
             //handleOutput(input);
             let newinput=input;
+            // setTask((prevState) => ({
+            //   ...prevState, 
+            //   task: newinput, 
+            // }));
+            task={userId:idUser,task:input,duration:600000}
+            addTask(); 
             setInput("");
             //handleOutput(`Execution in progress ...`);
             if (remainingResult > 0) {
@@ -857,12 +863,12 @@ interface Task {
   task: string;
   duration: number;
 }
-const [task, setTask] = useState<Task>({
-  userId: '0cd644c9-776d-4c1e-aa2b-853fbeeafe62',
-  task: 'Solana Price',
-  duration: 600000,
-});
-
+// const [task, setTask] = useState<Task>({
+//   userId: idUser,
+//   task: '',
+//   duration: 300000,
+// });
+let task={}
 const addTask = async () => {
   try {
     await axios.post('http://localhost:3003/api/tasks', task);

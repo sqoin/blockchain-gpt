@@ -57,11 +57,11 @@ export default function SuccessView(props: { userId: string }) {
       icon: SignOutIcon,
     },
   ];
-
+  
   return (
     <>
       <div className="main-container">
-        <Terminal></Terminal>
+        <Terminal idUser={userId}></Terminal>
       </div>
 
       
