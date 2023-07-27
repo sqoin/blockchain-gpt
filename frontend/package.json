@@ -62,7 +62,7 @@
             "last 1 safari version"
         ]
     },
-    "proxy": "http://authentification:3001",
+    "proxy": "http://localhost:3001",
     "devDependencies": {
         "@types/superagent": "^4.1.16",
         "react-scripts": "^5.0.1"

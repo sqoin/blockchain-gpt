@@ -78,7 +78,7 @@ const Terminal: React.FC = () => {
   const getData = (input: string): Promise<any> => {
     return new Promise((resolve, reject) => {
       request
-        .post("/gpt-test")
+        .post("http://localhost:300/gpt-test")
         .send({ command: input })
         .set("Accept", "application/json")
         .set("Access-Control-Allow-Origin", "*")
