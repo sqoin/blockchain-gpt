@@ -50,7 +50,7 @@ services:
   service-chatdata:
     build: backend/chatdata
     ports:
-      - 3005:3005
+      - 3006:3006
     
     container_name: chatdata
     volumes:
