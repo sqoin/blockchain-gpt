@@ -4,9 +4,7 @@ import {insertData} from "../databaseManager";
 import ThirdPartyEmailPassword from "supertokens-node/recipe/thirdpartyemailpassword";
 import SuperTokens from 'supertokens-node';
 import axios from 'axios';
-
-
-
+const {supertokensConfig,mongoose} = require('../config.js')
 let tasksController = require("../controller/tasksController");
 const router: Router = Router();
 
@@ -15,18 +13,7 @@ let userEmail='';
 let githubaccount='';
 let name='';
 let lastName='';
-SuperTokens.init({
-  supertokens: {
-    connectionURI: process.env.CONNECTION_URI||"",
-    apiKey: process.env.APIKEY||"",
-  },
-  appInfo: {
-    appName: 'blockchaingGpt',
-    apiDomain: 'http://localhost:3003',
-    websiteDomain: 'http://localhost:3000',
-  },
-  recipeList: [ThirdPartyEmailPassword.init({})],
-});
+SuperTokens.init(supertokensConfig);
 
 
 router.post('/saveUserId', async (req: Request, res: Response) => {
