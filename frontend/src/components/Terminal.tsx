@@ -78,7 +78,7 @@ const Terminal: React.FC = () => {
   const getData = (input: string): Promise<any> => {
     return new Promise((resolve, reject) => {
       request
-        .post("/gpt-test")
+        .post("http://localhost:3001/gpt-test")
         .send({ command: input })
         .set("Accept", "application/json")
         .set("Access-Control-Allow-Origin", "*")
@@ -497,6 +497,7 @@ async function fetchAndDisplayTransactions() {
       });
     } else {
       console.log('Failed to fetch transactions:', response.data.message);
+      handleOutput(`Failed to fetch transactions:${response.data.message} `);
       console.log('Full Response:', response.data);
     }
   } catch (error:any) {
@@ -504,22 +505,86 @@ async function fetchAndDisplayTransactions() {
   
   }
 }
-  const userCommand1 = "donner moi le publickey chaque 5min";
-  const userCommand2 = "donner moi la balance chaque 5min";
-  const userCommand3 = "donner moi la balance chaque 5min";
-  
-  useEffect(() => {
-    const storedCommand = localStorage.getItem('userCommand');
-    if (storedCommand === userCommand1) {
-      getAndDisplayPublicKey();
-    } else if (storedCommand === userCommand2) {
-      fetchBalanceFromMetaMask();
-    } else if (storedCommand === userCommand3) {
-      getNetworkInfoEvery5Minutes();
-    }
-  }, []); 
 
-  //solana functions
+// Interface pour définir le type de données stockées dans le localStorage
+interface InputData {
+  inputValue: string;
+}
+// Fonction pour vérifier si l'input existe déjà dans le localStorage
+function isInputExists(inputValue: string): boolean {
+  const storedInputs: InputData[] = JSON.parse(localStorage.getItem("inputs") || "[]");
+  return storedInputs.some((data) => data.inputValue === inputValue);
+}
+
+// Fonction pour ajouter un nouvel input dans le localStorage s'il n'existe pas déjà
+function addInputToLocalStorage(inputValue: string): void {
+  // Vérifier si l'input existe déjà
+  if (!isInputExists(inputValue)) {
+    // Vérifier si le localStorage est supporté par le navigateur
+    if (typeof Storage !== "undefined") {
+      // Récupérer les inputs précédents (s'ils existent) depuis le localStorage
+      const storedInputs: InputData[] = JSON.parse(localStorage.getItem("inputs") || "[]");
+
+      // Ajouter le nouvel input à la liste des inputs
+      storedInputs.push({ inputValue });
+
+      // Mettre à jour le localStorage avec la nouvelle liste d'inputs
+      localStorage.setItem("inputs", JSON.stringify(storedInputs));
+    } else {
+      // Le localStorage n'est pas supporté par le navigateur
+      console.error("LocalStorage n'est pas supporté par ce navigateur.");
+    }
+  } else {
+    console.log("L'input existe déjà dans le localStorage.");
+  }
+}
+
+
+//pour récupérer tous les inputs stockés dans le localStorage
+const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
+console.log(allInputs);
+
+///////////////////////////
+  const userCommand1 = "donner moi le publickey refrech chaque 5min";
+  const userCommand2 = "donner moi la balance chaque 5min";
+  const userCommand3="get network info"
+  useEffect(() => {
+    // Vérifier si la commande a été précédemment entrée dans le localStorage
+    const checkUserCommand = () => {
+      const storedCommand = localStorage.getItem('userCommand');
+
+      if (storedCommand === userCommand1) {
+        getAndDisplayPublicKey();
+      } else if (storedCommand === userCommand2) {
+        fetchBalanceFromMetaMask();
+      }else if (storedCommand === userCommand3) {
+        getNetworkInfoEvery5Minutes();
+      }
+    };
+
+    checkUserCommand();
+  }, []); // Exécutez cette vérification une seule fois au chargement de la page
+
+  // Mettre à jour le stockage local toutes les 5 minutes
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const storedCommand = localStorage.getItem('userCommand');
+      if (storedCommand === userCommand1) {
+        getAndDisplayPublicKey();
+      } else if (storedCommand === userCommand2) {
+        fetchBalanceFromMetaMask();
+      }
+      else if (storedCommand === userCommand3) {
+        getNetworkInfoEvery5Minutes();
+      }
+      
+    }, 5 * 60 * 1000); // 5 minutes en millisecondes
+
+    return () => clearInterval(interval);
+  }, []);
+
+
+   //solana functions
   const _connectToPhantomWallet = async (): Promise<null | PhantomWalletAdapter> => {
 
     //@ts-ignore
@@ -623,7 +688,6 @@ async function fetchAndDisplayTransactions() {
   };
 
 
-
   const _getSolanaBalance = async (address: string): Promise<null | number> => {
     try {
       let connection = new Connection(rpcUrlInitial)
@@ -631,7 +695,8 @@ async function fetchAndDisplayTransactions() {
       const balance = await connection.getBalance(publicKey);
       if (!balance || typeof balance != 'number')
         return null
-      const lamportsToSol = balance / 1e9;
+
+        const lamportsToSol = balance / 1e9;
       handleOutput("Your balance is " + lamportsToSol)
       return lamportsToSol;
     } catch (error: any) {
@@ -697,7 +762,6 @@ async function fetchAndDisplayTransactions() {
             setInput("");
             //handleOutput(`Execution in progress ...`);
             if (remainingResult > 0) {
-            
               
               if( input === 'Dessiner un graphique circulaire de la capitalisation boursière de Bitcoin, Ethereum et Binance.'){
 
@@ -705,7 +769,6 @@ async function fetchAndDisplayTransactions() {
                // sleep(5000)
                 setShowChart(true)
               }
-             
               
              else if (input === "Quelles ont été les nouvelles les plus importantes dans la blockchain ces trois derniers jours ?") {
                 // Add the static response to the output
@@ -724,26 +787,41 @@ async function fetchAndDisplayTransactions() {
               }
               
               else if (input === "donner moi le publickey chaque 5min") {
+                addInputToLocalStorage(input);
                 getAndDisplayPublicKey();
 
               }
               else if (input === "donner moi la balance chaque 5min") {
+                addInputToLocalStorage(input);
                 fetchBalanceFromMetaMask();
-
 
               } 
               else if (input === "get network information every 5min") {
+                addInputToLocalStorage(input);
                 getNetworkInfoEvery5Minutes();
 
-              } else if (
-                input === userCommand1 ||
-                input === userCommand2 ||
-                input === userCommand3
-              ) {
-                localStorage.setItem('userCommand', input);
-               handleOutput('');
-              } 
+               }
+              else if (input === userCommand3) {
+                addInputToLocalStorage(input);
+                const networkInfo = await _getNetworkInfo();
+                handleOutput(`network info: ${networkInfo?.chainId}  ${networkInfo?.networkName}  ${networkInfo?.networkId}`);
+                return;
+              }
+              else if (input === userCommand1){
+                addInputToLocalStorage(input);
+                const pk = await getAndDisplayPublicKey();
+                handleOutput(` PublicKey: ${pk} `);
+                return;
+              
+              } else if (input === userCommand2) {
+                addInputToLocalStorage(input);
+                const bl = await fetchBalanceFromMetaMask();
+                handleOutput(` Blance: ${bl} `);
+                return;
+              }
+            
               else if (input === "get bitcoin price every 5min") {
+                addInputToLocalStorage(input);
                 while (true) {
                   const price = await _getCryptoCurrencyQuote("bitcoin" , "price");
                   handleOutput(`Bitcoin Price: ${price}`);
@@ -754,6 +832,7 @@ async function fetchAndDisplayTransactions() {
                 
               } 
               else if (input === "get bitcoin total volume every 5min" ) {
+                addInputToLocalStorage(input);
                 while (true) {
                   const volume = await _getCryptoCurrencyQuote("bitcoin",'volume');
                   handleOutput(`Bitcoin Total Volume: ${volume}`);
@@ -761,6 +840,7 @@ async function fetchAndDisplayTransactions() {
                 }
               } 
               else if (input === "get bitcoin MarketCap every 5min") {
+                addInputToLocalStorage(input);
                 while (true) {
                   const marketCap = await _getCryptoCurrencyQuote("bitcoin","marketCap");
                   handleOutput(`Bitcoin MarketCap: ${marketCap}`);
@@ -1005,10 +1085,15 @@ interface Output {
 
           </div>
         </form>
+       {/*  <div>
+      <input type="text" onChange={handleInput} />
+      </div> */}
 
       </div>
-      
+     
     </div>
+      
+   
 
   )
 };
