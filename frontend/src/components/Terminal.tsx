@@ -5,7 +5,7 @@ import { Connection, PublicKey, Version } from "@solana/web3.js";
 import { SERVER_DOMAIN } from "../utils/constants";
 import { useHistory, useLocation } from "react-router-dom";
 import { signOut } from "supertokens-auth-react/recipe/session";
-import { SignOutIcon} from "../assets/images";
+import { SignOutIcon } from "../assets/images";
 import SideBar from "./SideBar/SideBar"
 import CmdOutput from "./CmdOutput/CmdOutput";
 import { _getCryptoCurrencyQuote } from "../adapters/market";
@@ -41,15 +41,17 @@ interface Transaction {
 }
 
 const request = require("superagent");
-let showBitcoinChart=false;
-let showPieChart=false;
-let showCharts=false
-let showMarketCapCharts=false;
+let showBitcoinChart = false;
+let showPieChart = false;
+let showCharts = false
+let showMarketCapCharts = false;
 interface Output {
   input: string;
   command: string;
 }
 const Terminal: React.FC = () => {
+  const [showEye, setShowEye] = useState(false);
+  const [error, setError] = useState("")
   const [isTyping, setIsTyping] = useState(false)
   const [input, setInput] = useState<string>("");
   const [showChart, setShowChart] = useState(false);
@@ -73,7 +75,7 @@ const Terminal: React.FC = () => {
 
   let userRequestCount: Map<string, number> = new Map();
 
-  
+
 
   const getData = (input: string): Promise<any> => {
     return new Promise((resolve, reject) => {
@@ -84,14 +86,14 @@ const Terminal: React.FC = () => {
         .set("Access-Control-Allow-Origin", "*")
         .end((err: any, res: any) => {
           if (err) {
-            console.log(err);
-            
+            //console.log(err);
+
             setIsTyping(false)
             popLastItem();
             reject(err);
           } else {
-            console.log(res);
-            
+            //console.log(res);
+
             setIsTyping(false)
             popLastItem();
             resolve(res);
@@ -116,8 +118,7 @@ const Terminal: React.FC = () => {
     if (data.error) {
       throw new Error(data.error);
     }
-    console.log("/////////", data);
-    popLastItem();
+
     return data.market_data.current_price.usd;
   };
 
@@ -129,16 +130,15 @@ const Terminal: React.FC = () => {
 
     const response = await fetch(apiUrl);
     const data = await response.json();
-    console.log("/////////", data);
-    
+
 
     if (data.error) {
       throw new Error(data.error);
     }
-    popLastItem();
+
     return data.market_data.current_price.usd;
   };
-  
+
 
 
   //ethereum functions
@@ -424,14 +424,14 @@ const Terminal: React.FC = () => {
     let wallet = new PhantomWalletAdapter(provider);
 
     if (!wallet) {
-      popLastItem();
+
       handleOutput("Please install Phantom Wallet to use this feature")
       console.log("Please install Phantom Wallet to use this feature");
       return null;
     }
 
     if (wallet.connected) {
-      popLastItem();
+
       handleOutput("You are already connected to Phantom Wallet")
       console.log("You are already connected to Phantom Wallet");
       return wallet;
@@ -440,7 +440,7 @@ const Terminal: React.FC = () => {
     try {
       await wallet.connect();
       if (!wallet.publicKey) {
-        popLastItem();
+
         console.log("No Connected Account");
         handleOutput("Failed to connect to Phantom Wallet")
         return null;
@@ -450,7 +450,7 @@ const Terminal: React.FC = () => {
       //handleOutput("You are now connected " + wallet.publicKey.toBase58())
       return wallet;
     } catch (error: any) {
-      popLastItem();
+
       console.log("Failed to connect to Phantom Wallet: " + error.message);
       handleOutput("Failed to connect to Phantom Wallet: " + error.message);
       return null;
@@ -461,7 +461,7 @@ const Terminal: React.FC = () => {
   const _disconnectFromPhantomWallet = async (): Promise<null | string> => {
 
     if (!solanaWallet || !solanaWallet.connected || !solanaWallet.publicKey) {
-      popLastItem();
+
       console.log("This Phantom Wallet is not connected");
       handleOutput("This Phantom Wallet is not connected, please connect first")
       return null;
@@ -471,12 +471,12 @@ const Terminal: React.FC = () => {
       await solanaWallet.disconnect();
       localStorage.removeItem("solanaPublicKey");
       console.log("You have successfully disconnected from Phantom Wallet");
-      popLastItem();
+
       handleOutput("You have successfully disconnected from Phantom Wallet")
       return "success"
     } catch (error: any) {
       console.log("Failed to disconnect from Phantom Wallet: " + error.message);
-      popLastItem();
+
       handleOutput("Failed to disconnect from Phantom Wallet: " + error.message)
       return null;
     }
@@ -485,17 +485,17 @@ const Terminal: React.FC = () => {
   const _getSolanaPublicKey = async (): Promise<null | string> => {
 
     if (!solanaWallet || !solanaWallet.connected || !solanaWallet.publicKey) {
-      popLastItem();
+
       handleOutput("You are not connected to Phantom Wallet");
       return null;
     }
 
     try {
-      popLastItem();
+
       handleOutput(solanaWallet.publicKey.toBase58())
       return solanaWallet.publicKey.toBase58();
     } catch (error: any) {
-      popLastItem();
+
       handleOutput(
         "Failed to retrieve public key from Phantom Wallet: " + error.message
       );
@@ -516,12 +516,12 @@ const Terminal: React.FC = () => {
         featureSet: version["feature-set"],
         epoch: epochInfo.epoch
       };
-      popLastItem();
+
       handleOutput(JSON.stringify(networkInfo))
       return JSON.stringify(networkInfo);
     }
     catch (error: any) {
-      popLastItem();
+
       handleOutput("Error while connection to this RPC URL " + error.message)
       return "Error while connection to this RPC URL " + error.message;
     }
@@ -537,7 +537,7 @@ const Terminal: React.FC = () => {
       if (!balance || typeof balance != 'number')
         return null
       const lamportsToSol = balance / 1e9;
-      popLastItem();
+
       handleOutput("Your balance is " + lamportsToSol)
       return lamportsToSol;
     } catch (error: any) {
@@ -563,18 +563,18 @@ const Terminal: React.FC = () => {
         let capturedOutput: any;
         const originalConsoleLog: Console["log"] = console.log;
         console.log = commandWriter;
-        popLastItem();
+
         const result: any = await eval(wrappedScript);
-        popLastItem();
+
         return capturedOutput;
       } catch (error: any) {
-        popLastItem();
+
         return `Error: ${error.message} \n script ${scriptContent}`;
       }
     } else {
-      popLastItem();
+
       commandWriter("This input does not require any specific action.")
-      
+
       return `${data}`;
     }
   };
@@ -595,27 +595,27 @@ const Terminal: React.FC = () => {
       if (remainingResult < 21) {
         try {
           let result;
-          
+
           setIsTyping(true)
 
           setTimeout(async () => {
             //handleOutput(input);
-            let newinput=input;
+            let newinput = input;
             setInput("");
             handleOutput(`Execution in progress ...`);
             if (remainingResult > 0) {
-            
-              
-              if( input === 'Dessiner un graphique circulaire de la capitalisation boursière de Bitcoin, Ethereum et Binance.'){
+
+
+              if (input === 'Dessiner un graphique circulaire de la capitalisation boursière de Bitcoin, Ethereum et Binance.') {
 
                 //handleOutput("Exécution en progress ...")
-               // sleep(5000)
+                // sleep(5000)
                 setShowChart(true)
               }
-             
-              
-             else if (input === "Quelles ont été les nouvelles les plus importantes dans la blockchain ces trois derniers jours ?") {
-                popLastItem();
+
+
+              else if (input === "Quelles ont été les nouvelles les plus importantes dans la blockchain ces trois derniers jours ?") {
+
                 // Add the static response to the output
                 sleep(5000)
                 handleOutput("Parmi les dernières tendances dans la technologie de la blockchain, Algofi, le plus gros protocole sur la blockchain Algorand, annonce la fin de la plupart de ses activités. La plate-forme se concentrera désormais sur le retrait uniquement, laissant de côté les prêts, les emprunts et les échanges. En parallèle, le Bitcoin, la plus importante crypto-monnaie au monde, connaît une nouvelle baisse de valeur, se situant en dessous de 30 500 $, avec une baisse de 0,70 % sur la dernière journée. Les investisseurs et traders s'inquiètent d'un mouvement de 10 000 bitcoins, d'une valeur de plus de 300 millions de dollars, initié par le gouvernement américain. Dans le même temps, les ventes minières de Bitcoin atteignent des sommets records, tandis que la complexité de l'extraction de Bitcoin atteint un niveau sans précédent.");
@@ -623,12 +623,12 @@ const Terminal: React.FC = () => {
               else if (input === "Vérifier la valeur de mon portefeuille toutes les  15 secondes et m'envoyer une alerte Telegram si la valeur de mon portefeuille en dollars augmente de plus de 200$.") {
                 // Add the static response to the output
                 sleep(5000)
-                while(true){
-                  let wallet :any = await _connectToPhantomWallet()
+                while (true) {
+                  let wallet: any = await _connectToPhantomWallet()
                   let balnace = await _getSolanaBalance(wallet?.publicKey?.toBase58())
-                  await sleep(15*1000 )
+                  await sleep(15 * 1000)
                 }
-      
+
               }
               else if (input === "donner moi le publickey chaque 5min") {
                 while (true) {
@@ -637,10 +637,10 @@ const Terminal: React.FC = () => {
                     console.log('Failed to connect to MetaMask');
                     return;
                   }
-                  const publicKey = await _getPublicKey();           
+                  const publicKey = await _getPublicKey();
                   if (publicKey) {
                     console.log('Public Key:', publicKey);
-                    popLastItem();
+
                     handleOutput(`Public Key: ${publicKey}`);
 
                   } else {
@@ -648,7 +648,7 @@ const Terminal: React.FC = () => {
                   }
                   await sleep(5 * 60 * 1000); // Attendre 5 minutes
                 }
-              } 
+              }
               else if (input === "donner moi la balance chaque 5min") {
                 while (true) {
                   let wallet = await _connectToMetaMask();
@@ -656,11 +656,11 @@ const Terminal: React.FC = () => {
                     console.log('Failed to connect to MetaMask');
                     return;
                   }
-                  const publicKey = await _getPublicKey();     
-                  const  balance = await _getBalance(publicKey);           
+                  const publicKey = await _getPublicKey();
+                  const balance = await _getBalance(publicKey);
                   if (balance) {
                     console.log('balance:', balance);
-                    popLastItem();
+
                     handleOutput(`balance: ${balance}`);
 
                   } else {
@@ -668,7 +668,7 @@ const Terminal: React.FC = () => {
                   }
                   await sleep(5 * 60 * 1000); // Attendre 5 minutes
                 }
-              } 
+              }
               else if (input === "get network information every 5min") {
                 while (true) {
                   let wallet = await _connectToMetaMask();
@@ -676,9 +676,9 @@ const Terminal: React.FC = () => {
                     console.log('Failed to connect to MetaMask');
                     return;
                   }
-                  const network = await _getNetworkInfo();     
+                  const network = await _getNetworkInfo();
                   if (network) {
-                    popLastItem();
+
                     handleOutput(`Network Information:
                     Chain ID: ${network.chainId}
                     Network ID: ${network.networkId}
@@ -686,68 +686,68 @@ const Terminal: React.FC = () => {
 
                   } else {
                     console.log('Failed to retrieve network information');
-                  }     
+                  }
                   await sleep(5 * 60 * 1000); // Attendre 5 minutes
                 }
-              } 
+              }
               else if (input === "get bitcoin price every 5min") {
                 while (true) {
-                  const price = await _getCryptoCurrencyQuote("bitcoin" , "price");
-                  popLastItem();
+                  const price = await _getCryptoCurrencyQuote("bitcoin", "price");
+
                   handleOutput(`Bitcoin Price: ${price}`);
                   await sleep(5 * 60 * 1000); // Attendre 5 minutes
                 }
-                
-              } 
-              else if (input === "get bitcoin total volume every 5min" ) {
+
+              }
+              else if (input === "get bitcoin total volume every 5min") {
                 while (true) {
-                  const volume = await _getCryptoCurrencyQuote("bitcoin",'volume');
-                  popLastItem();
+                  const volume = await _getCryptoCurrencyQuote("bitcoin", 'volume');
+
                   handleOutput(`Bitcoin Total Volume: ${volume}`);
                   await sleep(5 * 60 * 1000); // Attendre 5 minutes
                 }
-              } 
+              }
               else if (input === "get bitcoin MarketCap every 5min") {
                 while (true) {
-                  const marketCap = await _getCryptoCurrencyQuote("bitcoin","marketCap");
-                  popLastItem();
+                  const marketCap = await _getCryptoCurrencyQuote("bitcoin", "marketCap");
+
                   handleOutput(`Bitcoin MarketCap: ${marketCap}`);
                   await sleep(5 * 60 * 1000); // Attendre 5 minutes
                 }
-              } 
+              }
               else if (input === "What is Bitcoin?") {
-                popLastItem();
+
                 handleOutput(`Bitcoin is a decentralized cryptocurrency based on blockchain technology. It is a form of digital currency that enables peer-to-peer transactions without the need for a central authority such as a bank.`);
-              } 
+              }
               else if (input === "How does Bitcoin work?") {
-                popLastItem();
+
                 handleOutput(`Bitcoin operates on a decentralized network of nodes, where transactions are recorded in a public ledger called the blockchain. Transactions are secured using cryptographic techniques, 
                               and miners validate transactions by solving complex mathematical problems.`);
-              } 
+              }
               else if (input === "Who created Bitcoin?") {
-                popLastItem();
+
                 handleOutput(`Bitcoin was created by an individual or group of individuals using the pseudonym Satoshi Nakamoto. The true identity of Satoshi Nakamoto remains unknown to this day.`);
-              } 
+              }
               else if (input === "What is the difference between Bitcoin and traditional currencies?") {
-                popLastItem();
+
                 handleOutput(`Bitcoin differs from traditional currencies because it is not issued or controlled by a central authority like a central bank. It relies on blockchain technology and operates in a decentralized manner.`);
-              } 
+              }
               else if (input === "What is a Bitcoin address?") {
-                popLastItem();
+
                 handleOutput(`A Bitcoin address is a unique alphanumeric string that represents the location where Bitcoins are stored. You can share this address with others to receive Bitcoins.`);
-              } 
+              }
               else if (input === "How can I securely store my Bitcoins?") {
-                popLastItem();
+
                 handleOutput(`You can store your Bitcoins in a Bitcoin wallet. Wallets can be either software wallets on electronic devices or physical hardware wallets that offer additional security.`);
-              } 
+              }
               else if (input === "How can I use Bitcoin to make transactions?") {
-                popLastItem();
+
                 handleOutput(`To make a Bitcoin transaction, you need to know the recipient's Bitcoin address. You can send Bitcoins from your wallet using that address, specifying the amount and signing the transaction.`);
-              } 
+              }
               else if (input === "Is Bitcoin legal?") {
-                popLastItem();
+
                 handleOutput(`The legality of Bitcoin varies from country to country. In many countries, Bitcoin is considered a legal form of digital asset, but some jurisdictions may restrict its use or regulation.`);
-              } 
+              }
               else if (input === "get Latest Transactions") {
                 try {
                   let wallet = await _connectToMetaMask();
@@ -755,16 +755,16 @@ const Terminal: React.FC = () => {
                     console.log('Failed to connect to MetaMask');
                     return;
                   }
-                  const publicKey = await _getPublicKey(); 
+                  const publicKey = await _getPublicKey();
                   const apiKey = '13899XRJ6IPW6PJXJDQ9DMJ6ZMNP51PY7I'; // Replace with your Etherscan API key
                   const apiUrl = `https://api.etherscan.io/api?module=account&action=txlist&address=${publicKey}&sort=desc&apikey=${apiKey}`;
                   const response = await axios.get(apiUrl);
-                
+
                   if (response.data.status === '1') {
                     const transactions: Transaction[] = response.data.result;
                     transactions.forEach((transaction: Transaction) => {
                       console.log('success');
-                      popLastItem();
+
                       handleOutput(`Transaction Information:
                       Transaction Hash: ${transaction.hash}
                       From: ${transaction.from}
@@ -778,44 +778,50 @@ const Terminal: React.FC = () => {
                     console.log('Failed to fetch transactions:', response.data.message);
                     console.log('Full Response:', response.data);
                   }
-                } catch (error:any) {
+                } catch (error: any) {
                   console.log('Error occurred:', error.message);
                 }
-              } 
-              else{
+              }
+              else {
                 try {
                   const res = await getData(input);
-                  popLastItem();
+
                   result = await processServerResponse(res.text, handleOutput);
                 } catch (error: any) {
-                  popLastItem();
-                  handleOutput(`error: ${error.message}`)
+                  setError(error.message);
+                  setShowEye(true)
+                  handleOutput("")
                 }
-                
-                
+
+
               }
 
-              
-              showBitcoinChart= input.toLocaleLowerCase().replace(/\s/g, '').includes('bitcoinpricesevolution');
+
+              showBitcoinChart = input.toLocaleLowerCase().replace(/\s/g, '').includes('bitcoinpricesevolution');
               showPieChart = input.toLocaleLowerCase().replace(/\s/g, '').includes('bitcoinethereumandbinancemarketcapitalization');
-              showCharts= input.toLocaleLowerCase().replace(/\s/g, '').includes('cryptocurrenciespricesevolution');
-              showMarketCapCharts= input.toLocaleLowerCase().replace(/\s/g, '').includes('cryptomarketcaps');
+              showCharts = input.toLocaleLowerCase().replace(/\s/g, '').includes('cryptocurrenciespricesevolution');
+              showMarketCapCharts = input.toLocaleLowerCase().replace(/\s/g, '').includes('cryptomarketcaps');
               setInput("");
               setRemainingRequests(remainingResult - 1);
-             //await handleOutput(`Remaining requests: ${remainingResult}`);
+              //await handleOutput(`Remaining requests: ${remainingResult}`);
 
-             setRemainingRequests(remainingResult - 1);
+              setRemainingRequests(remainingResult - 1);
             } else {
-              popLastItem();
-              handleOutput(`Error: Maximum request limit reached !! Please upgrade to a paid account to continue using this feature.`);
+              setError("Maximum request limit reached !! Please upgrade to a paid account to continue using this feature.");
+              setShowEye(true)
+              handleOutput("")
+
+              //handleOutput(`Error: Maximum request limit reached !! Please upgrade to a paid account to continue using this feature.`);
               await sleep(10000)
               history.push("/paymentmode")
             }
           }, 2000);
 
         } catch (error: any) {
-          popLastItem();
-          handleOutput(`Error: ${error.message}\n`);
+
+          setError(error.message);
+          setShowEye(true)
+          handleOutput("")
         }
       }
 
@@ -857,7 +863,7 @@ const Terminal: React.FC = () => {
     }
 
     if (remainingRequests <= 0) {
-      popLastItem();
+
       handleOutput(`Error: Maximum request limit reached ! \n`);
       await sleep(10000)
       history.push("/paymentmode")
@@ -872,7 +878,7 @@ const Terminal: React.FC = () => {
     setOutput(prevOutput => {
       const lastOutput = prevOutput[prevOutput.length - 1];
       const isNewOutput = lastOutput?.input !== input.trim() || lastOutput?.command !== command;
-      
+
       if (isNewOutput) {
         return [
           ...prevOutput,
@@ -886,45 +892,57 @@ const Terminal: React.FC = () => {
       }
     });
   };
-  
+
+  /*
+   //this one is better
+    const popLastItem = (): void => {
+      setOutput((prevOutput: Output[]) => {
+        // Check if the previous output exists and has at least one item
+        if (prevOutput && prevOutput.length > 0) {
+          const lastItem = prevOutput[prevOutput.length - 1];
+    
+          // Check if the command of the last item is "Execution in progress ..."
+          if (lastItem.command === "Execution in progress ...") {
+            // Remove the last item from the array
+            return prevOutput.slice(0, prevOutput.length - 1);
+          }
+        }
+        // If the command is not "Execution in progress ..." or the array is empty, return the original array
+        return prevOutput;
+      });
+    };*/
+
+
 
   const popLastItem = (): void => {
     setOutput((prevOutput: Output[]) => {
-      // Check if the previous output exists and has at least one item
-      if (prevOutput && prevOutput.length > 0) {
-        const lastItem = prevOutput[prevOutput.length - 1];
-  
-        // Check if the command of the last item is "Execution in progress ..."
-        if (lastItem.command === "Execution in progress ...") {
-          // Remove the last item from the array
-          return prevOutput.slice(0, prevOutput.length - 1);
-        }
-      }
-      // If the command is not "Execution in progress ..." or the array is empty, return the original array
-      return prevOutput;
+      // Filter out items with command === "Execution in progress ..."
+      const updatedOutput = prevOutput.filter(item => item.command !== "Execution in progress ...");
+      return updatedOutput;
     });
   };
 
-interface Output {
-  input: string;
-  command: string;
-}
+
+  interface Output {
+    input: string;
+    command: string;
+  }
 
 
 
 
- /*  const _getStatics = async (
-    coinName: string,
-    vsCurrency: string,
-    days: number
-  ): Promise<string> => {
-
-    const interfaceUrl = `/statics?coinName=${coinName}&vsCurrency=${vsCurrency}&days=${days}`;
-    window.open(interfaceUrl, '_blank');
-    return 'you will find your request on the statics page '
-
-
-  }; */
+  /*  const _getStatics = async (
+     coinName: string,
+     vsCurrency: string,
+     days: number
+   ): Promise<string> => {
+ 
+     const interfaceUrl = `/statics?coinName=${coinName}&vsCurrency=${vsCurrency}&days=${days}`;
+     window.open(interfaceUrl, '_blank');
+     return 'you will find your request on the statics page '
+ 
+ 
+   }; */
 
   function redirectToAccDetails() {
     // window.open(SERVER_DOMAIN+"/accountdetails","_blank")
@@ -973,11 +991,11 @@ interface Output {
     <div className="terminal">
       <SideBar remaining={remainingRequests} />
       <div className="input-output">
-        
+
         <div className="output-result">
-        {output.map((line, index) => (
-            <CmdOutput oput={line} index={index}  />
-            ))}
+          {output.map((line, index) => (
+            <CmdOutput oput={line} index={index} eye={showEye} error={error} />
+          ))}
         </div>
         <form onSubmit={handleInputSubmit} className="input-cmd">
           <div className="line">
@@ -991,22 +1009,22 @@ interface Output {
             />
           </div>
           <div className="bitcoin-chart">
-            {showChart ? <PieChart/> : <></>} 
+            {showChart ? <PieChart /> : <></>}
 
             {showBitcoinChart ? <div className="bitcoin-chart">
-              <BitcoinChart /> </div>: null
+              <BitcoinChart /> </div> : null
             }
-        
-            {showPieChart ? <div className="pie-chart"> 
-              <PieChart apiEndpoint="https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,binancecoin" /> 
-            </div>: null}
+
+            {showPieChart ? <div className="pie-chart">
+              <PieChart apiEndpoint="https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,binancecoin" />
+            </div> : null}
 
             {showCharts ? <div className="crypto-charts">
-              <CryptoChart/>
+              <CryptoChart />
             </div> : null}
 
             {showMarketCapCharts ? <div className="marketcap-charts">
-              <CryptomarketCapChart/>
+              <CryptomarketCapChart />
             </div> : null}
 
           </div>

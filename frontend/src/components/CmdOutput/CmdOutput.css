@@ -1,11 +1,49 @@
-.command-line{
-    width: 90%;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-    padding: 16px;
-    justify-content: start;
-    align-items: star;
-    margin-left: 32px;
-  }
+.command-line {
+
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  justify-content: left;
+  align-items: start;
+
+}
+
+.linus {
+  width: 90%;
+  margin-left: 48px;
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
+  gap: 20px;
+}
+
+.eye{
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  height: 38px;
+  width: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.288);
+  color: white;
+  box-shadow: 0pc 2px 10px rgba(0,0,0,0.3); 
+  cursor: pointer;
+  background-color: var(--color3);
+}
+
+.eye:hover{
+  background-color: var(--color2);
+}
+
+.error-res{
+  position: absolute;
+  border-radius: 10px;
+  box-shadow: 0pc 2px 10px rgba(0,0,0,0.3); 
+  background-color: var(--color3);
+  padding: 10px;
+  margin-top: 10px;
+  z-index: 5;
+}
