@@ -24,12 +24,13 @@ const stripePromise = loadStripe('YOUR_PUBLISHABLE_KEY');
 SuperTokens.init(SuperTokensConfig);
 function App() {
     const user = {
-        email: "gahlouzi.ameni@gmail.com",
-        name: "Ameni Gahlouzi",
+        userId:'',
+        email: "",
+        name: "",
         password: "*********",
         githubAccount: "--",
-        googleAccount: "--",
-        blockchainAccount: "--"
+        blockchainAccount: "--",
+        lastName: ""
     };
     
     return (
@@ -81,7 +82,7 @@ function App() {
 
 
                             <Route
-                                path="/accountdetails"><AccountDetails user={user} /></Route>
+                                path="/accountdetails"><AccountDetails user={user} userId={user.userId} /></Route>
 
 
 

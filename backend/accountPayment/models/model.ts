@@ -3,6 +3,8 @@ import mongoose from 'mongoose'
 interface IRegister{
     ID: string,
     date: Date,
+    name: string,
+    lastName: string
     
   }
   interface RegisterModelInterface extends mongoose.Model<RegistertDoc> {
@@ -11,6 +13,8 @@ interface IRegister{
   interface RegistertDoc extends mongoose.Document {
     ID: string,
     date: Date,
+    name: string,
+    lastName: string
   }
 const registerSchema = new mongoose.Schema({
     ID: {
@@ -21,6 +25,14 @@ const registerSchema = new mongoose.Schema({
       type: Date,
       required: false
     },
+    name:{
+        type: String,
+        required: false
+    },
+    lastName:{
+        type: String,
+        required: false
+    }
   })
   registerSchema.statics.build = (attr: IRegister) => {
     return new Register(attr)
