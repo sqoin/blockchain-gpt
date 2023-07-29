@@ -9,14 +9,14 @@ import { SignOutIcon } from "../assets/images";
 import SideBar from "./SideBar/SideBar"
 import CmdOutput from "./CmdOutput/CmdOutput";
 import { _getCryptoCurrencyQuote } from "../adapters/market";
-
+/// @ts-ignore
+import BarChart from "./Statistic/AccountChart.tsx";
 /// @ts-ignore
 import BitcoinChart from "../charts.tsx";
 /// @ts-ignore
 import PieChart from "../pieChart.tsx"
 /// @ts-ignore
 import CryptomarketCapChart from "../cryptoMarketCapChart.tsx";
-
 
 import CryptoChart from "../cryptoCharts";
 import { log } from "console";
@@ -1016,7 +1016,6 @@ const Terminal: React.FC<{ idUser: string }> = ({ idUser }) => {
     <div className="terminal">
       <SideBar remaining={remainingRequests} />
       <div className="input-output">
-
         <div className="output-result">
           {output.map((line, index) => (
             <CmdOutput oput={line} index={index} />
@@ -1051,6 +1050,11 @@ const Terminal: React.FC<{ idUser: string }> = ({ idUser }) => {
             {showMarketCapCharts ? <div className="marketcap-charts">
               <CryptomarketCapChart />
             </div> : null}
+            
+
+            {/* {showBarChart ? <div className="bar-chart">
+              <BarChart/>
+            </div> : null} */}
 
           </div>
         </form>

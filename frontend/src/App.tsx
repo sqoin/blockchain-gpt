@@ -7,20 +7,28 @@ import Home from "./Home";
 import { SuperTokensConfig } from "./config";
 import Tester from "./tester";
 import ChartComponent from "./adapters/ChartComponent";
-import ServiceNotAvailable from "./Service_Unavailable";
-import ServerErrorPage from "./Internal_Server_Error";
-import NotAuthorized from "./Unauthorized";
+import ServiceNotAvailable from "./components/error pages/Service_Unavailable";
+import ServerErrorPage from "./components/error pages/Internal_Server_Error";
+import NotAuthorized from "./components/error pages/Unauthorized";
 import AccountDetails from "./Account_Details";
 import { loadStripe } from '@stripe/stripe-js';
 import Payment from "./payment";
 import Completion from "./Completion";
+
+
+
+
+
 import TelegramMessage from "./components/telegram-message/TelegramMessage"
 import PaymentMode from "./components/payment-mode/PaymentMode";
 import SendSol from "./components/pay-with-phantom/SendSol";
 import PayWithMetamask from "./components/pay-with-metamask/PayWithMetamask";
 import RepetitiveTasks from "./components/Repetitive-Tasks/RepetitiveTasks";
+import BarChart from "./components/Statistic/AccountChart";
 SuperTokens.init(SuperTokensConfig);
 const stripePromise = loadStripe('YOUR_PUBLISHABLE_KEY');
+
+
 SuperTokens.init(SuperTokensConfig);
 function App() {
     const user = {
@@ -102,10 +110,15 @@ function App() {
                                     <RepetitiveTasks  />
                                 </SessionAuth>
                             </Route>
+                            
+                            <Route
+                                path="/statistic"><BarChart />
+                            </Route>
+                               
 
 
+                    </Switch>
 
-                        </Switch>
 
                     </div>
                 </Router>
