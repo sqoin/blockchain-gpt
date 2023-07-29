@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import React, { useState, ChangeEvent, FormEvent ,useEffect} from "react";
 import "./Terminal.css";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
 import { Connection, PublicKey, Version } from "@solana/web3.js";
@@ -79,7 +79,7 @@ const Terminal: React.FC<{ idUser: string }> = ({ idUser }) => {
   const getData = (input: string): Promise<any> => {
     return new Promise((resolve, reject) => {
       request
-        .post("http://localhost:300/gpt-test")
+        .post("/gpt-test")
         .send({ command: input })
         .set("Accept", "application/json")
         .set("Access-Control-Allow-Origin", "*")
@@ -362,6 +362,7 @@ const Terminal: React.FC<{ idUser: string }> = ({ idUser }) => {
         })
         .estimateGas({ from: account });
 
+
       // Create the transaction object
       const transaction = {
         from: account,
@@ -405,8 +406,186 @@ const Terminal: React.FC<{ idUser: string }> = ({ idUser }) => {
       return null;
     }
   };
+  //////// tâches répétitives planifiées function  ////////////////////////
 
-  //solana functions
+  const getAndDisplayPublicKey = async () => {
+    while (true) {
+      let wallet = await _connectToMetaMask();
+      if (!wallet) {
+        console.log('Failed to connect to MetaMask');
+        return;
+      }
+
+      const publicKey = await _getPublicKey();
+      if (publicKey) {
+        console.log('Public Key:', publicKey);
+        handleOutput(`Public Key: ${publicKey}`);
+      } else {
+        console.log('Failed to retrieve public key');
+      }
+
+      await sleep(5 * 60 * 1000); // Attendre 5 minutes avant le prochain appel
+    }
+  };
+
+  async function fetchBalanceFromMetaMask() {
+    while (true) {
+      let wallet = await _connectToMetaMask();
+      if (!wallet) {
+        console.log('Failed to connect to MetaMask');
+        return;
+      }
+      
+      const publicKey = await _getPublicKey();     
+      const balance = await _getBalance(publicKey);
+      
+      if (balance) {
+        console.log('balance:', balance);
+        handleOutput(`balance: ${balance}`);
+      } else {
+        console.log('Failed to retrieve public key');
+      }
+      
+      await sleep(5 * 60 * 1000); // Attendre 5 minutes
+    }
+  }
+
+  async function getNetworkInfoEvery5Minutes() {
+  while (true) {
+    let wallet = await _connectToMetaMask();
+    if (!wallet) {
+      console.log('Failed to connect to MetaMask');
+      return;
+    }
+    const network = await _getNetworkInfo();
+    if (network) {
+      handleOutput(`Network Information:
+        Chain ID: ${network.chainId}
+        Network ID: ${network.networkId}
+        Network Name: ${network.networkName}`);
+    } else {
+      console.log('Failed to retrieve network information');
+    }
+    await sleep(5 * 60 * 1000); // Attendre 5 minutes
+  }
+}
+
+async function fetchAndDisplayTransactions() {
+  try {
+    let wallet = await _connectToMetaMask();
+    if (!wallet) {
+      console.log('Failed to connect to MetaMask');
+      return;
+    }
+
+    const publicKey = await _getPublicKey();
+    const apiKey = '13899XRJ6IPW6PJXJDQ9DMJ6ZMNP51PY7I'; // Replace with your Etherscan API key
+    const apiUrl = `https://api.etherscan.io/api?module=account&action=txlist&address=${publicKey}&sort=desc&apikey=${apiKey}`;
+    const response = await axios.get(apiUrl);
+
+    if (response.data.status === '1') {
+      const transactions = response.data.result;
+      transactions.forEach((transaction: Transaction) => {
+        console.log('success');
+        handleOutput(`Transaction Information:
+        Transaction Hash: ${transaction.hash}
+        From: ${transaction.from}
+        To: ${transaction.to}
+        Value: ${transaction.value}
+        Gas Price: ${transaction.gasPrice}
+        Timestamp: ${transaction.timeStamp}
+        ----------------------------------`);
+      });
+    } else {
+      console.log('Failed to fetch transactions:', response.data.message);
+      handleOutput(`Failed to fetch transactions:${response.data.message} `);
+      console.log('Full Response:', response.data);
+    }
+  } catch (error:any) {
+    console.log('Error occurred:', error.message);
+  
+  }
+}
+
+// Interface pour définir le type de données stockées dans le localStorage
+interface InputData {
+  inputValue: string;
+}
+// Fonction pour vérifier si l'input existe déjà dans le localStorage
+function isInputExists(inputValue: string): boolean {
+  const storedInputs: InputData[] = JSON.parse(localStorage.getItem("inputs") || "[]");
+  return storedInputs.some((data) => data.inputValue === inputValue);
+}
+
+// Fonction pour ajouter un nouvel input dans le localStorage s'il n'existe pas déjà
+function addInputToLocalStorage(inputValue: string): void {
+  // Vérifier si l'input existe déjà
+  if (!isInputExists(inputValue)) {
+    // Vérifier si le localStorage est supporté par le navigateur
+    if (typeof Storage !== "undefined") {
+      // Récupérer les inputs précédents (s'ils existent) depuis le localStorage
+      const storedInputs: InputData[] = JSON.parse(localStorage.getItem("inputs") || "[]");
+
+      // Ajouter le nouvel input à la liste des inputs
+      storedInputs.push({ inputValue });
+
+      // Mettre à jour le localStorage avec la nouvelle liste d'inputs
+      localStorage.setItem("inputs", JSON.stringify(storedInputs));
+    } else {
+      // Le localStorage n'est pas supporté par le navigateur
+      console.error("LocalStorage n'est pas supporté par ce navigateur.");
+    }
+  } else {
+    console.log("L'input existe déjà dans le localStorage.");
+  }
+}
+
+
+//pour récupérer tous les inputs stockés dans le localStorage
+const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
+console.log(allInputs);
+
+///////////////////////////
+  const userCommand1 = "donner moi le publickey refrech chaque 5min";
+  const userCommand2 = "donner moi la balance chaque 5min";
+  const userCommand3="get network info"
+  useEffect(() => {
+    // Vérifier si la commande a été précédemment entrée dans le localStorage
+    const checkUserCommand = () => {
+      const storedCommand = localStorage.getItem('userCommand');
+
+      if (storedCommand === userCommand1) {
+        getAndDisplayPublicKey();
+      } else if (storedCommand === userCommand2) {
+        fetchBalanceFromMetaMask();
+      }else if (storedCommand === userCommand3) {
+        getNetworkInfoEvery5Minutes();
+      }
+    };
+
+    checkUserCommand();
+  }, []); // Exécutez cette vérification une seule fois au chargement de la page
+
+  // Mettre à jour le stockage local toutes les 5 minutes
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const storedCommand = localStorage.getItem('userCommand');
+      if (storedCommand === userCommand1) {
+        getAndDisplayPublicKey();
+      } else if (storedCommand === userCommand2) {
+        fetchBalanceFromMetaMask();
+      }
+      else if (storedCommand === userCommand3) {
+        getNetworkInfoEvery5Minutes();
+      }
+      
+    }, 5 * 60 * 1000); // 5 minutes en millisecondes
+
+    return () => clearInterval(interval);
+  }, []);
+
+
+   //solana functions
   const _connectToPhantomWallet = async (): Promise<null | PhantomWalletAdapter> => {
 
     //@ts-ignore
@@ -510,7 +689,6 @@ const Terminal: React.FC<{ idUser: string }> = ({ idUser }) => {
   };
 
 
-
   const _getSolanaBalance = async (address: string): Promise<null | number> => {
     try {
       let connection = new Connection(rpcUrlInitial)
@@ -518,7 +696,8 @@ const Terminal: React.FC<{ idUser: string }> = ({ idUser }) => {
       const balance = await connection.getBalance(publicKey);
       if (!balance || typeof balance != 'number')
         return null
-      const lamportsToSol = balance / 1e9;
+
+        const lamportsToSol = balance / 1e9;
       handleOutput("Your balance is " + lamportsToSol)
       return lamportsToSol;
     } catch (error: any) {
@@ -591,15 +770,15 @@ const Terminal: React.FC<{ idUser: string }> = ({ idUser }) => {
                 task = { userId: idUser, task: input, duration: (await test).duration*60*1000 }
                 addTask(); 
               }
-              if (input === 'Dessiner un graphique circulaire de la capitalisation boursière de Bitcoin, Ethereum et Binance.') {
+              
+              else if( input === 'Dessiner un graphique circulaire de la capitalisation boursière de Bitcoin, Ethereum et Binance.'){
 
                 //handleOutput("Exécution en progress ...")
                 // sleep(5000)
                 setShowChart(true)
               }
-
-
-              else if (input === "Quelles ont été les nouvelles les plus importantes dans la blockchain ces trois derniers jours ?") {
+              
+             else if (input === "Quelles ont été les nouvelles les plus importantes dans la blockchain ces trois derniers jours ?") {
                 // Add the static response to the output
                 sleep(5000)
                 handleOutput("Parmi les dernières tendances dans la technologie de la blockchain, Algofi, le plus gros protocole sur la blockchain Algorand, annonce la fin de la plupart de ses activités. La plate-forme se concentrera désormais sur le retrait uniquement, laissant de côté les prêts, les emprunts et les échanges. En parallèle, le Bitcoin, la plus importante crypto-monnaie au monde, connaît une nouvelle baisse de valeur, se situant en dessous de 30 500 $, avec une baisse de 0,70 % sur la dernière journée. Les investisseurs et traders s'inquiètent d'un mouvement de 10 000 bitcoins, d'une valeur de plus de 300 millions de dollars, initié par le gouvernement américain. Dans le même temps, les ventes minières de Bitcoin atteignent des sommets records, tandis que la complexité de l'extraction de Bitcoin atteint un niveau sans précédent.");
@@ -614,72 +793,54 @@ const Terminal: React.FC<{ idUser: string }> = ({ idUser }) => {
                 }
 
               }
+              
               else if (input === "donner moi le publickey chaque 5min") {
-                while (true) {
-                  let wallet = await _connectToMetaMask();
-                  if (!wallet) {
-                    console.log('Failed to connect to MetaMask');
-                    return;
-                  }
-                  const publicKey = await _getPublicKey();
-                  if (publicKey) {
-                    console.log('Public Key:', publicKey);
-                    handleOutput(`Public Key: ${publicKey}`);
+                addInputToLocalStorage(input);
+                getAndDisplayPublicKey();
 
-                  } else {
-                    console.log('Failed to retrieve public key');
-                  }
-                  await sleep(5 * 60 * 1000); // Attendre 5 minutes
-                }
               }
               else if (input === "donner moi la balance chaque 5min") {
-                while (true) {
-                  let wallet = await _connectToMetaMask();
-                  if (!wallet) {
-                    console.log('Failed to connect to MetaMask');
-                    return;
-                  }
-                  const publicKey = await _getPublicKey();
-                  const balance = await _getBalance(publicKey);
-                  if (balance) {
-                    console.log('balance:', balance);
-                    handleOutput(`balance: ${balance}`);
+                addInputToLocalStorage(input);
+                fetchBalanceFromMetaMask();
 
-                  } else {
-                    console.log('Failed to retrieve public key');
-                  }
-                  await sleep(5 * 60 * 1000); // Attendre 5 minutes
-                }
-              }
+              } 
               else if (input === "get network information every 5min") {
-                while (true) {
-                  let wallet = await _connectToMetaMask();
-                  if (!wallet) {
-                    console.log('Failed to connect to MetaMask');
-                    return;
-                  }
-                  const network = await _getNetworkInfo();
-                  if (network) {
-                    handleOutput(`Network Information:
-                    Chain ID: ${network.chainId}
-                    Network ID: ${network.networkId}
-                    Network Name: ${network.networkName}`);
+                addInputToLocalStorage(input);
+                getNetworkInfoEvery5Minutes();
 
-                  } else {
-                    console.log('Failed to retrieve network information');
-                  }
-                  await sleep(5 * 60 * 1000); // Attendre 5 minutes
-                }
+               }
+              else if (input === userCommand3) {
+                addInputToLocalStorage(input);
+                const networkInfo = await _getNetworkInfo();
+                handleOutput(`network info: ${networkInfo?.chainId}  ${networkInfo?.networkName}  ${networkInfo?.networkId}`);
+                return;
               }
+              else if (input === userCommand1){
+                addInputToLocalStorage(input);
+                const pk = await getAndDisplayPublicKey();
+                handleOutput(` PublicKey: ${pk} `);
+                return;
+              
+              } else if (input === userCommand2) {
+                addInputToLocalStorage(input);
+                const bl = await fetchBalanceFromMetaMask();
+                handleOutput(` Blance: ${bl} `);
+                return;
+              }
+            
               else if (input === "get bitcoin price every 5min") {
+                addInputToLocalStorage(input);
                 while (true) {
                   const price = await _getCryptoCurrencyQuote("bitcoin", "price");
                   handleOutput(`Bitcoin Price: ${price}`);
+                  console.log('Bitcoin Price: ',price);
+
                   await sleep(5 * 60 * 1000); // Attendre 5 minutes
                 }
-
               }
-              else if (input === "get bitcoin total volume every 5min") {
+
+              else if (input === "get bitcoin total volume every 5min" ) {
+                addInputToLocalStorage(input);
                 while (true) {
                   const volume = await _getCryptoCurrencyQuote("bitcoin", 'volume');
                   handleOutput(`Bitcoin Total Volume: ${volume}`);
@@ -687,6 +848,7 @@ const Terminal: React.FC<{ idUser: string }> = ({ idUser }) => {
                 }
               }
               else if (input === "get bitcoin MarketCap every 5min") {
+                addInputToLocalStorage(input);
                 while (true) {
                   const marketCap = await _getCryptoCurrencyQuote("bitcoin", "marketCap");
                   handleOutput(`Bitcoin MarketCap: ${marketCap}`);
@@ -719,39 +881,10 @@ const Terminal: React.FC<{ idUser: string }> = ({ idUser }) => {
                 handleOutput(`The legality of Bitcoin varies from country to country. In many countries, Bitcoin is considered a legal form of digital asset, but some jurisdictions may restrict its use or regulation.`);
               }
               else if (input === "get Latest Transactions") {
-                try {
-                  let wallet = await _connectToMetaMask();
-                  if (!wallet) {
-                    console.log('Failed to connect to MetaMask');
-                    return;
-                  }
-                  const publicKey = await _getPublicKey();
-                  const apiKey = '13899XRJ6IPW6PJXJDQ9DMJ6ZMNP51PY7I'; // Replace with your Etherscan API key
-                  const apiUrl = `https://api.etherscan.io/api?module=account&action=txlist&address=${publicKey}&sort=desc&apikey=${apiKey}`;
-                  const response = await axios.get(apiUrl);
-
-                  if (response.data.status === '1') {
-                    const transactions: Transaction[] = response.data.result;
-                    transactions.forEach((transaction: Transaction) => {
-                      console.log('success');
-                      handleOutput(`Transaction Information:
-                      Transaction Hash: ${transaction.hash}
-                      From: ${transaction.from}
-                      To: ${transaction.to}
-                      Value: ${transaction.value}
-                      Gas Price: ${transaction.gasPrice}
-                      Timestamp: ${transaction.timeStamp}
-                      ----------------------------------`);
-                    });
-                  } else {
-                    console.log('Failed to fetch transactions:', response.data.message);
-                    console.log('Full Response:', response.data);
-                  }
-                } catch (error: any) {
-                  console.log('Error occurred:', error.message);
-                }
-              }
-              else {
+                fetchAndDisplayTransactions();
+              } 
+             
+               else{
                 const res = await getData(input);
                 result = await processServerResponse(res.text, handleOutput);
               }
@@ -1058,11 +1191,15 @@ const Terminal: React.FC<{ idUser: string }> = ({ idUser }) => {
 
           </div>
         </form>
+       {/*  <div>
+      <input type="text" onChange={handleInput} />
+      </div> */}
 
       </div>
-
-
+     
     </div>
+      
+   
 
   )
 };
