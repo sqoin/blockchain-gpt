@@ -245,8 +245,8 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    gap: 5px;
-    margin-top: 10px;
+    gap: 20px;
+    margin-top: 28px;
   }
 
   .terminal .input-cmd{

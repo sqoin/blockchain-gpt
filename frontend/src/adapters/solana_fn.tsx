@@ -1,6 +1,9 @@
-
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
-import { Connection, PublicKey, Version } from "@solana/web3.js";
+import { Connection, PublicKey, Version, Transaction, SystemProgram } from "@solana/web3.js";
+import * as buffer from "buffer";
+import {  getConnection } from "../utils/headers";
+window.Buffer = buffer.Buffer;
+
 
 export const _connectToPhantomWallet = async (): Promise<null | PhantomWalletAdapter> => {
 
@@ -36,7 +39,7 @@ export const _connectToPhantomWallet = async (): Promise<null | PhantomWalletAda
   }
 };
 
-export const _disconnectFromPhantomWallet = async (wallet:PhantomWalletAdapter): Promise<null | string> => {
+export const _disconnectFromPhantomWallet = async (wallet: PhantomWalletAdapter): Promise<null | string> => {
 
   if (!wallet) {
     console.log("Please install Phantom Wallet to use this feature");
@@ -61,7 +64,7 @@ export const _disconnectFromPhantomWallet = async (wallet:PhantomWalletAdapter):
   }
 };
 
-export const _getSolanaPublicKey = async (wallet:PhantomWalletAdapter): Promise<null | string> => {
+export const _getSolanaPublicKey = async (wallet: PhantomWalletAdapter): Promise<null | string> => {
 
   if (!wallet) {
     console.log("Please install Phantom Wallet to use this feature");
@@ -82,11 +85,11 @@ export const _getSolanaPublicKey = async (wallet:PhantomWalletAdapter): Promise<
     return null;
   }
 };
-export const _getSolanaNetworkInfo = async (rpcUrl:any): Promise<{ endpoint: string, solanaCore: string|undefined, featureSet: number|undefined} | null> => {
-  try{
+export const _getSolanaNetworkInfo = async (rpcUrl: any): Promise<{ endpoint: string, solanaCore: string | undefined, featureSet: number | undefined } | null> => {
+  try {
     let connection = new Connection(rpcUrl)
-    let version:Version = await connection.getVersion()
-    let endpoint =  connection.rpcEndpoint
+    let version: Version = await connection.getVersion()
+    let endpoint = connection.rpcEndpoint
     const networkInfo = {
       endpoint: endpoint,
       solanaCore: version["solana-core"],
@@ -94,15 +97,15 @@ export const _getSolanaNetworkInfo = async (rpcUrl:any): Promise<{ endpoint: str
     };
     return networkInfo;
   }
-  catch(error:any){
-    console.log("Error while connection to this RPC URL ", error.message )
+  catch (error: any) {
+    console.log("Error while connection to this RPC URL ", error.message)
     return null;
   }
 };
 
-export const _getSolanaBalance = async (address: string, rpcUrl: string): Promise<null | number> => {
+export const _getSolanaBalance = async (address: string): Promise<null | number> => {
   try {
-    let connection = new Connection(rpcUrl)
+    let connection = getConnection();
     const publicKey = new PublicKey(address);
     const balance = await connection.getBalance(publicKey);
     const lamportsToSol = balance / 1e9;
@@ -112,7 +115,52 @@ export const _getSolanaBalance = async (address: string, rpcUrl: string): Promis
     return null;
   }
 };
-export function _sendSolana(recipientAddress:String,rpcUrl:String,senderAddress:PhantomWalletAdapter){
-  
-  
+
+
+
+export async function _sendSolana(recipientAddress: string, wallet: PhantomWalletAdapter, amount:any) {
+  if (!wallet) {
+    console.log("Please install Phantom Wallet to use this feature");
+    return;
+  }
+
+  if (!wallet.connected || !wallet.publicKey) {
+    console.log("You are not connected to Phantom Wallet");
+    return;
+  }
+
+  try {
+    const connection = getConnection();;
+
+    // Construct and sign the transaction
+    const transaction = new Transaction().add(
+      SystemProgram.transfer({
+        fromPubkey: wallet.publicKey,
+        toPubkey: new PublicKey(recipientAddress),
+        lamports: amount, 
+      })
+    );
+
+    transaction.recentBlockhash = (
+      await connection.getLatestBlockhash()
+    ).blockhash;
+
+    transaction.feePayer = wallet.publicKey!;
+
+    let signed = await wallet.signTransaction(transaction);
+
+    let signature = await connection.sendRawTransaction(signed.serialize());
+    console.log("tr signature********", signature)
+    let res = await connection.confirmTransaction(signature, 'max');
+
+    console.log(transaction);
+
+
+    console.log(signature);
+
+
+    console.log("Transaction sent. Signature:", signature);
+  } catch (error: any) {
+    console.log("Failed to send Solana:", error.message);
+  }
 }

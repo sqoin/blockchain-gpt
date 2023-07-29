@@ -19,7 +19,6 @@ import PieChart from "../pieChart.tsx"
 import CryptomarketCapChart from "../cryptoMarketCapChart.tsx";
 
 import CryptoChart from "../cryptoCharts";
-import { log } from "console";
 
 
 
@@ -50,7 +49,10 @@ interface Output {
   input: string;
   command: string;
 }
-const Terminal: React.FC<{ idUser: string }> = ({ idUser }) => {
+
+const Terminal: React.FC<{ idUser: string }> = ({ idUser }:any) => {
+  const [showEye, setShowEye] = useState(false);
+  const [error, setError] = useState("")
   const [isTyping, setIsTyping] = useState(false)
   const [input, setInput] = useState<string>("");
   const [showChart, setShowChart] = useState(false);
@@ -85,10 +87,14 @@ const Terminal: React.FC<{ idUser: string }> = ({ idUser }) => {
         .set("Access-Control-Allow-Origin", "*")
         .end((err: any, res: any) => {
           if (err) {
+            //console.log(err);
+
             setIsTyping(false)
             popLastItem();
             reject(err);
           } else {
+            //console.log(res);
+
             setIsTyping(false)
             popLastItem();
             resolve(res);
@@ -125,6 +131,7 @@ const Terminal: React.FC<{ idUser: string }> = ({ idUser }) => {
 
     const response = await fetch(apiUrl);
     const data = await response.json();
+
 
     if (data.error) {
       throw new Error(data.error);
@@ -597,12 +604,14 @@ console.log(allInputs);
     let wallet = new PhantomWalletAdapter(provider);
 
     if (!wallet) {
+
       handleOutput("Please install Phantom Wallet to use this feature")
       console.log("Please install Phantom Wallet to use this feature");
       return null;
     }
 
     if (wallet.connected) {
+
       handleOutput("You are already connected to Phantom Wallet")
       console.log("You are already connected to Phantom Wallet");
       return wallet;
@@ -611,6 +620,7 @@ console.log(allInputs);
     try {
       await wallet.connect();
       if (!wallet.publicKey) {
+
         console.log("No Connected Account");
         handleOutput("Failed to connect to Phantom Wallet")
         return null;
@@ -620,6 +630,7 @@ console.log(allInputs);
       //handleOutput("You are now connected " + wallet.publicKey.toBase58())
       return wallet;
     } catch (error: any) {
+
       console.log("Failed to connect to Phantom Wallet: " + error.message);
       handleOutput("Failed to connect to Phantom Wallet: " + error.message);
       return null;
@@ -630,6 +641,7 @@ console.log(allInputs);
   const _disconnectFromPhantomWallet = async (): Promise<null | string> => {
 
     if (!solanaWallet || !solanaWallet.connected || !solanaWallet.publicKey) {
+
       console.log("This Phantom Wallet is not connected");
       handleOutput("This Phantom Wallet is not connected, please connect first")
       return null;
@@ -639,10 +651,12 @@ console.log(allInputs);
       await solanaWallet.disconnect();
       localStorage.removeItem("solanaPublicKey");
       console.log("You have successfully disconnected from Phantom Wallet");
+
       handleOutput("You have successfully disconnected from Phantom Wallet")
       return "success"
     } catch (error: any) {
       console.log("Failed to disconnect from Phantom Wallet: " + error.message);
+
       handleOutput("Failed to disconnect from Phantom Wallet: " + error.message)
       return null;
     }
@@ -651,14 +665,17 @@ console.log(allInputs);
   const _getSolanaPublicKey = async (): Promise<null | string> => {
 
     if (!solanaWallet || !solanaWallet.connected || !solanaWallet.publicKey) {
+
       handleOutput("You are not connected to Phantom Wallet");
       return null;
     }
 
     try {
+
       handleOutput(solanaWallet.publicKey.toBase58())
       return solanaWallet.publicKey.toBase58();
     } catch (error: any) {
+
       handleOutput(
         "Failed to retrieve public key from Phantom Wallet: " + error.message
       );
@@ -679,10 +696,12 @@ console.log(allInputs);
         featureSet: version["feature-set"],
         epoch: epochInfo.epoch
       };
+
       handleOutput(JSON.stringify(networkInfo))
       return JSON.stringify(networkInfo);
     }
     catch (error: any) {
+
       handleOutput("Error while connection to this RPC URL " + error.message)
       return "Error while connection to this RPC URL " + error.message;
     }
@@ -723,15 +742,16 @@ console.log(allInputs);
         let capturedOutput: any;
         const originalConsoleLog: Console["log"] = console.log;
         console.log = commandWriter;
+
         const result: any = await eval(wrappedScript);
-        //popLastItem();
+
         return capturedOutput;
       } catch (error: any) {
-        //popLastItem();
+
         return `Error: ${error.message} \n script ${scriptContent}`;
       }
     } else {
-      //popLastItemInput();
+
       commandWriter("This input does not require any specific action.")
 
       return `${data}`;
@@ -760,10 +780,8 @@ console.log(allInputs);
           setTimeout(async () => {
             //handleOutput(input);
             let newinput = input;
-            
-            // addTask(); 
             setInput("");
-            //handleOutput(`Execution in progress ...`);
+            handleOutput(`Execution in progress ...`);
             if (remainingResult > 0) {
               let test = isRepetitive();
               if((await test).isRepetitiveTask){
@@ -856,37 +874,54 @@ console.log(allInputs);
                 }
               }
               else if (input === "What is Bitcoin?") {
+
                 handleOutput(`Bitcoin is a decentralized cryptocurrency based on blockchain technology. It is a form of digital currency that enables peer-to-peer transactions without the need for a central authority such as a bank.`);
               }
               else if (input === "How does Bitcoin work?") {
+
                 handleOutput(`Bitcoin operates on a decentralized network of nodes, where transactions are recorded in a public ledger called the blockchain. Transactions are secured using cryptographic techniques, 
                               and miners validate transactions by solving complex mathematical problems.`);
               }
               else if (input === "Who created Bitcoin?") {
+
                 handleOutput(`Bitcoin was created by an individual or group of individuals using the pseudonym Satoshi Nakamoto. The true identity of Satoshi Nakamoto remains unknown to this day.`);
               }
               else if (input === "What is the difference between Bitcoin and traditional currencies?") {
+
                 handleOutput(`Bitcoin differs from traditional currencies because it is not issued or controlled by a central authority like a central bank. It relies on blockchain technology and operates in a decentralized manner.`);
               }
               else if (input === "What is a Bitcoin address?") {
+
                 handleOutput(`A Bitcoin address is a unique alphanumeric string that represents the location where Bitcoins are stored. You can share this address with others to receive Bitcoins.`);
               }
               else if (input === "How can I securely store my Bitcoins?") {
+
                 handleOutput(`You can store your Bitcoins in a Bitcoin wallet. Wallets can be either software wallets on electronic devices or physical hardware wallets that offer additional security.`);
               }
               else if (input === "How can I use Bitcoin to make transactions?") {
+
                 handleOutput(`To make a Bitcoin transaction, you need to know the recipient's Bitcoin address. You can send Bitcoins from your wallet using that address, specifying the amount and signing the transaction.`);
               }
               else if (input === "Is Bitcoin legal?") {
+
                 handleOutput(`The legality of Bitcoin varies from country to country. In many countries, Bitcoin is considered a legal form of digital asset, but some jurisdictions may restrict its use or regulation.`);
               }
               else if (input === "get Latest Transactions") {
                 fetchAndDisplayTransactions();
               } 
              
-               else{
-                const res = await getData(input);
-                result = await processServerResponse(res.text, handleOutput);
+              else {
+                try {
+                  const res = await getData(input);
+
+                  result = await processServerResponse(res.text, handleOutput);
+                } catch (error: any) {
+                  setError(error.message);
+                  setShowEye(true)
+                  handleOutput("")
+                }
+
+
               }
 
 
@@ -894,24 +929,27 @@ console.log(allInputs);
               showPieChart = input.toLocaleLowerCase().replace(/\s/g, '').includes('bitcoinethereumandbinancemarketcapitalization');
               showCharts = input.toLocaleLowerCase().replace(/\s/g, '').includes('cryptocurrenciespricesevolution');
               showMarketCapCharts = input.toLocaleLowerCase().replace(/\s/g, '').includes('cryptomarketcaps');
-              const res = await getData(input);
-              result = await processServerResponse(res.text, handleOutput);
               setInput("");
               setRemainingRequests(remainingResult - 1);
               //await handleOutput(`Remaining requests: ${remainingResult}`);
 
-              setInput("");
               setRemainingRequests(remainingResult - 1);
             } else {
-              popLastItem();
-              handleOutput(`Error: Maximum request limit reached !! Please upgrade to a paid account to continue using this feature.`);
+              setError("Maximum request limit reached !! Please upgrade to a paid account to continue using this feature.");
+              setShowEye(true)
+              handleOutput("")
+
+              //handleOutput(`Error: Maximum request limit reached !! Please upgrade to a paid account to continue using this feature.`);
               await sleep(10000)
               history.push("/paymentmode")
             }
           }, 2000);
 
         } catch (error: any) {
-          handleOutput(`Error: ${error.message}\n`);
+
+          setError(error.message);
+          setShowEye(true)
+          handleOutput("")
         }
       }
 
@@ -975,6 +1013,7 @@ console.log(allInputs);
     }
 
     if (remainingRequests <= 0) {
+
       handleOutput(`Error: Maximum request limit reached ! \n`);
       await sleep(10000)
       history.push("/paymentmode")
@@ -986,7 +1025,7 @@ console.log(allInputs);
     }
   }
   const handleOutput = (command: string): void => {
-    setOutput(prevOutput => {
+    setOutput((prevOutput:any) => {
       const lastOutput = prevOutput[prevOutput.length - 1];
       const isNewOutput = lastOutput?.input !== input.trim() || lastOutput?.command !== command;
 
@@ -1004,15 +1043,41 @@ console.log(allInputs);
     });
   };
 
+  /*
+   //this one is better
+    const popLastItem = (): void => {
+      setOutput((prevOutput: Output[]) => {
+        // Check if the previous output exists and has at least one item
+        if (prevOutput && prevOutput.length > 0) {
+          const lastItem = prevOutput[prevOutput.length - 1];
+    
+          // Check if the command of the last item is "Execution in progress ..."
+          if (lastItem.command === "Execution in progress ...") {
+            // Remove the last item from the array
+            return prevOutput.slice(0, prevOutput.length - 1);
+          }
+        }
+        // If the command is not "Execution in progress ..." or the array is empty, return the original array
+        return prevOutput;
+      });
+    };*/
+
+
 
   const popLastItem = (): void => {
-    setOutput((prevOutput: Output[]) => prevOutput.slice(0, prevOutput.length - 1));
+    setOutput((prevOutput: Output[]) => {
+      // Filter out items with command === "Execution in progress ..."
+      const updatedOutput = prevOutput.filter(item => item.command !== "Execution in progress ...");
+      return updatedOutput;
+    });
   };
+
 
   interface Output {
     input: string;
     command: string;
   }
+
 
   let task = {}
   const addTask = async () => {
@@ -1083,10 +1148,6 @@ console.log(allInputs);
     return null;
   }
   
-  
-  
-  
-  
 
 
   /*  const _getStatics = async (
@@ -1149,9 +1210,10 @@ console.log(allInputs);
     <div className="terminal">
       <SideBar remaining={remainingRequests} />
       <div className="input-output">
+
         <div className="output-result">
           {output.map((line, index) => (
-            <CmdOutput oput={line} index={index} />
+            <CmdOutput oput={line} index={index} eye={showEye} error={error} />
           ))}
         </div>
         <form onSubmit={handleInputSubmit} className="input-cmd">
