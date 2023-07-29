@@ -18,9 +18,9 @@ import TelegramMessage from "./components/telegram-message/TelegramMessage"
 import PaymentMode from "./components/payment-mode/PaymentMode";
 import SendSol from "./components/pay-with-phantom/SendSol";
 import PayWithMetamask from "./components/pay-with-metamask/PayWithMetamask";
+import RepetitiveTasks from "./components/Repetitive-Tasks/RepetitiveTasks";
 SuperTokens.init(SuperTokensConfig);
 const stripePromise = loadStripe('YOUR_PUBLISHABLE_KEY');
-
 SuperTokens.init(SuperTokensConfig);
 function App() {
     const user = {
@@ -31,32 +31,34 @@ function App() {
         googleAccount: "--",
         blockchainAccount: "--"
     };
+    
     return (
         <SuperTokensWrapper>
             <div className="App app-container">
                 <Router>
                     <div className="fill">
-                    <Switch>
+                        <Switch>
                             {/* This shows the login UI on "/auth" route */}
                             {getSuperTokensRoutesForReactRouterDom(require("react-router-dom"))}
 
-                            
+
                             <Route exact path="/">
                                 <SessionAuth>
-                                        <Home />
+                                    <Home />
                                 </SessionAuth>
+
                             </Route>
 
 
                             <Route exact path="/test">
                                 <Tester />
                             </Route>
-                             
-                            <Route path="/paymentWithStripe"><Payment /></Route>
-                            
 
-                        <Route path="/completion"><Completion /></Route>
-                        <Route path="/sendNotif"><TelegramMessage/></Route>
+                            <Route path="/paymentWithStripe"><Payment /></Route>
+
+
+                            <Route path="/completion"><Completion /></Route>
+                            <Route path="/sendNotif"><TelegramMessage /></Route>
 
 
 
@@ -69,34 +71,40 @@ function App() {
                             <Route
                                 path="/ServiceUnavailable"><ServiceNotAvailable /></Route>
 
-                              
+
                             <Route
                                 path="/InternalServerError"><ServerErrorPage /></Route>
 
-                               
+
                             <Route
                                 path="/notauthorized"><NotAuthorized /></Route>
 
-                                
+
                             <Route
                                 path="/accountdetails"><AccountDetails user={user} /></Route>
 
-                               
+
 
                             <Route
                                 path="/paywithmetamask"><PayWithMetamask /></Route>
 
-                               
-                            
+
+
 
                             <Route
                                 path="/paywithphantom"><SendSol /></Route>
                             <Route
                                 path="/paymentmode"><PaymentMode /></Route>
 
-                               
+                            <Route path="/repetitivetasks">
+                                <SessionAuth>
+                                    <RepetitiveTasks  />
+                                </SessionAuth>
+                            </Route>
 
-                    </Switch>
+
+
+                        </Switch>
 
                     </div>
                 </Router>
