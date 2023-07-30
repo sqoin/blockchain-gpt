@@ -48,6 +48,8 @@ let showMarketCapCharts = false;
 interface Output {
   input: string;
   command: string;
+  error: string;
+  eye:boolean;
 }
 const Terminal: React.FC = () => {
   const [showEye, setShowEye] = useState(false);
@@ -80,7 +82,7 @@ const Terminal: React.FC = () => {
   const getData = (input: string): Promise<any> => {
     return new Promise((resolve, reject) => {
       request
-        .post("/gpt-test")
+        .post("/gpt-testy")
         .send({ command: input })
         .set("Accept", "application/json")
         .set("Access-Control-Allow-Origin", "*")
@@ -790,7 +792,7 @@ const Terminal: React.FC = () => {
                 } catch (error: any) {
                   setError(error.message);
                   setShowEye(true)
-                  handleOutput("")
+                  handleOutput("", error.message, true)
                 }
 
 
@@ -809,7 +811,7 @@ const Terminal: React.FC = () => {
             } else {
               setError("Maximum request limit reached !! Please upgrade to a paid account to continue using this feature.");
               setShowEye(true)
-              handleOutput("")
+              handleOutput("", "Maximum request limit reached !! Please upgrade to a paid account to continue using this feature.", true)
 
               //handleOutput(`Error: Maximum request limit reached !! Please upgrade to a paid account to continue using this feature.`);
               await sleep(10000)
@@ -821,7 +823,7 @@ const Terminal: React.FC = () => {
 
           setError(error.message);
           setShowEye(true)
-          handleOutput("")
+          handleOutput("", error.message, true)
         }
       }
 
@@ -874,7 +876,7 @@ const Terminal: React.FC = () => {
 
     }
   }
-  const handleOutput = (command: string): void => {
+  const handleOutput = (command: string, error: string = "", eye: boolean = false): void => {
     setOutput(prevOutput => {
       const lastOutput = prevOutput[prevOutput.length - 1];
       const isNewOutput = lastOutput?.input !== input.trim() || lastOutput?.command !== command;
@@ -885,6 +887,8 @@ const Terminal: React.FC = () => {
           {
             input: input.trim(),
             command,
+            error,
+            eye
           },
         ];
       } else {
@@ -923,10 +927,6 @@ const Terminal: React.FC = () => {
   };
 
 
-  interface Output {
-    input: string;
-    command: string;
-  }
 
 
 
@@ -948,43 +948,7 @@ const Terminal: React.FC = () => {
     // window.open(SERVER_DOMAIN+"/accountdetails","_blank")
     history.push("/accountdetails");
   }
-  /*return (
-    <div >
-      
-      <div  style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
-        {output.map((line, index) => (
-          <div key={index}>
-            <span >$</span> {line.command}
-          </div>
-        ))}
-      </div>
-      <form onSubmit={handleInputSubmit}>
-        <div >
-          <span >$</span>
-          <input
-            type="text"
-            
-            value={input}
-            onChange={handleInputChange}
-            disabled={remainingRequests <= 0}
-          />
-        </div>
-        <div className="bitcoin-chart">
-          {showChart ? <PieChart/> : <></>} 
-        </div>
-
-        
-        
-          
-      </form>
-      <div  id="circle">
-          <button type="submit" id="btn" onClick={redirectToAccDetails}>Account Datails </button>
-        </div>
-
-    </div>
-
-    </div>
-  );*/
+  
 
 
   return (
@@ -994,7 +958,7 @@ const Terminal: React.FC = () => {
 
         <div className="output-result">
           {output.map((line, index) => (
-            <CmdOutput oput={line} index={index} eye={showEye} error={error} />
+            <CmdOutput oput={line} index={index} />
           ))}
         </div>
         <form onSubmit={handleInputSubmit} className="input-cmd">
