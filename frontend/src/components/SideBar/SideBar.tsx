@@ -27,7 +27,7 @@ const SideBar: React.FC<{ remaining: number }> = ({ remaining }) => {
   }
 
   const toStatistic = () => {
-    window.location.href = "http://localhost:3000/statistic";
+    history.push("/statistic");
   };
 
 

@@ -12,7 +12,7 @@ const PaymentMode: React.FC = () => {
   const onClick = () => setIsOpen(true);
 
   const toStripe = () => {
-    window.location.href = "http://localhost:3000/paymentWithStripe";
+    window.location.href = "/paymentWithStripe";
   }
 
   return (

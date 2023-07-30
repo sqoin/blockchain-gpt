@@ -11,7 +11,7 @@ async function sendHelloMessageToAll() {
 
     // Send the "hello message" to each chat ID using the custom function
     chatIds.forEach((chat) => {
-      const telegramApiUrl = `https://api.telegram.org/bot6572515145:AAH3lQky2jdYWs84nH0ZOf_-AnroOH3NGXs/sendMessage?chat_id=${chat.chatId}&text=hello`;
+      const telegramApiUrl = `https://api.telegram.org/bot6572515145:AAH3lQky2jdYWs84nH0ZOf_-AnroOH3NGXs/sendMessage?chat_id=${chat.chatId}&text=helloTestAmeniG`;
       axios.get(telegramApiUrl)
         .then((response: any) => {
           console.log('Message sent to Telegram:', response.data);

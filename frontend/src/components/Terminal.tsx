@@ -2,7 +2,6 @@ import React, { useState, ChangeEvent, FormEvent ,useEffect} from "react";
 import "./Terminal.css";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
 import { Connection, PublicKey, Version } from "@solana/web3.js";
-import { SERVER_DOMAIN } from "../utils/constants";
 import { useHistory, useLocation } from "react-router-dom";
 import { signOut } from "supertokens-auth-react/recipe/session";
 import { SignOutIcon } from "../assets/images";
@@ -19,6 +18,7 @@ import PieChart from "../pieChart.tsx"
 import CryptomarketCapChart from "../cryptoMarketCapChart.tsx";
 
 import CryptoChart from "../cryptoCharts";
+import { ACCOUNT_MANAGEMENT } from "../utils/constants";
 
 
 
@@ -1082,7 +1082,7 @@ console.log(allInputs);
   let task = {}
   const addTask = async () => {
     try {
-      await axios.post('http://localhost:3003/api/tasks', task);
+      await axios.post(`${ACCOUNT_MANAGEMENT}/api/tasks`, task);
       alert('Task saved successfully!');
     } catch (error) {
       alert('Failed to save task');

@@ -1,4 +1,4 @@
-import {IRegister, Register} from "./model";
+import {IRegister, Register} from "./models/model";
 
 require('./config.js');
 async function insertData(data: IRegister) {

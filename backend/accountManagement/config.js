@@ -20,8 +20,8 @@ let supertokensConfig = {
     },
     appInfo: {
         appName: 'blockchaingGpt',
-        apiDomain: 'http://localhost:3003',
-        websiteDomain: 'http://localhost:3000',
+        apiDomain: process.env.API_DOMAIN,
+        websiteDomain: process.env.WEBSITE_DOMAIN,
     },
     recipeList: [ThirdPartyEmailPassword.init({})],
 }

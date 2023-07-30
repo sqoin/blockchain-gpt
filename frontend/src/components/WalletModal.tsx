@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import { Modal } from "reactstrap";
 import "./WalletModal.css";
+import { useHistory } from "react-router-dom";
+
 export default function CrypoCurrencyPaymentModal({ isOpen, toggle }: any) {
+  const history = useHistory();
   const toMetamask = () => {
-    window.location.href = "http://localhost:3000/paywithmetamask";
+    history.push("/paywithmetamask");
   };
 
   const toPhantom = () => {
-    window.location.href = "http://localhost:3000/paywithphantom";
+    history.push("/paywithphantom");
   };
 
   function closeToggle() {

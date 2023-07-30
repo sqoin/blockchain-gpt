@@ -1,8 +1,8 @@
 import { ConnectionConfig, HttpHeaders } from "@solana/web3.js";
 import { Connection } from "@solana/web3.js";
+import { PAID_NODE_URL } from "./constants";
 
 
-export const PAID_NODE_URL = "https://nova-solana-main-rpc-0.machine.restake.tech"
 
 export const HEADERS={
     'Content-Type': 'application/json',

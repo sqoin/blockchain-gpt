@@ -86,3 +86,12 @@
 .modalContainer .redirect-btn:hover {
   background-color: rgb(70, 131, 217);
 } 
+
+.modalContainer .title{
+  font-size: 30px;
+  color: black;
+  text-transform: uppercase;
+  font-weight: 300;
+  text-align: center;
+  margin-bottom: 15px;
+}

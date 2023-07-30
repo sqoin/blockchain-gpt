@@ -59,3 +59,11 @@
 .PaymentMode .redirect-btn:hover{
     background-color: var(--color3);
 }
+.PaymentMode .title{
+    font-size: 30px;
+    color: black;
+    text-transform: uppercase;
+    font-weight: 300;
+    text-align: center;
+    margin-bottom: 15px;
+}

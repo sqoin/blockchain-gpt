@@ -38,7 +38,12 @@ router.post('/saveUserId', async (req: Request, res: Response) => {
     await insertData(dataToInsert);
 
     console.log('User ID:', userId, "name: ",name, "last name: ", lastName);
-    const userInfo = await ThirdPartyEmailPassword.getUserById(userId);
+    let userInfo;
+    try{
+      userInfo= await ThirdPartyEmailPassword.getUserById(userId);
+    } catch (error) {
+      console.error('Error fetching ThirdPartyEmailPassword.getUserById:', error);
+    }
     userEmail=userInfo?.email||"";
     console.log("userEmail is: "+userEmail);
     ID_user=userId;

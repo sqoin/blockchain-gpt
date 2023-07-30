@@ -57,6 +57,15 @@ services:
       - ./backend/chatdata:/app
       - /app/node_modules
     
+  service-account-payment:
+    build: backend/accountManagement
+    ports:
+      - 3003:3003
+    
+    container_name: accountManagement
+    volumes:
+      - ./backend/accountManagement:/app
+      - /app/node_modules
 
 
     

@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "ts-node ./app.ts",
+    "start": "nodemon ./app.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

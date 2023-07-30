@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import "./RepetitiveTasks.css";
 import axios from 'axios';
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
+import { ACCOUNT_MANAGEMENT } from '../../utils/constants';
 
 interface Task {
     _id: string;
@@ -20,7 +21,7 @@ const RepetitiveTasks: React.FC = () => {
             return null;
         }
         try {
-            const response = await axios.get(`http://localhost:3003/api/tasks/${sessionContext.userId}`);
+            const response = await axios.get(`${ACCOUNT_MANAGEMENT}/api/tasks/${sessionContext.userId}`);
             setTasks(response.data);
         } catch (error) {
             console.error('Error fetching tasks:', error);

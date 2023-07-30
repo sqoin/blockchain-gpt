@@ -9,7 +9,7 @@
 
  5: Copy the link (normally it should be "mongodb+srv://YOUR_USERNME:YOUR_PASSWORD@DB_CLUSTER.......")
 
- 6: create a .env file in blockchain-gpt/backend/accountPayment/
+ 6: create a .env file in blockchain-gpt/backend/accountManagement/
  
  ## .env structure: 
  DB_USERNAME= /* your username */
@@ -17,4 +17,4 @@
  DB_CLUSTER=DB_CLUSTER (by default it should be "atlascluster.token" the token value changes from cluster to cluster)
 
 
-## to run this webservice: open the terminal in blockchain-gpt/backend/accountPayment/ and run the command: ts-node server.ts
+## to run this webservice: open the terminal in blockchain-gpt/backend/accountManagement/ and run the command: ts-node server.ts

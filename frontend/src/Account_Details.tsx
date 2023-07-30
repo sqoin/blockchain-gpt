@@ -3,6 +3,7 @@ import './Account_Details.css';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { useSessionContext } from 'supertokens-auth-react/recipe/session';
+import { ACCOUNT_MANAGEMENT } from './utils/constants';
 
 interface AccountDetailsProps {
   user: {
@@ -16,7 +17,7 @@ interface AccountDetailsProps {
 
 async function UpdateUserInformation(userId: string, userName: string, userLastName: string) {
   try {
-    const response = await axios.put('http://localhost:3003/api/updateUser', {
+    const response = await axios.put(`${ACCOUNT_MANAGEMENT}/api/updateUser`, {
       userId,
       userName,
       userLastName,
@@ -55,7 +56,7 @@ const AccountDetails: React.FC<AccountDetailsProps> = ({ user, userId }) => {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const response = await axios.get('http://localhost:3003/api/getUserInfo');
+        const response = await axios.get(`${ACCOUNT_MANAGEMENT}/api/getUserInfo`);
         setUserInfo(response.data);
         user.githubAccount = userInfo.githubAccount;
         user.name=userInfo.userName;

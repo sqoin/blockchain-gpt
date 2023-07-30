@@ -2,7 +2,6 @@ FROM node:16.10.0
 WORKDIR /app
 COPY . .
 RUN npm install
-RUN npm i axios
-RUN chmod -R a+rwx /app/node_modules 
+
 EXPOSE 3006 
 CMD [ "npm", "run", "start" ]

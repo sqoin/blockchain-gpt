@@ -7,9 +7,9 @@ import Home from "./Home";
 import { SuperTokensConfig } from "./config";
 import Tester from "./tester";
 import ChartComponent from "./adapters/ChartComponent";
-import ServiceNotAvailable from "./components/error pages/Service_Unavailable";
+/* import ServiceNotAvailable from "./components/error pages/Service_Unavailable";
 import ServerErrorPage from "./components/error pages/Internal_Server_Error";
-import NotAuthorized from "./components/error pages/Unauthorized";
+import NotAuthorized from "./components/error pages/Unauthorized"; */
 import AccountDetails from "./Account_Details";
 import { loadStripe } from '@stripe/stripe-js';
 import Payment from "./payment";
@@ -77,18 +77,12 @@ function App() {
                             <Route path="/statics">
                                 <ChartComponent />
                             </Route>
-                            <Route
+                           {/*  <Route
                                 path="/ServiceUnavailable"><ServiceNotAvailable /></Route>
-
-
                             <Route
                                 path="/InternalServerError"><ServerErrorPage /></Route>
-
-
                             <Route
-                                path="/notauthorized"><NotAuthorized /></Route>
-
-
+                                path="/notauthorized"><NotAuthorized /></Route> */}
                             <Route
                                 path="/accountdetails"><AccountDetails user={user} userId={user.userId} /></Route>
 

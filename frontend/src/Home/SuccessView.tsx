@@ -10,6 +10,7 @@ import {
 } from "../assets/images";
 import Terminal from "../components/Terminal"
 import axios from "axios";
+import { ACCOUNT_MANAGEMENT } from "../utils/constants";
 
 interface ILink {
   name: string;
@@ -30,7 +31,7 @@ export default function SuccessView(props: { userId: string }) {
 
   async function sendUserIdToBackend() {
     try {
-      const response = await axios.post('http://localhost:3003/api/saveUserId', { userId });
+      const response = await axios.post(`${ACCOUNT_MANAGEMENT}/api/saveUserId`, { userId });
       if (response.data && response.data.message) {
         history.push("/paymentmode") // Display the alert message from the backend response
       }
