@@ -5,16 +5,15 @@ import {insertData} from "../databaseManager";
 import ThirdPartyEmailPassword from "supertokens-node/recipe/thirdpartyemailpassword";
 import SuperTokens from 'supertokens-node';
 import axios from 'axios';
-const {supertokensConfig,mongoose} = require('../config.js')
 let tasksController = require("../controller/tasksController");
 const router: Router = Router();
-
+const config=require('../config')
 let ID_user='';
 let userEmail='';
 let githubaccount='';
 let name='';
 let lastName='';
-SuperTokens.init(supertokensConfig);
+SuperTokens.init(config.supertokensConfig);
 
 
 router.post('/saveUserId', async (req: Request, res: Response) => {

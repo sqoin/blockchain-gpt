@@ -785,9 +785,9 @@ console.log(allInputs);
             setInput("");
             handleOutput(`Execution in progress ...`);
             if (remainingResult > 0) {
-              let test = isRepetitive();
-              if((await test).isRepetitiveTask){
-                task = { userId: idUser, task: input, duration: (await test).duration*60*1000 }
+              let test = await isRepetitive();
+              if(test?.isRepetitiveTask){
+                task = { userId: idUser, task: input, duration: test.duration*60*1000 }
                 addTask(); 
               }
               
@@ -967,8 +967,16 @@ console.log(allInputs);
     tu vas retourner {duration:5,isRepetitifTask:true}
     et la tache "give me bitcoin price"  est non repetitive tu vas retourner 
     {duration:0,isRepetitifTask:false}`
-    const rq = await getData(repetitiveQuerry);
-    const rs = parseTaskString(rq.text);
+    let rq ;
+    try {
+      rq = await getData(repetitiveQuerry);
+    } catch (error: any) {
+      handleOutput("", error.message, true)
+    }
+    let rs = null;
+    if(rq){
+      rs = parseTaskString(rq.text);
+    }
     if (rs) {
       console.log('====================================');
       console.log(rs);

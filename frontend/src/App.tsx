@@ -6,15 +6,14 @@ import { Switch, BrowserRouter as Router, Route } from "react-router-dom";
 import Home from "./Home";
 import { SuperTokensConfig } from "./config";
 import Tester from "./tester";
-import ChartComponent from "./adapters/ChartComponent";
-/* import ServiceNotAvailable from "./components/error pages/Service_Unavailable";
-import ServerErrorPage from "./components/error pages/Internal_Server_Error";
-import NotAuthorized from "./components/error pages/Unauthorized"; */
+import ServiceNotAvailable from "./error_pages/Service_Unavailable";
+import ServerErrorPage from "./error_pages/Internal_Server_Error";
+import NotAuthorized from "./error_pages/Unauthorized";
 import AccountDetails from "./Account_Details";
 import { loadStripe } from '@stripe/stripe-js';
 import Payment from "./payment";
 import Completion from "./Completion";
-
+import Charts from './components/Statistic/Charts';
 
 
 
@@ -24,7 +23,7 @@ import PaymentMode from "./components/payment-mode/PaymentMode";
 import SendSol from "./components/pay-with-phantom/SendSol";
 import PayWithMetamask from "./components/pay-with-metamask/PayWithMetamask";
 import RepetitiveTasks from "./components/Repetitive-Tasks/RepetitiveTasks";
-import BarChart from "./components/Statistic/AccountChart";
+import BarChart from "./components/Statistic/Bar_Chart";
 SuperTokens.init(SuperTokensConfig);
 const stripePromise = loadStripe('YOUR_PUBLISHABLE_KEY');
 
@@ -74,15 +73,15 @@ function App() {
 
 
 
-                            <Route path="/statics">
-                                <ChartComponent />
+                            <Route path="/statistics">
+                                <Charts />
                             </Route>
-                           {/*  <Route
+                           <Route
                                 path="/ServiceUnavailable"><ServiceNotAvailable /></Route>
                             <Route
                                 path="/InternalServerError"><ServerErrorPage /></Route>
                             <Route
-                                path="/notauthorized"><NotAuthorized /></Route> */}
+                                path="/notauthorized"><NotAuthorized /></Route> 
                             <Route
                                 path="/accountdetails"><AccountDetails user={user} userId={user.userId} /></Route>
 
@@ -93,11 +92,11 @@ function App() {
 
 
 
-
                             <Route
                                 path="/paywithphantom"><SendSol /></Route>
                             <Route
                                 path="/paymentmode"><PaymentMode /></Route>
+
 
                             <Route path="/repetitivetasks">
                                 <SessionAuth>
@@ -111,8 +110,7 @@ function App() {
                                
 
 
-                    </Switch>
-
+                        </Switch>
 
                     </div>
                 </Router>
