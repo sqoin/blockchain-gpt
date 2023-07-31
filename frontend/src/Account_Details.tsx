@@ -14,6 +14,7 @@ interface AccountDetailsProps {
     blockchainAccount: string;
   };
   userId: string; }
+  let IDUSER='';
 
 async function UpdateUserInformation(userId: string, userName: string, userLastName: string) {
   try {
@@ -32,12 +33,14 @@ async function UpdateUserInformation(userId: string, userName: string, userLastN
 
 const AccountDetails: React.FC<AccountDetailsProps> = ({ user, userId }) => {
   const history = useHistory();
-  const [userInfo, setUserInfo] = useState({email: '', creationDate: '', githubAccount: '',userName:'',userLastName:'' });
+  const [userInfo, setUserInfo] = useState({email: '', githubAccount: '',userName:'',userLastName:'' });
   const [lastName, setLastName] = useState('');
+  const [User, setUser] = useState({ githubAccount: '', name: '', lastName: '' });
   const [Name, setName] = useState('');
   const session = useSessionContext();
   if (!session.loading){
     userId= session.userId;
+    IDUSER=userId;    
   }
 
   // Function to handle changes to the last name
@@ -53,22 +56,30 @@ const AccountDetails: React.FC<AccountDetailsProps> = ({ user, userId }) => {
     UpdateUserInformation(userId, Name, lastName);
   };
 
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const response = await axios.get(`${ACCOUNT_MANAGEMENT}/api/getUserInfo`);
-        setUserInfo(response.data);
-        user.githubAccount = userInfo.githubAccount;
-        user.name=userInfo.userName;
-        user.lastName=userInfo.userLastName;
-        console.log(JSON.stringify(userInfo),"\n name: ",user.name);
-      } catch (error) {
-        console.error('Error fetching user information:', error);
-      }
-    };
 
-    fetchUserInfo();
-  }, []);
+useEffect(() => {
+  const fetchUserInfo = async () => {
+    try {
+      const response = await axios.post(`${ACCOUNT_MANAGEMENT}/api/getUserInfo`, { IDUSER });
+      setUserInfo(response.data);
+    } catch (error) {
+      console.error('Error fetching user information:', error);
+    }
+  };
+
+  fetchUserInfo();
+}, [IDUSER]);
+
+// Update user state whenever userInfo changes
+useEffect(() => {
+  setUser({
+    githubAccount: userInfo.githubAccount,
+    name: userInfo.userName,
+    lastName: userInfo.userLastName,
+  });
+}, [userInfo]);
+
+
 
   return (
     <div className="accountdetails">
@@ -89,7 +100,7 @@ const AccountDetails: React.FC<AccountDetailsProps> = ({ user, userId }) => {
                     <input
                         className="form-control"
                         id="name"
-                        defaultValue={user.name}
+                        defaultValue={User.name}
                         onChange={handleNameChange}
                     ></input>
                   </div>
@@ -98,11 +109,11 @@ const AccountDetails: React.FC<AccountDetailsProps> = ({ user, userId }) => {
 
                 <div className="col-md-6">
                   <div className="form-group">
-                    <label htmlFor="lastName">Last name</label>
+                    <label htmlFor="lastName">Last name </label>
                     <input
                         className="form-control"
                         id="lastName"
-                        defaultValue={user.lastName}
+                        defaultValue={User.lastName}
                         onChange={handleLastNameChange}
                     ></input>
                   </div>
