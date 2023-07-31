@@ -8,8 +8,10 @@ async function insertData(data: Ichat) {
       return;
     }
 
-    const documentToInsert = new chat({ chatId: data.chatId }); // Create a new document with the chat ID
-
+    const documentToInsert = new chat({
+      chatId: data.chatId,
+      userId: data.userId,
+    }); 
     const insertResult = await documentToInsert.save(); // Save the document to the database
     console.log('Inserted document:', insertResult);
   } catch (error) {

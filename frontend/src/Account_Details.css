@@ -156,3 +156,29 @@
 .accountdetails .account-links-container .account-link:last-child {
   border-right: none;
 } 
+
+.toggle-button {
+  font-size: 16px;
+  padding: 10px 20px;
+  background-color: #4CAF50; /* Green background for OFF state */
+  color: #fff; /* White text for OFF state */
+  border: none;
+  border-radius: 1000px; /* Fully rounded */
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  margin-left: 300px; /* Add right margin for spacing */
+
+
+
+}
+.toggle-container {
+  display: flex;
+  justify-content: flex-end; /* Aligns the content to the right */
+  margin-right: 20px; /* Add right margin for spacing */
+}
+
+.toggle-button.on {
+  background-color: #2ECC71; /* Lighter green background for ON state */
+}
+
+
