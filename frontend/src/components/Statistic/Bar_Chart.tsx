@@ -1,6 +1,6 @@
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
-import "./AccountChart.css";
+import "./Bar_Chart.css";
 
 const BarChart = () => {
 

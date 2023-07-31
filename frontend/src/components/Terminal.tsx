@@ -918,7 +918,6 @@ console.log(allInputs);
 
                   result = await processServerResponse(res.text, handleOutput);
                 } catch (error: any) {
-                  alert("catch")
                   setError(error.message);
                   setShowEye(true)
                   handleOutput("", error.message, true)
