@@ -1,5 +1,6 @@
 import React from 'react';
 import { Pie } from 'react-chartjs-2';
+import './Charts.css'
 
 const PieChart = () => {
   const chartData = [
@@ -76,7 +77,7 @@ const PieChart = () => {
   };
 
   return (
-    <div className="chart">
+    <div className="pie-chart">
       <Pie data={data} options={options} />
     </div>
   );

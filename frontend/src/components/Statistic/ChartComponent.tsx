@@ -6,6 +6,7 @@ import { ChartDataset, ChartTypeRegistry, ScatterDataPoint, BubbleDataPoint } fr
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import { Line, Pie } from 'react-chartjs-2';
+import PieChart from './Pie_Chart';
 
 // Register the scales and elements
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement);
@@ -24,6 +25,12 @@ const ChartComponent: React.FC = () => {
   const days = parseInt(queryParams['days'] as string);
   const [interval, setInterval] = useState<string>('daily');
   const [chartData, setChartData] = useState<ChartData | null>(null);
+
+  interface ChartDataEntry {
+    name: string;
+    count: number;
+  }
+    
 
   const handleCheckboxChange = (index: number) => {
     setChartData((prevState) => {
@@ -112,13 +119,14 @@ const ChartComponent: React.FC = () => {
 
   return (
     <div>
+      <PieChart />
       {chartData && chartData.labels.length > 0 ? (
         <div>
           <div>
             <Line
                style={{ maxWidth: '800px' }}
                data={chartData as ChartData<'line'>}
-              options={{
+               options={{
                 responsive: true,
                 plugins: {
                   legend: {
@@ -126,30 +134,20 @@ const ChartComponent: React.FC = () => {
                     labels: {
                       generateLabels: function (chart: any) {
                         const datasets = chart.data.datasets;
-                        return chartData.datasets.map((dataset: any, i: number) => 
-                    ({
-                      datasetIndex: i,
-                      text: dataset.label,
-                      fillStyle: dataset.borderColor,
-                      strokeStyle: dataset.borderColor,
-                      lineWidth: 2,
-                      hidden: !chart.isDatasetVisible(i),
-                      index: i,
-                     })
-                    );
-                    return {
+                        return chartData.datasets.map((dataset: any, i: number) => ({
+                          datasetIndex: i,
+                          text: dataset.label,
+                          fillStyle: dataset.borderColor,
+                          strokeStyle: dataset.borderColor,
+                          lineWidth: 2,
+                          hidden: !chart.isDatasetVisible(i),
+                          index: i,
+                        }));
+                      },
                       usePointStyle: true,
                       pointStyle: 'circle',
                       boxWidth: 10,
                       boxHeight: 10,
-                    },
-                    onClick={ (e: any, legendItem: any, legend: any) => {
-                      const index = legendItem.datasetIndex;
-                      const chart = legend.chart;
-                      const meta = chart.getDatasetMeta(index);
-                    }},
-                      meta.hidden = meta.hidden === null ? !chart.data.datasets[index].hidden : null;
-                      chart.update();
                     },
                   },
                   annotation: {
@@ -166,10 +164,10 @@ const ChartComponent: React.FC = () => {
                         },
                       } as any,
                     ],
-                  }
+                  },
                 },
-              }}}
-            />
+              }}
+               />
           </div>
           <div>
             {chartData.datasets.map((dataset: any, i: number) => (
@@ -184,10 +182,12 @@ const ChartComponent: React.FC = () => {
         <p>Please enter a valid coin name.</p>
       )}
 
-      {/* Pie Chart */}
+      {/* Pie Chart 
       <div className="chart">
         <Pie data={pieChartData} options={options} />
-      </div>
+      </div>*/}
+
+      
 
       {!chartData?.labels.length && <p>Error fetching chart data. Please try again later.</p>}
     </div>
