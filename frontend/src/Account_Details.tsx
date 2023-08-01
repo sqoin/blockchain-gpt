@@ -94,6 +94,7 @@ useEffect(() => {
     if (!session.loading) {
       userId = session.userId;
     }
+  }
 
   const handleButtonClick = async () => {
     if (!isToggled) {
@@ -223,6 +224,6 @@ useEffect(() => {
       </div>
     </div>
   );
-
+}
 
 export default AccountDetails;

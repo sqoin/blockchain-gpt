@@ -25,3 +25,8 @@
     font-weight: bold;
     font-size: 17px;
 }  */
+
+.fix{
+    display: flex;
+    flex-direction: row;
+}

@@ -29,6 +29,10 @@ body{
     padding: 4px 6px;
     font-family: 'Rubik';
     padding: 10px 0;
+    position: sticky;
+    top: 0;
+    bottom: 0;
+    left: 0;
 }
 
 .sidebar .options, .sidebar .chats{

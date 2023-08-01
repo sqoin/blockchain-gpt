@@ -1,6 +1,6 @@
 .accountdetails {
   font-family: "Roboto", sans-serif;
-  background: linear-gradient(45deg, var(--color1) , var(--color2)); 
+  background: var(--color3); 
   width: 100vw;
   height: 100vh;
 

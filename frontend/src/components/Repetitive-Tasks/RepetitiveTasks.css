@@ -1,10 +1,9 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,500,300,700);
 .repetitiveTasks{
-  background: -webkit-linear-gradient(left, #453750, #9882AC);
-  background: linear-gradient(to right, #453750, #9882AC);
+  background: var(--color3); 
   font-family: 'Roboto', sans-serif;
   height: 100vh;
-  width: 100vw;
+  width: 100%;
   padding: 40px;
 }
 
@@ -16,18 +15,18 @@
     text-align: center;
     margin-bottom: 15px;
   }
-  table{
+  .task-table{
     width:100%;
     table-layout: fixed;
   }
   .tbl-header{
-    background-color: rgba(255,255,255,0.3);
+    background-color: rgba(151, 151, 151, 0.8);
    }
   .tbl-content{
     height:65vh;
     overflow-x:auto;
     margin-top: 0px;
-    border: 1px solid rgba(255,255,255,0.3);
+    border: 1px solid rgba(151,151,151,0.8);
   }
   th{
     padding: 20px 15px;
