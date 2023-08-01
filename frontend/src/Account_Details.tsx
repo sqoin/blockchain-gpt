@@ -16,26 +16,14 @@ interface AccountDetailsProps {
     googleAccount: string;
     blockchainAccount: string;
   };
-  userId: string; }
+  userId: string; 
+}
   let IDUSER='';
 
-async function UpdateUserInformation(userId: string, userName: string, userLastName: string) {
-  try {
-    const response = await axios.put(`${ACCOUNT_MANAGEMENT}/api/updateUser`, {
-      userId,
-      userName,
-      userLastName,
-    });
-    if (response.data && response.data.message) {
-    }
-    console.log('User updated successfully!');
-  } catch (error) {
-    console.error('Error updating the user:', error);
-  }
-}
 
 
-const AccountDetails: React.FC<AccountDetailsProps> = ({ user, userId }) => {
+
+const AccountDetails: React.FC<any> = ({ userId }) => {
   const [isToggled, setIsToggled] = useState(false);
   const history = useHistory();
   const [userInfo, setUserInfo] = useState({email: '', githubAccount: '',userName:'',userLastName:'' });
@@ -62,79 +50,59 @@ const AccountDetails: React.FC<AccountDetailsProps> = ({ user, userId }) => {
   };
 
 
-useEffect(() => {
-  const fetchUserInfo = async () => {
+  async function UpdateUserInformation(userId: string, userName: string, userLastName: string) {
     try {
-      const response = await axios.post(`${ACCOUNT_MANAGEMENT}/api/getUserInfo`, { IDUSER });
-      setUserInfo(response.data);
+      const response = await axios.put(`${ACCOUNT_MANAGEMENT}/api/updateUser`, {
+        userId,
+        userName,
+        userLastName,
+      });
+      if (response.data && response.data.message) {
+      }
+      console.log('User updated successfully!');
     } catch (error) {
-      console.error('Error fetching user information:', error);
+      console.error('Error updating the user:', error);
+    }
+  }
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const response = await axios.post(`${ACCOUNT_MANAGEMENT}/api/getUserInfo`, { IDUSER });
+        setUserInfo(response.data);
+      } catch (error) {
+        console.error('Error fetching user information:', error);
+      }
+    };
+
+    fetchUserInfo();
+  }, [IDUSER]);
+
+
+
+
+  // Update user state whenever userInfo changes
+  useEffect(() => {
+    setUser({
+      githubAccount: userInfo.githubAccount,
+      name: userInfo.userName,
+      lastName: userInfo.userLastName,
+    });
+  }, [userInfo]);
+
+
+
+  const getChatIdFromTelegram = async () => {
+    try {
+      const response = await axios.get('https://api.telegram.org/bot6572515145:AAH3lQky2jdYWs84nH0ZOf_-AnroOH3NGXs/getUpdates');
+      const chatId = response.data.result[0].message.chat.id;
+      return chatId;
+    } catch (error) {
+      console.error('Error fetching chat ID from Telegram:', error);
+      return null;
     }
   };
 
-  fetchUserInfo();
-}, [IDUSER]);
-
-
-
-
-// Update user state whenever userInfo changes
-useEffect(() => {
-  setUser({
-    githubAccount: userInfo.githubAccount,
-    name: userInfo.userName,
-    lastName: userInfo.userLastName,
-  });
-}, [userInfo]);
-
-
-const handleButtonClick = async () => {
-  if (!isToggled) {
-    (async () => {
-      try {
-        // Open the Telegram bot link in a new tab
-        window.open('http://t.me/sqqoiin_bot', '_blank');
-        // Retrieve the chat ID from Telegram
-        const chatId = await getChatIdFromTelegram();
-        console.log(chatId);
-        // Send the chat ID to your backend
-        await axios.post('http://localhost:3006/api/telegram/chat', { chatId,userId});
-        // Perform any other desired actions
-        console.log('Button clicked, chat ID collected, and sent to the backend.');
-      } catch (error:any) {
-        console.error('Error handling button click:', error);
-        console.log("Error handling button click" + error.message);
-      }
-    })();
-  }
-
-  // Toggle the connected state
-  setIsToggled((prevIsToggled) => !prevIsToggled);
-};
-
-const getChatIdFromTelegram = async () => {
-  try {
-    const response = await axios.get('https://api.telegram.org/bot6572515145:AAH3lQky2jdYWs84nH0ZOf_-AnroOH3NGXs/getUpdates');
-    const chatId = response.data.result[0].message.chat.id;
-    return chatId;
-  } catch (error) {
-    console.error('Error fetching chat ID from Telegram:', error);
-    return null;
-  }
-};
-
-
-
-  const AccountDetails: React.FC<AccountDetailsProps> = ({ user }) => {
-    const history = useHistory();
-    const [isToggled, setIsToggled] = useState(false);
-    const session = useSessionContext();
-    let userId = ''; // Initialize userId with a default value
-  
-    if (!session.loading) {
-      userId = session.userId;
-    }
-  }
 
   const handleButtonClick = async () => {
     if (!isToggled) {
@@ -160,16 +128,8 @@ const getChatIdFromTelegram = async () => {
     setIsToggled((prevIsToggled) => !prevIsToggled);
   };
 
-  const getChatIdFromTelegram = async () => {
-    try {
-      const response = await axios.get('https://api.telegram.org/bot6572515145:AAH3lQky2jdYWs84nH0ZOf_-AnroOH3NGXs/getUpdates');
-      const chatId = response.data.result[0].message.chat.id;
-      return chatId;
-    } catch (error) {
-      console.error('Error fetching chat ID from Telegram:', error);
-      return null;
-    }
-  };
+
+  
 
   
   return ( 
@@ -234,9 +194,7 @@ const getChatIdFromTelegram = async () => {
                   <div className="form-group">
 
                   <button onClick={()=>history.push("/paymentmode")}>Payer mon compte</button>
-                  <button  className={`toggle-button ${isToggled ? 'on' : ''}`}  onClick={handleButtonClick}>
-                    {isToggled ? 'ON' : 'OFF'}
-                  </button>
+
 
                   
 
