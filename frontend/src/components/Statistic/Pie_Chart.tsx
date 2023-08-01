@@ -1,51 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Pie } from 'react-chartjs-2';
-import './Charts.css'
+import './Charts.css';
+import axios from 'axios';
+import { STATISTICS_PIE_CHART_URL } from '../../utils/constants';
+
+interface ChartDataEntry {
+  name: string;
+  count: number;
+}
 
 const PieChart = () => {
-  const chartData = [
-    {"name": "freeAccounts", "count": 2, "date": "20220731000000"},
-    {"name": "PaidAccounts", "count": 3, "date": "20220731000000"},
-    {"name": "freeAccounts", "count": 3, "date": "20220831000000"},
-    {"name": "PaidAccounts", "count": 7, "date": "20220831000000"},
-    {"name": "freeAccounts", "count": 4, "date": "20220930000000"},
-    {"name": "PaidAccounts", "count": 10, "date": "20220930000000"},
-    {"name": "freeAccounts", "count": 6, "date": "20221031000000"},
-    {"name": "PaidAccounts", "count": 11, "date": "20221031000000"},
-    {"name": "freeAccounts", "count": 7, "date": "20221130000000"},
-    {"name": "PaidAccounts", "count": 14, "date": "20221130000000"},
-    {"name": "freeAccounts", "count": 9, "date": "20221231000000"},
-    {"name": "PaidAccounts", "count": 17, "date": "20221231000000"},
-    {"name": "freeAccounts", "count": 10, "date": "20230131000000"},
-    {"name": "PaidAccounts", "count": 19, "date": "20230131000000"},
-    {"name": "freeAccounts", "count": 11, "date": "20230228000000"},
-    {"name": "PaidAccounts", "count": 21, "date": "20230228000000"},
-    {"name": "freeAccounts", "count": 11, "date": "20230331000000"},
-    {"name": "PaidAccounts", "count": 23, "date": "20230331000000"},
-    {"name": "freeAccounts", "count": 12, "date": "20230430000000"},
-    {"name": "PaidAccounts", "count": 25, "date": "20230430000000"},
-    {"name": "freeAccounts", "count": 13, "date": "20230531000000"},
-    {"name": "PaidAccounts", "count": 26, "date": "20230531000000"},
-    {"name": "freeAccounts", "count": 14, "date": "20230630000000"},
-    {"name": "PaidAccounts", "count": 28, "date": "20230630000000"},
-    ];
+  const [chartData, setChartData] = useState<ChartDataEntry[]>([]);
+
+  useEffect(() => {
+    // Fetch the JSON data from the URL using axios
+    const fetchData = async () => {
+      try {
+        const response = await axios.get<ChartDataEntry[]>(STATISTICS_PIE_CHART_URL);
+        setChartData(response.data);
+      } catch (error) {
+        console.error('Error fetching chart data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // Summarize data by category (freeAccounts and PaidAccounts)
-  interface ChartDataEntry {
-    name: string;
-    count: number;
-  }
-  
-  const summaryData: { [key: string]: number } = chartData.reduce((acc: { [key: string]: number }, entry: ChartDataEntry) => {
+  const summaryData = chartData.reduce((acc: { [key: string]: number }, entry: ChartDataEntry) => {
     const category = entry.name;
     acc[category] = (acc[category] || 0) + entry.count;
     return acc;
   }, {});
-  
-
-
-
-
 
   // Extract the category names and counts for the pie chart
   const chartLabels = Object.keys(summaryData);

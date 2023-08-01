@@ -27,7 +27,7 @@ const SideBar: React.FC<{ remaining: number }> = ({ remaining }) => {
   }
 
   const toStatistic = () => {
-    history.push("/statistic");
+    history.push("/statistics");
   };
 
 
