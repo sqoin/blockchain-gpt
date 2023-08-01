@@ -68,9 +68,10 @@ router.post('/saveUserId', async (req: Request, res: Response) => {
     return res.sendStatus(500);
   }
 });
-router.get('/getUserInfo', async (req: Request, res: Response) => {
-
-  try {
+router.post('/getUserInfo', async (req: Request, res: Response) => {
+  const ID_user=req.body;
+  console.log("connected user id is: ",ID_user);
+    try {
     const userInfo = {
       userId: ID_user,
       email: userEmail, // Replace with the actual email retrieved from the database
