@@ -13,6 +13,7 @@ let userEmail='';
 let githubaccount='';
 let name='';
 let lastName='';
+let email ='';
 SuperTokens.init(config.supertokensConfig);
 
 
@@ -32,11 +33,6 @@ router.post('/saveUserId', async (req: Request, res: Response) => {
         return res.status(200).json({ message: "Free trial expired" });
       }
     }
-
-    const dataToInsert: IRegister = { date: new Date(), ID: userId , name:'',lastName: ''};
-    await insertData(dataToInsert);
-
-    console.log('User ID:', userId, "name: ",name, "last name: ", lastName);
     let userInfo;
     try{
       userInfo= await ThirdPartyEmailPassword.getUserById(userId);
@@ -47,6 +43,12 @@ router.post('/saveUserId', async (req: Request, res: Response) => {
     console.log("userEmail is: "+userEmail);
     ID_user=userId;
     console.log('User information: ',userInfo);
+
+    const dataToInsert: IRegister = { date: new Date(), ID: userId , name:'',lastName: '',email: userEmail};
+    await insertData(dataToInsert);
+
+    console.log('User ID:', userId, "name: ",name, "last name: ", lastName);
+    
     if (userInfo?.thirdParty?.id === 'github') {
       const url = 'https://api.github.com/user/' + userInfo?.thirdParty?.userId;
       try {

@@ -5,6 +5,7 @@ interface IRegister{
     date: Date,
     name: string,
     lastName: string
+    email: string
     
   }
   interface RegisterModelInterface extends mongoose.Model<RegistertDoc> {
@@ -15,6 +16,7 @@ interface IRegister{
     date: Date,
     name: string,
     lastName: string
+    email :string
   }
 const registerSchema = new mongoose.Schema({
     ID: {
@@ -32,6 +34,10 @@ const registerSchema = new mongoose.Schema({
     lastName:{
         type: String,
         required: false
+    },
+    email:{
+      type: String,
+      required:false
     }
   })
   registerSchema.statics.build = (attr: IRegister) => {
