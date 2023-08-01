@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { chat, Ichat } from '../model';
-import { insertData } from '../databaseManager';
 import { sendHelloMessageToAll } from '../message'  ;
+let databaseManager = require("../databaseManager");
 
 const router: Router = Router();
 
@@ -12,7 +12,7 @@ router.post('/telegram/chat', async (req: Request, res: Response) => {
 
   try {
     const dataToInsert: Ichat =  { chatId: chatId,userId : userId};
-    await insertData(dataToInsert);
+    await databaseManager.insertData(dataToInsert);
 
     console.log('chat ID:', chatId);
     console.log('user id',userId);
@@ -25,5 +25,6 @@ router.post('/telegram/chat', async (req: Request, res: Response) => {
     return res.sendStatus(500);
   }
 });
+router.get('/telegram/chat/:userId',databaseManager.getDataByUserId);
 
 module.exports = router;

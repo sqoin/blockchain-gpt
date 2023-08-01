@@ -18,7 +18,6 @@ interface AccountDetailsProps {
   };
   userId: string; 
 }
-  let IDUSER='';
 
 
 
@@ -33,7 +32,6 @@ const AccountDetails: React.FC<any> = ({ userId }) => {
   const session = useSessionContext();
   if (!session.loading){
     userId= session.userId;
-    IDUSER=userId;    
   }
 
   // Function to handle changes to the last name
@@ -65,18 +63,21 @@ const AccountDetails: React.FC<any> = ({ userId }) => {
     }
   }
 
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const response = await axios.post(`${ACCOUNT_MANAGEMENT}/api/getUserInfo`, { IDUSER });
-        setUserInfo(response.data);
-      } catch (error) {
-        console.error('Error fetching user information:', error);
-      }
-    };
+  const fetchUserInfo = async (userId:any) => {
+    try {
+      const response = await axios.post(`${ACCOUNT_MANAGEMENT}/api/getUserInfo`, { userId });
+      setUserInfo(response.data);
+    } catch (error) {
+      console.error('Error fetching user information:', error);
+    }
+  };
 
-    fetchUserInfo();
-  }, [IDUSER]);
+
+  useEffect(() =>{ 
+    if(userId){
+      fetchUserInfo(userId);
+    }
+  }, [userId]);
 
 
 
@@ -128,6 +129,18 @@ const AccountDetails: React.FC<any> = ({ userId }) => {
     setIsToggled((prevIsToggled) => !prevIsToggled);
   };
 
+
+  useEffect(() => {
+   if(userId){ axios.get(`http://localhost:3006/api/telegram/chat/${userId}`)
+      .then(response => {
+        // If the server returns a response (data exists), set isToggled to true
+        setIsToggled(response.data.length > 0);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+        // Handle any error that occurred during the request
+      });}
+  }, [userId]);
 
   
 
