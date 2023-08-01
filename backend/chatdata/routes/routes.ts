@@ -7,15 +7,17 @@ const router: Router = Router();
 
 
 router.post('/telegram/chat', async (req: Request, res: Response) => {
-  const { chatId } = req.body;
+  const  chatId= req.body.chatId;
+  const userId=req.body.userId ;
 
   try {
-    const dataToInsert: Ichat =  { chatId: chatId};
+    const dataToInsert: Ichat =  { chatId: chatId,userId : userId};
     await insertData(dataToInsert);
 
     console.log('chat ID:', chatId);
+    console.log('user id',userId);
      // Call the function to send hello messages to all chat IDs
-     await sendHelloMessageToAll();
+    // await sendHelloMessageToAll();
 
      return res.sendStatus(200);
   } catch (error) {

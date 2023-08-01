@@ -46,7 +46,7 @@ function App() {
                     <div className="fill">
                         <Switch>
                             {/* This shows the login UI on "/auth" route */}
-                            {getSuperTokensRoutesForReactRouterDom(require("react-router-dom"))}
+                            {getSuperTokensRoutesForReactRouterDom(require("react-router-dom"))} 
 
 
                             <Route exact path="/">
@@ -63,9 +63,15 @@ function App() {
 
                             <Route path="/paymentWithStripe"><Payment /></Route>
 
+                        <Route path="/completion"><Completion /></Route>
+                        
+                       <Route path="/sendNotif">
+                        <SessionAuth>
+                            <TelegramMessage/>
+                        
+                        </SessionAuth></Route> 
+                       
 
-                            <Route path="/completion"><Completion /></Route>
-                            <Route path="/sendNotif"><TelegramMessage /></Route>
 
 
 

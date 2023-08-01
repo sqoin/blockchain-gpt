@@ -1,5 +1,6 @@
 import { response } from 'express';
 import { chat, Ichat } from './model';
+import {sendHelloMessageToAll} from './message';
 const cors = require('cors');
 
 
@@ -31,6 +32,16 @@ app.use((req:any, res: any, next:any) => {
 app.use(express.json());
 app.use(bodyParser.json());
 app.use('/api', routes);
+
+app.post('/sendHelloToAll', async (req:any, res:any) => {
+  try {
+    await sendHelloMessageToAll();
+    res.sendStatus(200); // Sending a success response to the frontend
+  } catch (error) {
+    console.error('Error sending hello message to all chats:', error);
+    res.sendStatus(500); // Sending an error response to the frontend
+  }
+});
 
 
 const port = 3006; // Specify the port number you want to listen on
