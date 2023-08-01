@@ -36,6 +36,7 @@ async function UpdateUserInformation(userId: string, userName: string, userLastN
 
 
 const AccountDetails: React.FC<AccountDetailsProps> = ({ user, userId }) => {
+  const [isToggled, setIsToggled] = useState(false);
   const history = useHistory();
   const [userInfo, setUserInfo] = useState({email: '', githubAccount: '',userName:'',userLastName:'' });
   const [lastName, setLastName] = useState('');
@@ -74,6 +75,9 @@ useEffect(() => {
   fetchUserInfo();
 }, [IDUSER]);
 
+
+
+
 // Update user state whenever userInfo changes
 useEffect(() => {
   setUser({
@@ -82,6 +86,42 @@ useEffect(() => {
     lastName: userInfo.userLastName,
   });
 }, [userInfo]);
+
+
+const handleButtonClick = async () => {
+  if (!isToggled) {
+    (async () => {
+      try {
+        // Open the Telegram bot link in a new tab
+        window.open('http://t.me/sqqoiin_bot', '_blank');
+        // Retrieve the chat ID from Telegram
+        const chatId = await getChatIdFromTelegram();
+        console.log(chatId);
+        // Send the chat ID to your backend
+        await axios.post('http://localhost:3006/api/telegram/chat', { chatId,userId});
+        // Perform any other desired actions
+        console.log('Button clicked, chat ID collected, and sent to the backend.');
+      } catch (error:any) {
+        console.error('Error handling button click:', error);
+        console.log("Error handling button click" + error.message);
+      }
+    })();
+  }
+
+  // Toggle the connected state
+  setIsToggled((prevIsToggled) => !prevIsToggled);
+};
+
+const getChatIdFromTelegram = async () => {
+  try {
+    const response = await axios.get('https://api.telegram.org/bot6572515145:AAH3lQky2jdYWs84nH0ZOf_-AnroOH3NGXs/getUpdates');
+    const chatId = response.data.result[0].message.chat.id;
+    return chatId;
+  } catch (error) {
+    console.error('Error fetching chat ID from Telegram:', error);
+    return null;
+  }
+};
 
 
 
@@ -198,6 +238,8 @@ useEffect(() => {
                     {isToggled ? 'ON' : 'OFF'}
                   </button>
 
+                  
+
                     {/* <label htmlFor="radioOptions">Payment Options</label>
                     <div>
                       <label className="radio-label">
@@ -215,6 +257,9 @@ useEffect(() => {
                   <div>
                     <button className={'confirm'} onClick={handleApplyChanges}>Save changes</button>
                   </div>
+                  <button  className={`toggle-button ${isToggled ? 'on' : ''}`}  onClick={handleButtonClick}>
+                    {isToggled ? 'ON' : 'OFF'}
+                  </button>
                 </div>
               </div>
 
