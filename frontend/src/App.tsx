@@ -17,13 +17,12 @@ import Charts from './components/Statistic/Charts';
 
 
 
-
 import TelegramMessage from "./components/telegram-message/TelegramMessage"
 import PaymentMode from "./components/payment-mode/PaymentMode";
 import SendSol from "./components/pay-with-phantom/SendSol";
 import PayWithMetamask from "./components/pay-with-metamask/PayWithMetamask";
 import RepetitiveTasks from "./components/Repetitive-Tasks/RepetitiveTasks";
-import BarChart from "./components/Statistic/Bar_Chart";
+import { Component } from "react";
 SuperTokens.init(SuperTokensConfig);
 const stripePromise = loadStripe('YOUR_PUBLISHABLE_KEY');
 
@@ -104,9 +103,7 @@ function App() {
                                 </SessionAuth>
                             </Route>
                             
-                            <Route
-                                path="/statistic"><BarChart />
-                            </Route>
+                            
                                
 
 

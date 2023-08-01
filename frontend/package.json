@@ -21,8 +21,10 @@
         "axios": "^0.21.4",
         "babel-plugin-macros": "^3.1.0",
         "chart.js": "^3.9.1",
+        "chartjs-adapter-date-fns": "^3.0.0",
         "chartjs-plugin-annotation": "^1.1.0",
         "copy-to-clipboard": "^3.3.3",
+        "dotenv": "^16.3.1",
         "mdb-react-ui-kit": "^6.1.0",
         "qrcode.react": "^3.1.0",
         "query-string": "^6.14.1",
@@ -63,7 +65,7 @@
             "last 1 safari version"
         ]
     },
-    "proxy": "http://authentification:3001",
+    "proxy": "http://localhost:3001",
     "devDependencies": {
         "@types/superagent": "^4.1.16",
         "react-scripts": "^5.0.1"
