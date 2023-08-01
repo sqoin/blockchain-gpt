@@ -9,6 +9,7 @@ interface Task {
     userId: string;
     task: string;
     duration: number;
+    stopped: boolean;
 }
 
 const RepetitiveTasks: React.FC = () => {
@@ -35,6 +36,19 @@ const RepetitiveTasks: React.FC = () => {
         return Math.floor(milliseconds / 60000);
       };
 
+    
+    const updateTaskStopped = async (taskId:any, newStoppedValue:any) => {
+        try {
+          await axios.put(`${ACCOUNT_MANAGEMENT}/api/tasks/${taskId}/stopped`, { stopped: newStoppedValue });
+          fetchTasksByUserId();
+        } catch (error) {
+          console.error('Error updating task:', error);
+        }
+    };
+      const handleUpdateTask = async (taskId: any, newStoppedValue: any) => {
+        await updateTaskStopped(taskId, newStoppedValue);
+        fetchTasksByUserId();
+      };
 
     return (
         <div className='repetitiveTasks'>
@@ -45,6 +59,8 @@ const RepetitiveTasks: React.FC = () => {
                         <tr>
                             <th>Task</th>
                             <th>Duration</th>
+                            <th>Status</th>
+
                         </tr>
                     </thead>
                 </table>
@@ -60,6 +76,10 @@ const RepetitiveTasks: React.FC = () => {
                                 </td>
                                 <td >
                                     {convertMillisecondsToMinutes(task.duration)} min
+                                </td>
+                                <td >
+                                {task.stopped.toString()}
+                                <button onClick={() => handleUpdateTask(task._id, !task.stopped)}>Modify</button>
                                 </td>
                             </tr>
                         ))}
