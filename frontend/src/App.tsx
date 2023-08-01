@@ -14,16 +14,14 @@ import { loadStripe } from '@stripe/stripe-js';
 import Payment from "./payment";
 import Completion from "./Completion";
 import Charts from './components/Statistic/Charts';
-
-
-
-
+import SideBar from "./components/SideBar/SideBar";
 import TelegramMessage from "./components/telegram-message/TelegramMessage"
 import PaymentMode from "./components/payment-mode/PaymentMode";
 import SendSol from "./components/pay-with-phantom/SendSol";
 import PayWithMetamask from "./components/pay-with-metamask/PayWithMetamask";
 import RepetitiveTasks from "./components/Repetitive-Tasks/RepetitiveTasks";
 import BarChart from "./components/Statistic/Bar_Chart";
+
 SuperTokens.init(SuperTokensConfig);
 const stripePromise = loadStripe('YOUR_PUBLISHABLE_KEY');
 
@@ -43,6 +41,7 @@ function App() {
     return (
         <SuperTokensWrapper>
             <div className="App app-container">
+                
                 <Router>
                     <div className="fill">
                         <Switch>
@@ -83,7 +82,7 @@ function App() {
                             <Route
                                 path="/notauthorized"><NotAuthorized /></Route> 
                             <Route
-                                path="/accountdetails"><AccountDetails user={user} userId={user.userId} /></Route>
+                                path="/accountdetails"><div className="fix"><SideBar remaining={20}/><AccountDetails user={user} userId={user.userId} /></div></Route>
 
 
 
@@ -100,12 +99,15 @@ function App() {
 
                             <Route path="/repetitivetasks">
                                 <SessionAuth>
+                                <div className="fix">
+                                    <SideBar remaining={20}/>
                                     <RepetitiveTasks  />
+                                    </div>
                                 </SessionAuth>
                             </Route>
                             
                             <Route
-                                path="/statistic"><BarChart />
+                                path="/statistic"><div className="fix"><SideBar remaining={20}/><BarChart /></div>
                             </Route>
                                
 

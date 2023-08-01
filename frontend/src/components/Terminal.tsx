@@ -83,7 +83,7 @@ const Terminal: React.FC<{ idUser: string }> = ({ idUser }:any) => {
   const getData = (input: string): Promise<any> => {
     return new Promise((resolve, reject) => {
       request
-        .post("/gpt-testy")
+        .post("/gpt-test")
         .send({ command: input })
         .set("Accept", "application/json")
         .set("Access-Control-Allow-Origin", "*")
@@ -552,7 +552,7 @@ function addInputToLocalStorage(inputValue: string): void {
 
 //pour récupérer tous les inputs stockés dans le localStorage
 const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
-console.log(allInputs);
+//console.log(allInputs);
 
 ///////////////////////////
   const userCommand1 = "donner moi le publickey refrech chaque 5min";
@@ -744,9 +744,7 @@ console.log(allInputs);
         let capturedOutput: any;
         const originalConsoleLog: Console["log"] = console.log;
         console.log = commandWriter;
-
         const result: any = await eval(wrappedScript);
-
         return capturedOutput;
       } catch (error: any) {
 
@@ -755,7 +753,6 @@ console.log(allInputs);
     } else {
 
       commandWriter("This input does not require any specific action.")
-
       return `${data}`;
     }
   };
@@ -786,12 +783,12 @@ console.log(allInputs);
             handleOutput(`Execution in progress ...`);
             if (remainingResult > 0) {
               let test = await isRepetitive();
-              if(test?.isRepetitiveTask){
-                task = { userId: idUser, task: input, duration: test.duration*60*1000 }
-                addTask(); 
-              }
+              // if(test?.isRepetitiveTask){
+              //   task = { userId: idUser, task: input, duration: test.duration*60*1000 }
+              //   addTask(); 
+              // }
               
-              else if( input === 'Dessiner un graphique circulaire de la capitalisation boursière de Bitcoin, Ethereum et Binance.'){
+              if( input === 'Dessiner un graphique circulaire de la capitalisation boursière de Bitcoin, Ethereum et Binance.'){
 
                 //handleOutput("Exécution en progress ...")
                 // sleep(5000)
@@ -913,17 +910,28 @@ console.log(allInputs);
               } 
              
               else {
-                try {
-                  const res = await getData(input);
-
-                  result = await processServerResponse(res.text, handleOutput);
-                } catch (error: any) {
-                  setError(error.message);
-                  setShowEye(true)
-                  handleOutput("", error.message, true)
+                if(test?.isRepetitiveTask && test?.duration!==0){
+                  task = { userId: idUser, task: input, duration: test.duration*60*1000 }
+                  addTask(); 
+                  try {
+                    const res = await getData(input);
+                    result = await processServerResponse(res.text, handleOutput);
+                  } catch (error: any) {
+                    setError(error.message);
+                    setShowEye(true)
+                    handleOutput("", error.message, true)
+                  }
                 }
-
-
+                else{
+                  try {
+                    const res = await getData(input);
+                    result = await processServerResponse(res.text, handleOutput);
+                  } catch (error: any) {
+                    setError(error.message);
+                    setShowEye(true)
+                    handleOutput("", error.message, true)
+                  }
+                }
               }
 
 
@@ -976,16 +984,6 @@ console.log(allInputs);
     let rs = null;
     if(rq){
       rs = parseTaskString(rq.text);
-    }
-    if (rs) {
-      console.log('====================================');
-      console.log(rs);
-      console.log('====================================');
-    }
-    else{
-      console.log('====================================');
-      console.log('return type null');
-      console.log('====================================');
     }
     return rs;
   }
@@ -1091,9 +1089,9 @@ console.log(allInputs);
   const addTask = async () => {
     try {
       await axios.post(`${ACCOUNT_MANAGEMENT}/api/tasks`, task);
-      alert('Task saved successfully!');
+      //alert('Task saved successfully!');
     } catch (error) {
-      alert('Failed to save task');
+      //alert('Failed to save task');
     }
   };
   function parseTaskString(taskString: string): { duration: number; isRepetitiveTask: boolean } {

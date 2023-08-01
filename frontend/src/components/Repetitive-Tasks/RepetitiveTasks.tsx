@@ -40,7 +40,7 @@ const RepetitiveTasks: React.FC = () => {
         <div className='repetitiveTasks'>
             <h1 className='title'>Repetitive Tasks</h1>
             <div className="tbl-header">
-                <table  cellPadding="0" cellSpacing="0">
+                <table className='task-table' cellPadding="0" cellSpacing="0">
                     <thead>
                         <tr>
                             <th>Task</th>
@@ -50,7 +50,7 @@ const RepetitiveTasks: React.FC = () => {
                 </table>
             </div>
             <div className="tbl-content">
-                <table cellPadding="0" cellSpacing="0" >
+                <table className='task-table' cellPadding="0" cellSpacing="0" >
                     <tbody>
 
                         {tasks.map((task) => (
