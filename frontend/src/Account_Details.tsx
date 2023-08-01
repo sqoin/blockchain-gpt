@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './Account_Details.css';
 import { useHistory } from "react-router-dom";
 import axios from 'axios';
+import {useSessionContext} from 'supertokens-auth-react/recipe/session';
 
 
 
@@ -15,21 +16,27 @@ interface AccountDetailsProps {
   };
 }
 
-const AccountDetails: React.FC<AccountDetailsProps> = ({ user }) => {
+  const AccountDetails: React.FC<AccountDetailsProps> = ({ user }) => {
+    const history = useHistory();
+    const [isToggled, setIsToggled] = useState(false);
+    const session = useSessionContext();
+    let userId = ''; // Initialize userId with a default value
+  
+    if (!session.loading) {
+      userId = session.userId;
+    }
 
-  const history= useHistory() ;
-  const [isToggled, setIsToggled] = useState(false);
   const handleButtonClick = async () => {
     if (!isToggled) {
       (async () => {
         try {
           // Open the Telegram bot link in a new tab
-          window.open('http://t.me/testt159_bot', '_blank');
+          window.open('http://t.me/sqqoiin_bot', '_blank');
           // Retrieve the chat ID from Telegram
           const chatId = await getChatIdFromTelegram();
           console.log(chatId);
           // Send the chat ID to your backend
-          await axios.post('http://localhost:3006/api/telegram/chat', { chatId });
+          await axios.post('http://localhost:3006/api/telegram/chat', { chatId,userId});
           // Perform any other desired actions
           console.log('Button clicked, chat ID collected, and sent to the backend.');
         } catch (error:any) {
@@ -45,7 +52,7 @@ const AccountDetails: React.FC<AccountDetailsProps> = ({ user }) => {
 
   const getChatIdFromTelegram = async () => {
     try {
-      const response = await axios.get('https://api.telegram.org/bot6692494514:AAEuxi9FiEsIP4OK50nI9s4UwzX31a5OkNQ/getUpdates');
+      const response = await axios.get('https://api.telegram.org/bot6572515145:AAH3lQky2jdYWs84nH0ZOf_-AnroOH3NGXs/getUpdates');
       const chatId = response.data.result[0].message.chat.id;
       return chatId;
     } catch (error) {

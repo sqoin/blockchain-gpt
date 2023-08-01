@@ -160,7 +160,7 @@
 .toggle-button {
   font-size: 16px;
   padding: 10px 20px;
-  background-color: #4CAF50; /* Green background for OFF state */
+  background-color: #adadad; /* Green background for OFF state */
   color: #fff; /* White text for OFF state */
   border: none;
   border-radius: 1000px; /* Fully rounded */
