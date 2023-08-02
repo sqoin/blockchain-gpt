@@ -9,18 +9,20 @@ interface Task {
     userId: string;
     task: string;
     duration: number;
-    stopped: boolean;
+    status: 'stopped' | '';
 }
 
 const RepetitiveTasks: React.FC = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
     const sessionContext = useSessionContext();
-
+    const [userId, setUserId] = useState("");
     
     const fetchTasksByUserId = async () => {
         if (sessionContext.loading === true) {
             return null;
         }
+        console.log(sessionContext?.userId)
+        setUserId(sessionContext?.userId.toString())
         try {
             const response = await axios.get(`${ACCOUNT_MANAGEMENT}/api/tasks/${sessionContext.userId}`);
             setTasks(response.data);
@@ -30,24 +32,34 @@ const RepetitiveTasks: React.FC = () => {
     }
     useEffect(() => {
         fetchTasksByUserId();
-    }, [])
+    }, [userId])
 
     const convertMillisecondsToMinutes = (milliseconds: number): number => {
         return Math.floor(milliseconds / 60000);
       };
 
     
-    const updateTaskStopped = async (taskId:any, newStoppedValue:any) => {
-        try {
-          await axios.put(`${ACCOUNT_MANAGEMENT}/api/tasks/${taskId}/stopped`, { stopped: newStoppedValue });
-          fetchTasksByUserId();
+    const updateTaskStopped = async (taskId: any)  => {
+      try {
+        
+        const object = { "userId":userId,"taskId":taskId};
+        const url = `${ACCOUNT_MANAGEMENT}/api/tasks/stopTask`;
+        const response = await axios.put(url, object);
+      
+        if (response.status === 200) {
+            console.log('Task updated successfully:', response.data);
+          } else {
+            console.log('Unexpected response status:', response.status);
+          }
         } catch (error) {
           console.error('Error updating task:', error);
         }
-    };
-      const handleUpdateTask = async (taskId: any, newStoppedValue: any) => {
-        await updateTaskStopped(taskId, newStoppedValue);
-        fetchTasksByUserId();
+      };
+      
+      const handleUpdateTask = async (taskId: any) => {
+        await updateTaskStopped(taskId);
+        fetchTasksByUserId()
+
       };
 
     return (
@@ -78,8 +90,14 @@ const RepetitiveTasks: React.FC = () => {
                                     {convertMillisecondsToMinutes(task.duration)} min
                                 </td>
                                 <td >
-                                {task.stopped.toString()}
-                                <button onClick={() => handleUpdateTask(task._id, !task.stopped)}>Modify</button>
+                                {task.status}
+                                {/* <button  className="normal" onClick={() => handleUpdateTask(task._id)}>Modify</button> */}
+                                
+                                {task.status === '' && (
+                                    <button  onClick={() => handleUpdateTask(task._id)}>
+                                    Stop
+                                    </button>
+                                )}
                                 </td>
                             </tr>
                         ))}
@@ -93,3 +111,4 @@ const RepetitiveTasks: React.FC = () => {
 };
 
 export default RepetitiveTasks;
+
