@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useSessionContext } from 'supertokens-auth-react/recipe/session';
 import { ACCOUNT_MANAGEMENT } from './utils/constants';
 import './Account_Details.css';
+import { FaTelegram } from "react-icons/fa"
 
 
 
@@ -206,7 +207,7 @@ const AccountDetails: React.FC<any> = ({ userId }) => {
                 <div className="col-md-6">
                   <div className="form-group">
 
-                  <button onClick={()=>history.push("/paymentmode")}>Payer mon compte</button>
+                  
 
 
                   
@@ -225,12 +226,24 @@ const AccountDetails: React.FC<any> = ({ userId }) => {
 
 
                   </div>
-                  <div>
-                    <button className={'confirm'} onClick={handleApplyChanges}>Save changes</button>
+                  <div className='button-container'>
+                  <div className='first-button-container'><button className='confirm' onClick={()=>history.push("/paymentmode")}>Payer mon compte</button>
+                    <button className='confirm' onClick={handleApplyChanges}>Save changes</button>
+                    </div>
+                  <div className='on-off-container'>
+                  <span className="icons"><FaTelegram/></span>
+                    <span>Enable Telegram Notification</span>
+                    <input
+                      className='on-off-input'
+                      type="checkbox"
+                      id="switch"
+                      onClick={handleButtonClick}
+                      checked={isToggled}
+                    />
+                    <label className='on-off-label' htmlFor="switch"></label>
                   </div>
-                  <button  className={`toggle-button ${isToggled ? 'on' : ''}`}  onClick={handleButtonClick}>
-                    {isToggled ? 'ON' : 'OFF'}
-                  </button>
+                  </div>
+                  
                 </div>
               </div>
 

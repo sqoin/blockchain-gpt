@@ -39,6 +39,7 @@
 
 .accountdetails .form-control {
   width: 100%;
+  height: 35px;
   padding: 8px;
   border-radius: 3px;
   border: 1px solid #ccc;
@@ -128,7 +129,7 @@
   margin-top: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  padding: 10px;
+  padding: 7px;
 }
 
 .accountdetails .account-links-container .account-link {
@@ -176,26 +177,103 @@
 
 }
 
-.toggle-button {
+.button-container{
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.first-button-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.on-off-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border: 2px solid var(--color2);
+  border-radius: 10px;
+  padding: 5px;
+}
+
+.on-off-input[type=checkbox]{
+  height: 0;
+  width: 0;
+  visibility: hidden;
+}
+
+.on-off-label {
+  cursor: pointer;
+  text-indent: -9999px;
+  width: 70px;
+  height: 30px;
+  background: grey;
+  display: block;
+  border-radius: 100px;
+  position: relative;
+}
+
+.on-off-label:after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border-radius: 20px;
+  transition: 0.4s;
+}
+
+.on-off-input:checked + .on-off-label {
+  background: var(--color2);
+}
+
+.on-off-input:checked + .on-off-label:after {
+  left: calc(100% - 5px);
+  transform: translateX(-100%);
+}
+
+.on-off-label:active:after {
+  width: 130px;
+}
+
+.on-off-container .icons{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: x-large;
+  color: #2AABEE;
+}
+
+
+/* .toggle-button {
   font-size: 16px;
   padding: 10px 20px;
-  background-color: #adadad; /* Green background for OFF state */
-  color: #fff; /* White text for OFF state */
+  background-color: #adadad; 
+  color: #fff; 
   border: none;
-  border-radius: 1000px; /* Fully rounded */
+  border-radius: 1000px; 
   cursor: pointer;
   transition: background-color 0.3s ease-in-out;
-  margin-left: 300px; /* Add right margin for spacing */
+  margin-left: 0px;
 
 
 
 }
 .toggle-container {
   display: flex;
-  justify-content: flex-end; /* Aligns the content to the right */
-  margin-right: 20px; /* Add right margin for spacing */
+  justify-content: flex-end; 
+  margin-right: 0px; 
 }
 
 .toggle-button.on {
-  background-color: #2ECC71; /* Lighter green background for ON state */
-}
+  background-color: #2ECC71; 
+} */
