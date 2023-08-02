@@ -35,8 +35,8 @@ const SideBar: React.FC<{ remaining: number }> = ({ remaining }) => {
   }
 
   const toStatistic = () => {
-    history.push("/statistic");
-    setCurrentWindow("/statistic")
+    history.push("/statistics");
+    setCurrentWindow("/statistics")
   };
 
   const toChat = () => {
