@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export async function fetchQuestionCategory(input:any) {
   const url = 'https://api.openai.com/v1/chat/completions';
-  const apiKey = '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'; 
+  const apiKey = process.env.API_KEY; 
 
   const headers = {
     'Authorization': `Bearer ${apiKey}`,
