@@ -9,17 +9,20 @@ interface Task {
     userId: string;
     task: string;
     duration: number;
+    status: 'stopped' | '';
 }
 
 const RepetitiveTasks: React.FC = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
     const sessionContext = useSessionContext();
-
+    const [userId, setUserId] = useState("");
     
     const fetchTasksByUserId = async () => {
         if (sessionContext.loading === true) {
             return null;
         }
+        console.log(sessionContext?.userId)
+        setUserId(sessionContext?.userId.toString())
         try {
             const response = await axios.get(`${ACCOUNT_MANAGEMENT}/api/tasks/${sessionContext.userId}`);
             setTasks(response.data);
@@ -29,12 +32,35 @@ const RepetitiveTasks: React.FC = () => {
     }
     useEffect(() => {
         fetchTasksByUserId();
-    }, [])
+    }, [userId])
 
     const convertMillisecondsToMinutes = (milliseconds: number): number => {
         return Math.floor(milliseconds / 60000);
       };
 
+    
+    const updateTaskStopped = async (taskId: any)  => {
+      try {
+        
+        const object = { "userId":userId,"taskId":taskId};
+        const url = `${ACCOUNT_MANAGEMENT}/api/tasks/stopTask`;
+        const response = await axios.put(url, object);
+      
+        if (response.status === 200) {
+            console.log('Task updated successfully:', response.data);
+          } else {
+            console.log('Unexpected response status:', response.status);
+          }
+        } catch (error) {
+          console.error('Error updating task:', error);
+        }
+      };
+      
+      const handleUpdateTask = async (taskId: any) => {
+        await updateTaskStopped(taskId);
+        fetchTasksByUserId()
+
+      };
 
     return (
         <div className='repetitiveTasks'>
@@ -45,6 +71,8 @@ const RepetitiveTasks: React.FC = () => {
                         <tr>
                             <th>Task</th>
                             <th>Duration</th>
+                            <th>Status</th>
+
                         </tr>
                     </thead>
                 </table>
@@ -61,6 +89,17 @@ const RepetitiveTasks: React.FC = () => {
                                 <td >
                                     {convertMillisecondsToMinutes(task.duration)} min
                                 </td>
+                                <td>
+                              <span className="label1">{task.status}</span>
+                                
+                                {task.status === '' && (
+                                    <button className="button" onClick={() => handleUpdateTask(task._id)}>
+                                    Stop
+                                    </button>
+                                   
+                                )}
+                                      
+                                </td>
                             </tr>
                         ))}
 
@@ -73,3 +112,4 @@ const RepetitiveTasks: React.FC = () => {
 };
 
 export default RepetitiveTasks;
+

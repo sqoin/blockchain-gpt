@@ -22,7 +22,6 @@ import { ACCOUNT_MANAGEMENT } from "../utils/constants";
 import { fetchQuestionCategory } from "./QuestionCategory";
 
 
-
 interface ILink {
   name: string;
   onClick: () => void;
@@ -609,7 +608,111 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
     return () => clearInterval(interval);
   }, []);
 
+////////////////
+// Main function to handle user inputs
+ async function handleUserInputRep(input:string) {
+  if (input === "get publickey every 5 min") {
+    addInputToLocalStorage(input);
+    getAndDisplayPublicKey();
 
+  }
+  else if (input === "get balance every 5 min") {
+    addInputToLocalStorage(input);
+    fetchBalanceFromMetaMask();
+
+  } 
+  else if (input === "get network information every 5min") {
+    addInputToLocalStorage(input);
+    getNetworkInfoEvery5Minutes();
+
+   }
+  else if (input === userCommand3) {
+    addInputToLocalStorage(input);
+    const networkInfo = await _getNetworkInfo();
+    handleOutput(`network info: ${networkInfo?.chainId}  ${networkInfo?.networkName}  ${networkInfo?.networkId}`);
+    return;
+  }
+  else if (input === userCommand1){
+    addInputToLocalStorage(input);
+    const pk = await getAndDisplayPublicKey();
+    handleOutput(` PublicKey: ${pk} `);
+    return;
+  
+  } else if (input === userCommand2) {
+    addInputToLocalStorage(input);
+    const bl = await fetchBalanceFromMetaMask();
+    handleOutput(` Blance: ${bl} `);
+    return;
+  }
+
+  else if (input === "get bitcoin price every 5min") {
+    //addInputToLocalStorage(input);
+    while (true) {
+      const price = await _getCryptoCurrencyQuote("bitcoin", "price");
+      handleOutput(`Bitcoin Price: ${price}`);
+      console.log('Bitcoin Price: ',price);
+
+      await sleep(5 * 60 * 1000); // Attendre 5 minutes
+    }
+  }
+
+  else if (input === "get bitcoin total volume every 5min" ) {
+    addInputToLocalStorage(input);
+    while (true) {
+      const volume = await _getCryptoCurrencyQuote("bitcoin", 'volume');
+      handleOutput(`Bitcoin Total Volume: ${volume}`);
+      await sleep(5 * 60 * 1000); // Attendre 5 minutes
+    }
+  }
+  else if (input === "get bitcoin MarketCap every 5min") {
+    addInputToLocalStorage(input);
+    while (true) {
+      const marketCap = await _getCryptoCurrencyQuote("bitcoin", "marketCap");
+      handleOutput(`Bitcoin MarketCap: ${marketCap}`);
+      await sleep(5 * 60 * 1000); // Attendre 5 minutes
+    }
+  }
+  else if (input === "What is Bitcoin?") {
+
+    handleOutput(`Bitcoin is a decentralized cryptocurrency based on blockchain technology. It is a form of digital currency that enables peer-to-peer transactions without the need for a central authority such as a bank.`);
+  }
+  else if (input === "How does Bitcoin work?") {
+
+    handleOutput(`Bitcoin operates on a decentralized network of nodes, where transactions are recorded in a public ledger called the blockchain. Transactions are secured using cryptographic techniques, 
+                  and miners validate transactions by solving complex mathematical problems.`);
+  }
+  else if (input === "Who created Bitcoin?") {
+
+    handleOutput(`Bitcoin was created by an individual or group of individuals using the pseudonym Satoshi Nakamoto. The true identity of Satoshi Nakamoto remains unknown to this day.`);
+  }
+  else if (input === "What is the difference between Bitcoin and traditional currencies?") {
+
+    handleOutput(`Bitcoin differs from traditional currencies because it is not issued or controlled by a central authority like a central bank. It relies on blockchain technology and operates in a decentralized manner.`);
+  }
+  else if (input === "What is a Bitcoin address?") {
+
+    handleOutput(`A Bitcoin address is a unique alphanumeric string that represents the location where Bitcoins are stored. You can share this address with others to receive Bitcoins.`);
+  }
+  else if (input === "How can I securely store my Bitcoins?") {
+
+    handleOutput(`You can store your Bitcoins in a Bitcoin wallet. Wallets can be either software wallets on electronic devices or physical hardware wallets that offer additional security.`);
+  }
+  else if (input === "How can I use Bitcoin to make transactions?") {
+
+    handleOutput(`To make a Bitcoin transaction, you need to know the recipient's Bitcoin address. You can send Bitcoins from your wallet using that address, specifying the amount and signing the transaction.`);
+  }
+  else if (input === "Is Bitcoin legal?") {
+
+    handleOutput(`The legality of Bitcoin varies from country to country. In many countries, Bitcoin is considered a legal form of digital asset, but some jurisdictions may restrict its use or regulation.`);
+  }
+  else if (input === "get Latest Transactions") {
+    fetchAndDisplayTransactions();
+
+  }  else {
+    // Handle other cases if needed
+    console.log("Unknown input:", input);
+  }
+}
    //solana functions
   const _connectToPhantomWallet = async (): Promise<null | PhantomWalletAdapter> => {
 
@@ -799,10 +902,10 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
             handleOutput(`Execution in progress ...`);
             if (remainingResult > 0) {
               let test = await isRepetitive();
-              // if(test?.isRepetitiveTask){
-              //   task = { userId: idUser, task: input, duration: test.duration*60*1000 }
-              //   addTask(); 
-              // }
+              if(test?.isRepetitiveTask){
+                task = { userId: idUser, task: input, duration: test.duration*60*1000,status:""}
+                addTask(); 
+              }
               
               if( input === 'Dessiner un graphique circulaire de la capitalisation boursière de Bitcoin, Ethereum et Binance.'){
 
@@ -826,105 +929,10 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
                 }
 
               }
-              
-              else if (input === "donner moi le publickey chaque 5min") {
-                addInputToLocalStorage(input);
-                getAndDisplayPublicKey();
-
+              else if (input !=="")
+              {
+                handleUserInputRep(input);
               }
-              else if (input === "donner moi la balance chaque 5min") {
-                addInputToLocalStorage(input);
-                fetchBalanceFromMetaMask();
-
-              } 
-              else if (input === "get network information every 5min") {
-                addInputToLocalStorage(input);
-                getNetworkInfoEvery5Minutes();
-
-               }
-              else if (input === userCommand3) {
-                addInputToLocalStorage(input);
-                const networkInfo = await _getNetworkInfo();
-                handleOutput(`network info: ${networkInfo?.chainId}  ${networkInfo?.networkName}  ${networkInfo?.networkId}`);
-                return;
-              }
-              else if (input === userCommand1){
-                addInputToLocalStorage(input);
-                const pk = await getAndDisplayPublicKey();
-                handleOutput(` PublicKey: ${pk} `);
-                return;
-              
-              } else if (input === userCommand2) {
-                addInputToLocalStorage(input);
-                const bl = await fetchBalanceFromMetaMask();
-                handleOutput(` Blance: ${bl} `);
-                return;
-              }
-            
-              else if (input === "get bitcoin price every 5min") {
-                addInputToLocalStorage(input);
-                while (true) {
-                  const price = await _getCryptoCurrencyQuote("bitcoin", "price");
-                  handleOutput(`Bitcoin Price: ${price}`);
-                  console.log('Bitcoin Price: ',price);
-
-                  await sleep(5 * 60 * 1000); // Attendre 5 minutes
-                }
-              }
-
-              else if (input === "get bitcoin total volume every 5min" ) {
-                addInputToLocalStorage(input);
-                while (true) {
-                  const volume = await _getCryptoCurrencyQuote("bitcoin", 'volume');
-                  handleOutput(`Bitcoin Total Volume: ${volume}`);
-                  await sleep(5 * 60 * 1000); // Attendre 5 minutes
-                }
-              }
-              else if (input === "get bitcoin MarketCap every 5min") {
-                addInputToLocalStorage(input);
-                while (true) {
-                  const marketCap = await _getCryptoCurrencyQuote("bitcoin", "marketCap");
-                  handleOutput(`Bitcoin MarketCap: ${marketCap}`);
-                  await sleep(5 * 60 * 1000); // Attendre 5 minutes
-                }
-              }
-              else if (input === "What is Bitcoin?") {
-
-                handleOutput(`Bitcoin is a decentralized cryptocurrency based on blockchain technology. It is a form of digital currency that enables peer-to-peer transactions without the need for a central authority such as a bank.`);
-              }
-              else if (input === "How does Bitcoin work?") {
-
-                handleOutput(`Bitcoin operates on a decentralized network of nodes, where transactions are recorded in a public ledger called the blockchain. Transactions are secured using cryptographic techniques, 
-                              and miners validate transactions by solving complex mathematical problems.`);
-              }
-              else if (input === "Who created Bitcoin?") {
-
-                handleOutput(`Bitcoin was created by an individual or group of individuals using the pseudonym Satoshi Nakamoto. The true identity of Satoshi Nakamoto remains unknown to this day.`);
-              }
-              else if (input === "What is the difference between Bitcoin and traditional currencies?") {
-
-                handleOutput(`Bitcoin differs from traditional currencies because it is not issued or controlled by a central authority like a central bank. It relies on blockchain technology and operates in a decentralized manner.`);
-              }
-              else if (input === "What is a Bitcoin address?") {
-
-                handleOutput(`A Bitcoin address is a unique alphanumeric string that represents the location where Bitcoins are stored. You can share this address with others to receive Bitcoins.`);
-              }
-              else if (input === "How can I securely store my Bitcoins?") {
-
-                handleOutput(`You can store your Bitcoins in a Bitcoin wallet. Wallets can be either software wallets on electronic devices or physical hardware wallets that offer additional security.`);
-              }
-              else if (input === "How can I use Bitcoin to make transactions?") {
-
-                handleOutput(`To make a Bitcoin transaction, you need to know the recipient's Bitcoin address. You can send Bitcoins from your wallet using that address, specifying the amount and signing the transaction.`);
-              }
-              else if (input === "Is Bitcoin legal?") {
-
-                handleOutput(`The legality of Bitcoin varies from country to country. In many countries, Bitcoin is considered a legal form of digital asset, but some jurisdictions may restrict its use or regulation.`);
-              }
-              else if (input === "get Latest Transactions") {
-                fetchAndDisplayTransactions();
-              } 
-             
               else {
                 if(test?.isRepetitiveTask && test?.duration!==0){
                   task = { userId: idUser, task: input, duration: test.duration*60*1000 }
@@ -1105,9 +1113,9 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
   const addTask = async () => {
     try {
       await axios.post(`${ACCOUNT_MANAGEMENT}/api/tasks`, task);
-      //alert('Task saved successfully!');
+      console.log('Task saved successfully!');
     } catch (error) {
-      //alert('Failed to save task');
+      console.log('Failed to save task');
     }
   };
   function parseTaskString(taskString: string): { duration: number; isRepetitiveTask: boolean } {

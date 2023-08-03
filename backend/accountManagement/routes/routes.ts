@@ -121,5 +121,8 @@ router.put('/updateUser',async (req: Request, res: Response) => {
 
 router.post('/tasks', tasksController.createTask);
 router.get('/tasks/:userId', tasksController.getTasksByUserId);
+router.put('/tasks/:taskId', tasksController.updateTaskStopped);
+
+router.put('/tasks/stopTask', tasksController.updateTaskStopped);
 
 module.exports= router;
