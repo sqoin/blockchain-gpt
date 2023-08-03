@@ -19,6 +19,7 @@ import CryptomarketCapChart from "../cryptoMarketCapChart.tsx";
 
 import CryptoChart from "../cryptoCharts";
 import { ACCOUNT_MANAGEMENT } from "../utils/constants";
+import { log } from "console";
 
 
 
@@ -89,13 +90,11 @@ const Terminal: React.FC<{ idUser: string }> = ({ idUser }:any) => {
         .set("Access-Control-Allow-Origin", "*")
         .end((err: any, res: any) => {
           if (err) {
-            //console.log(err);
 
             setIsTyping(false)
             popLastItem();
             reject(err);
           } else {
-            //console.log(res);
 
             setIsTyping(false)
             popLastItem();
@@ -765,206 +764,215 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
     event: FormEvent<HTMLFormElement>
   ): Promise<void> => {
     event.preventDefault();
-    let remainingResult = await remaining();
-    if (input.trim().toLowerCase() === "clear") {
-      setOutput([]);
-      setInput("");
-    } else {
-      if (remainingResult < 21) {
-        try {
-          let result;
 
-          setIsTyping(true)
+    // let remainingResult = await remaining();
+    // if (input.trim().toLowerCase() === "clear") {
+    //   setOutput([]);
+    //   setInput("");
+    // } else {
+    //   if (remainingResult < 21) {
+    //     try {
+    //       let result;
 
-          setTimeout(async () => {
-            //handleOutput(input);
-            let newinput = input;
-            setInput("");
-            handleOutput(`Execution in progress ...`);
-            if (remainingResult > 0) {
-              let test = await isRepetitive();
-              // if(test?.isRepetitiveTask){
-              //   task = { userId: idUser, task: input, duration: test.duration*60*1000 }
-              //   addTask(); 
-              // }
+    //       setIsTyping(true)
+
+    //       setTimeout(async () => {
+    //         //handleOutput(input);
+    //         let newinput = input;
+    //         setInput("");
+    //         handleOutput(`Execution in progress ...`);
+    //         if (remainingResult > 0) {
+    //           let test = await isRepetitive();
+    //           // if(test?.isRepetitiveTask){
+    //           //   task = { userId: idUser, task: input, duration: test.duration*60*1000 }
+    //           //   addTask(); 
+    //           // }
               
-              if( input === 'Dessiner un graphique circulaire de la capitalisation boursière de Bitcoin, Ethereum et Binance.'){
+    //           if( input === 'Dessiner un graphique circulaire de la capitalisation boursière de Bitcoin, Ethereum et Binance.'){
 
-                //handleOutput("Exécution en progress ...")
-                // sleep(5000)
-                setShowChart(true)
-              }
+    //             //handleOutput("Exécution en progress ...")
+    //             // sleep(5000)
+    //             setShowChart(true)
+    //           }
               
-             else if (input === "Quelles ont été les nouvelles les plus importantes dans la blockchain ces trois derniers jours ?") {
-                // Add the static response to the output
-                sleep(5000)
-                handleOutput("Parmi les dernières tendances dans la technologie de la blockchain, Algofi, le plus gros protocole sur la blockchain Algorand, annonce la fin de la plupart de ses activités. La plate-forme se concentrera désormais sur le retrait uniquement, laissant de côté les prêts, les emprunts et les échanges. En parallèle, le Bitcoin, la plus importante crypto-monnaie au monde, connaît une nouvelle baisse de valeur, se situant en dessous de 30 500 $, avec une baisse de 0,70 % sur la dernière journée. Les investisseurs et traders s'inquiètent d'un mouvement de 10 000 bitcoins, d'une valeur de plus de 300 millions de dollars, initié par le gouvernement américain. Dans le même temps, les ventes minières de Bitcoin atteignent des sommets records, tandis que la complexité de l'extraction de Bitcoin atteint un niveau sans précédent.");
-              }
-              else if (input === "Vérifier la valeur de mon portefeuille toutes les  15 secondes et m'envoyer une alerte Telegram si la valeur de mon portefeuille en dollars augmente de plus de 200$.") {
-                // Add the static response to the output
-                sleep(5000)
-                while (true) {
-                  let wallet: any = await _connectToPhantomWallet()
-                  let balnace = await _getSolanaBalance(wallet?.publicKey?.toBase58())
-                  await sleep(15 * 1000)
-                }
+    //          else if (input === "Quelles ont été les nouvelles les plus importantes dans la blockchain ces trois derniers jours ?") {
+    //             // Add the static response to the output
+    //             sleep(5000)
+    //             handleOutput("Parmi les dernières tendances dans la technologie de la blockchain, Algofi, le plus gros protocole sur la blockchain Algorand, annonce la fin de la plupart de ses activités. La plate-forme se concentrera désormais sur le retrait uniquement, laissant de côté les prêts, les emprunts et les échanges. En parallèle, le Bitcoin, la plus importante crypto-monnaie au monde, connaît une nouvelle baisse de valeur, se situant en dessous de 30 500 $, avec une baisse de 0,70 % sur la dernière journée. Les investisseurs et traders s'inquiètent d'un mouvement de 10 000 bitcoins, d'une valeur de plus de 300 millions de dollars, initié par le gouvernement américain. Dans le même temps, les ventes minières de Bitcoin atteignent des sommets records, tandis que la complexité de l'extraction de Bitcoin atteint un niveau sans précédent.");
+    //           }
+    //           else if (input === "Vérifier la valeur de mon portefeuille toutes les  15 secondes et m'envoyer une alerte Telegram si la valeur de mon portefeuille en dollars augmente de plus de 200$.") {
+    //             // Add the static response to the output
+    //             sleep(5000)
+    //             while (true) {
+    //               let wallet: any = await _connectToPhantomWallet()
+    //               let balnace = await _getSolanaBalance(wallet?.publicKey?.toBase58())
+    //               await sleep(15 * 1000)
+    //             }
 
-              }
+    //           }
               
-              else if (input === "donner moi le publickey chaque 5min") {
-                addInputToLocalStorage(input);
-                getAndDisplayPublicKey();
+    //           else if (input === "donner moi le publickey chaque 5min") {
+    //             addInputToLocalStorage(input);
+    //             getAndDisplayPublicKey();
 
-              }
-              else if (input === "donner moi la balance chaque 5min") {
-                addInputToLocalStorage(input);
-                fetchBalanceFromMetaMask();
+    //           }
+    //           else if (input === "donner moi la balance chaque 5min") {
+    //             addInputToLocalStorage(input);
+    //             fetchBalanceFromMetaMask();
 
-              } 
-              else if (input === "get network information every 5min") {
-                addInputToLocalStorage(input);
-                getNetworkInfoEvery5Minutes();
+    //           } 
+    //           else if (input === "get network information every 5min") {
+    //             addInputToLocalStorage(input);
+    //             getNetworkInfoEvery5Minutes();
 
-               }
-              else if (input === userCommand3) {
-                addInputToLocalStorage(input);
-                const networkInfo = await _getNetworkInfo();
-                handleOutput(`network info: ${networkInfo?.chainId}  ${networkInfo?.networkName}  ${networkInfo?.networkId}`);
-                return;
-              }
-              else if (input === userCommand1){
-                addInputToLocalStorage(input);
-                const pk = await getAndDisplayPublicKey();
-                handleOutput(` PublicKey: ${pk} `);
-                return;
+    //            }
+    //           else if (input === userCommand3) {
+    //             addInputToLocalStorage(input);
+    //             const networkInfo = await _getNetworkInfo();
+    //             handleOutput(`network info: ${networkInfo?.chainId}  ${networkInfo?.networkName}  ${networkInfo?.networkId}`);
+    //             return;
+    //           }
+    //           else if (input === userCommand1){
+    //             addInputToLocalStorage(input);
+    //             const pk = await getAndDisplayPublicKey();
+    //             handleOutput(` PublicKey: ${pk} `);
+    //             return;
               
-              } else if (input === userCommand2) {
-                addInputToLocalStorage(input);
-                const bl = await fetchBalanceFromMetaMask();
-                handleOutput(` Blance: ${bl} `);
-                return;
-              }
+    //           } else if (input === userCommand2) {
+    //             addInputToLocalStorage(input);
+    //             const bl = await fetchBalanceFromMetaMask();
+    //             handleOutput(` Blance: ${bl} `);
+    //             return;
+    //           }
             
-              else if (input === "get bitcoin price every 5min") {
-                addInputToLocalStorage(input);
-                while (true) {
-                  const price = await _getCryptoCurrencyQuote("bitcoin", "price");
-                  handleOutput(`Bitcoin Price: ${price}`);
-                  console.log('Bitcoin Price: ',price);
+    //           else if (input === "get bitcoin price every 5min") {
+    //             addInputToLocalStorage(input);
+    //             while (true) {
+    //               const price = await _getCryptoCurrencyQuote("bitcoin", "price");
+    //               handleOutput(`Bitcoin Price: ${price}`);
+    //               console.log('Bitcoin Price: ',price);
 
-                  await sleep(5 * 60 * 1000); // Attendre 5 minutes
-                }
-              }
+    //               await sleep(5 * 60 * 1000); // Attendre 5 minutes
+    //             }
+    //           }
 
-              else if (input === "get bitcoin total volume every 5min" ) {
-                addInputToLocalStorage(input);
-                while (true) {
-                  const volume = await _getCryptoCurrencyQuote("bitcoin", 'volume');
-                  handleOutput(`Bitcoin Total Volume: ${volume}`);
-                  await sleep(5 * 60 * 1000); // Attendre 5 minutes
-                }
-              }
-              else if (input === "get bitcoin MarketCap every 5min") {
-                addInputToLocalStorage(input);
-                while (true) {
-                  const marketCap = await _getCryptoCurrencyQuote("bitcoin", "marketCap");
-                  handleOutput(`Bitcoin MarketCap: ${marketCap}`);
-                  await sleep(5 * 60 * 1000); // Attendre 5 minutes
-                }
-              }
-              else if (input === "What is Bitcoin?") {
+    //           else if (input === "get bitcoin total volume every 5min" ) {
+    //             addInputToLocalStorage(input);
+    //             while (true) {
+    //               const volume = await _getCryptoCurrencyQuote("bitcoin", 'volume');
+    //               handleOutput(`Bitcoin Total Volume: ${volume}`);
+    //               await sleep(5 * 60 * 1000); // Attendre 5 minutes
+    //             }
+    //           }
+    //           else if (input === "get bitcoin MarketCap every 5min") {
+    //             addInputToLocalStorage(input);
+    //             while (true) {
+    //               const marketCap = await _getCryptoCurrencyQuote("bitcoin", "marketCap");
+    //               handleOutput(`Bitcoin MarketCap: ${marketCap}`);
+    //               await sleep(5 * 60 * 1000); // Attendre 5 minutes
+    //             }
+    //           }
+    //           else if (input === "What is Bitcoin?") {
 
-                handleOutput(`Bitcoin is a decentralized cryptocurrency based on blockchain technology. It is a form of digital currency that enables peer-to-peer transactions without the need for a central authority such as a bank.`);
-              }
-              else if (input === "How does Bitcoin work?") {
+    //             handleOutput(`Bitcoin is a decentralized cryptocurrency based on blockchain technology. It is a form of digital currency that enables peer-to-peer transactions without the need for a central authority such as a bank.`);
+    //           }
+    //           else if (input === "How does Bitcoin work?") {
 
-                handleOutput(`Bitcoin operates on a decentralized network of nodes, where transactions are recorded in a public ledger called the blockchain. Transactions are secured using cryptographic techniques, 
-                              and miners validate transactions by solving complex mathematical problems.`);
-              }
-              else if (input === "Who created Bitcoin?") {
+    //             handleOutput(`Bitcoin operates on a decentralized network of nodes, where transactions are recorded in a public ledger called the blockchain. Transactions are secured using cryptographic techniques, 
+    //                           and miners validate transactions by solving complex mathematical problems.`);
+    //           }
+    //           else if (input === "Who created Bitcoin?") {
 
-                handleOutput(`Bitcoin was created by an individual or group of individuals using the pseudonym Satoshi Nakamoto. The true identity of Satoshi Nakamoto remains unknown to this day.`);
-              }
-              else if (input === "What is the difference between Bitcoin and traditional currencies?") {
+    //             handleOutput(`Bitcoin was created by an individual or group of individuals using the pseudonym Satoshi Nakamoto. The true identity of Satoshi Nakamoto remains unknown to this day.`);
+    //           }
+    //           else if (input === "What is the difference between Bitcoin and traditional currencies?") {
 
-                handleOutput(`Bitcoin differs from traditional currencies because it is not issued or controlled by a central authority like a central bank. It relies on blockchain technology and operates in a decentralized manner.`);
-              }
-              else if (input === "What is a Bitcoin address?") {
+    //             handleOutput(`Bitcoin differs from traditional currencies because it is not issued or controlled by a central authority like a central bank. It relies on blockchain technology and operates in a decentralized manner.`);
+    //           }
+    //           else if (input === "What is a Bitcoin address?") {
 
-                handleOutput(`A Bitcoin address is a unique alphanumeric string that represents the location where Bitcoins are stored. You can share this address with others to receive Bitcoins.`);
-              }
-              else if (input === "How can I securely store my Bitcoins?") {
+    //             handleOutput(`A Bitcoin address is a unique alphanumeric string that represents the location where Bitcoins are stored. You can share this address with others to receive Bitcoins.`);
+    //           }
+    //           else if (input === "How can I securely store my Bitcoins?") {
 
-                handleOutput(`You can store your Bitcoins in a Bitcoin wallet. Wallets can be either software wallets on electronic devices or physical hardware wallets that offer additional security.`);
-              }
-              else if (input === "How can I use Bitcoin to make transactions?") {
+    //             handleOutput(`You can store your Bitcoins in a Bitcoin wallet. Wallets can be either software wallets on electronic devices or physical hardware wallets that offer additional security.`);
+    //           }
+    //           else if (input === "How can I use Bitcoin to make transactions?") {
 
-                handleOutput(`To make a Bitcoin transaction, you need to know the recipient's Bitcoin address. You can send Bitcoins from your wallet using that address, specifying the amount and signing the transaction.`);
-              }
-              else if (input === "Is Bitcoin legal?") {
+    //             handleOutput(`To make a Bitcoin transaction, you need to know the recipient's Bitcoin address. You can send Bitcoins from your wallet using that address, specifying the amount and signing the transaction.`);
+    //           }
+    //           else if (input === "Is Bitcoin legal?") {
 
-                handleOutput(`The legality of Bitcoin varies from country to country. In many countries, Bitcoin is considered a legal form of digital asset, but some jurisdictions may restrict its use or regulation.`);
-              }
-              else if (input === "get Latest Transactions") {
-                fetchAndDisplayTransactions();
-              } 
+    //             handleOutput(`The legality of Bitcoin varies from country to country. In many countries, Bitcoin is considered a legal form of digital asset, but some jurisdictions may restrict its use or regulation.`);
+    //           }
+    //           else if (input === "get Latest Transactions") {
+    //             fetchAndDisplayTransactions();
+    //           } 
              
-              else {
-                if(test?.isRepetitiveTask && test?.duration!==0){
-                  task = { userId: idUser, task: input, duration: test.duration*60*1000 }
-                  addTask(); 
-                  try {
-                    const res = await getData(input);
-                    result = await processServerResponse(res.text, handleOutput);
-                  } catch (error: any) {
-                    setError(error.message);
-                    setShowEye(true)
-                    handleOutput("", error.message, true)
-                  }
-                }
-                else{
-                  try {
-                    const res = await getData(input);
-                    result = await processServerResponse(res.text, handleOutput);
-                  } catch (error: any) {
-                    setError(error.message);
-                    setShowEye(true)
-                    handleOutput("", error.message, true)
-                  }
-                }
-              }
+    //           else {
+    //             if(test?.isRepetitiveTask && test?.duration!==0){
+    //               task = { userId: idUser, task: input, duration: test.duration*60*1000 }
+    //               addTask(); 
+    //               try {
+    //                 const res = await getData(input);
+    //                 result = await processServerResponse(res.text, handleOutput);
+    //               } catch (error: any) {
+    //                 setError(error.message);
+    //                 setShowEye(true)
+    //                 handleOutput("", error.message, true)
+    //               }
+    //             }
+    //             else{
+    //               try {
+    //                 const res = await getData(input);
+    //                 result = await processServerResponse(res.text, handleOutput);
+    //               } catch (error: any) {
+    //                 setError(error.message);
+    //                 setShowEye(true)
+    //                 handleOutput("", error.message, true)
+    //               }
+    //             }
+    //           }
 
 
-              showBitcoinChart = input.toLocaleLowerCase().replace(/\s/g, '').includes('bitcoinpricesevolution');
-              showPieChart = input.toLocaleLowerCase().replace(/\s/g, '').includes('bitcoinethereumandbinancemarketcapitalization');
-              showCharts = input.toLocaleLowerCase().replace(/\s/g, '').includes('cryptocurrenciespricesevolution');
-              showMarketCapCharts = input.toLocaleLowerCase().replace(/\s/g, '').includes('cryptomarketcaps');
-              setInput("");
-              setRemainingRequests(remainingResult - 1);
-              //await handleOutput(`Remaining requests: ${remainingResult}`);
+    //           showBitcoinChart = input.toLocaleLowerCase().replace(/\s/g, '').includes('bitcoinpricesevolution');
+    //           showPieChart = input.toLocaleLowerCase().replace(/\s/g, '').includes('bitcoinethereumandbinancemarketcapitalization');
+    //           showCharts = input.toLocaleLowerCase().replace(/\s/g, '').includes('cryptocurrenciespricesevolution');
+    //           showMarketCapCharts = input.toLocaleLowerCase().replace(/\s/g, '').includes('cryptomarketcaps');
+    //           setInput("");
+    //           setRemainingRequests(remainingResult - 1);
+    //           //await handleOutput(`Remaining requests: ${remainingResult}`);
 
-              setRemainingRequests(remainingResult - 1);
-            } else {
-              setError("Maximum request limit reached !! Please upgrade to a paid account to continue using this feature.");
-              setShowEye(true)
-              handleOutput("", "Maximum request limit reached !! Please upgrade to a paid account to continue using this feature.", true)
+    //           setRemainingRequests(remainingResult - 1);
+    //         } else {
+    //           setError("Maximum request limit reached !! Please upgrade to a paid account to continue using this feature.");
+    //           setShowEye(true)
+    //           handleOutput("", "Maximum request limit reached !! Please upgrade to a paid account to continue using this feature.", true)
 
-              //handleOutput(`Error: Maximum request limit reached !! Please upgrade to a paid account to continue using this feature.`);
-              await sleep(10000)
-              history.push("/paymentmode")
-            }
-          }, 2000);
+    //           //handleOutput(`Error: Maximum request limit reached !! Please upgrade to a paid account to continue using this feature.`);
+    //           await sleep(10000)
+    //           history.push("/paymentmode")
+    //         }
+    //       }, 2000);
 
-        } catch (error: any) {
+    //     } catch (error: any) {
 
-          setError(error.message);
-          setShowEye(true)
-          handleOutput("", error.message, true)
-        }
-      }
+    //       setError(error.message);
+    //       setShowEye(true)
+    //       handleOutput("", error.message, true)
+    //     }
+    //   }
 
 
+    //}
+    try {
+      const res = await chartType();
+      console.log(JSON.stringify(res));
     }
+     catch (error: any) {
+      setError(error.message);
+      handleOutput("", error.message, true)
+     }
   };
   const isRepetitive = async () => {
     let repetitiveQuerry = `L'utilisateur a tapé dans son command line:"${input}" est ce que 
@@ -987,7 +995,47 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
     }
     return rs;
   }
- 
+  
+
+  const chartType = async () => {
+    let repetitiveQuerry = `the user asked me this question:"${input}" can you just give me the
+    type of chart, answer me as follows: 
+    {
+      "Chart": chartNumber
+    } 
+    1:Bar Chart
+    2:Line Chart
+    3:Pie Chart
+    4:Scatter Plot
+    5:Bubble Chart
+    6:Histogram
+    7:Gantt Chart
+    8:Radar Chart 
+    9:Box Plot 
+    10:Waterfall Chart
+    11:Heatmap
+    12:TreeMap
+    13:Donut Chart
+    14:Funnel Chart
+    15:Area Chart`
+    let rq ;
+    try {
+      rq = await getData(repetitiveQuerry);
+      console.log("rq: " + rq.text);
+      
+    } catch (error: any) {
+      handleOutput("", error.message, true)
+    }
+    let rs = null;
+    if(rq){
+      rs = parseChartString(rq.text);
+    }
+    return rs;
+     
+  }
+  
+  
+  
 
   async function logoutClicked() {
     await signOut();
@@ -1118,38 +1166,18 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
     // Return the object with the parsed values
     return { duration, isRepetitiveTask };
   }
-    
-  function extractJSON(str: string): { duration: number, isRepetitifTask: boolean } | null {
-    if (typeof str !== "string") {
-      return null; // Return early if str is not a string
-    }
-    let firstOpen = -1;
-    let firstClose: number, candidate: string;
+  function parseChartString(input: string): object | null {
+    const regex = /\{"Chart":\s*([^\}]+)\}/
+    ;
+    const match = input.match(regex);
   
-    do {
-      firstOpen = str.indexOf('{', firstOpen + 1);
-      firstClose = str.lastIndexOf('}');
-  
-      if (firstClose <= firstOpen) {
-        return null;
+    if (match && match[1]) {
+      try {
+        return JSON.parse(match[1]);
+      } catch (error) {
+        console.error("Error parsing the object:", error);
       }
-  
-      do {
-        candidate = str.substring(firstOpen, firstClose + 1);
-  
-        try {
-          const parsedObj: { duration: number, isRepetitifTask: boolean } = JSON.parse(candidate);
-          if ('duration' in parsedObj && 'isRepetitifTask' in parsedObj) {
-            return parsedObj;
-          }
-        } catch (e) {
-          // Parsing failed, continue searching for the next JSON object
-        }
-  
-        firstClose = str.substr(0, firstClose).lastIndexOf('}');
-      } while (firstClose > firstOpen);
-  
-    } while (firstOpen !== -1);
+    }
   
     return null;
   }
