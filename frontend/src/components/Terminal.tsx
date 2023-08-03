@@ -19,7 +19,7 @@ import CryptomarketCapChart from "../cryptoMarketCapChart.tsx";
 
 import CryptoChart from "../cryptoCharts";
 import { ACCOUNT_MANAGEMENT } from "../utils/constants";
-
+import { fetchQuestionCategory } from "./QuestionCategory";
 
 
 
@@ -53,6 +53,7 @@ interface Output {
 }
 
 const Terminal: React.FC<{ idUser: string }> = ({ idUser }:any) => {
+  const [questionCategory, setQuestionCategory] = useState<number | null>(null);
   const [showEye, setShowEye] = useState(false);
   const [error, setError] = useState("")
   const [isTyping, setIsTyping] = useState(false)
@@ -574,6 +575,21 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
 
     checkUserCommand();
   }, []); // Exécutez cette vérification une seule fois au chargement de la page
+      
+    const fetchData = async () => {
+        const categoryNumber = await fetchQuestionCategory(input);
+        setQuestionCategory(categoryNumber);
+
+        alert(categoryNumber);
+      };
+    
+      const questionRegex = /\?\s*$/;
+      if(questionRegex.test(input))
+      {
+        fetchData();
+        
+        setInput("");
+      }
 
   // Mettre à jour le stockage local toutes les 5 minutes
   useEffect(() => {
@@ -1197,6 +1213,13 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
               disabled={remainingRequests <= 0 || isTyping}
             />
           </div>
+
+          <div>
+            {questionCategory !== null && (
+              <p>Category number: {questionCategory}</p>
+            )}
+          </div>
+
           <div className="bitcoin-chart">
             {showChart ? <PieChart /> : <></>}
 

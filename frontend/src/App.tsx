@@ -21,6 +21,7 @@ import SendSol from "./components/pay-with-phantom/SendSol";
 import PayWithMetamask from "./components/pay-with-metamask/PayWithMetamask";
 import RepetitiveTasks from "./components/Repetitive-Tasks/RepetitiveTasks";
 import BarChart from "./components/Statistic/Bar_Chart";
+import PieChart from "./components/Statistic/Pie_Chart";
 
 SuperTokens.init(SuperTokensConfig);
 const stripePromise = loadStripe('YOUR_PUBLISHABLE_KEY');
@@ -78,9 +79,7 @@ function App() {
 
 
 
-                            <Route path="/statistics">
-                                <Charts />
-                            </Route>
+                            
                            <Route
                                 path="/ServiceUnavailable"><ServiceNotAvailable /></Route>
                             <Route
@@ -114,7 +113,7 @@ function App() {
                             
                             
                             <Route
-                                path="/statistic"><div className="fix"><SideBar remaining={20}/><BarChart /></div>
+                                path="/statistics"><div className="fix"><SideBar remaining={20}/><BarChart /> <PieChart/></div>
                             </Route>
                                
 
