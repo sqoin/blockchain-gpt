@@ -22,7 +22,6 @@ import { ACCOUNT_MANAGEMENT } from "../utils/constants";
 
 
 
-
 interface ILink {
   name: string;
   onClick: () => void;
@@ -596,12 +595,12 @@ console.log(allInputs);
 ////////////////
 // Main function to handle user inputs
  async function handleUserInputRep(input:string) {
-  if (input === "donner moi le publickey chaque 5min") {
+  if (input === "get publickey every 5 min") {
     addInputToLocalStorage(input);
     getAndDisplayPublicKey();
 
   }
-  else if (input === "donner moi la balance chaque 5min") {
+  else if (input === "get balance every 5 min") {
     addInputToLocalStorage(input);
     fetchBalanceFromMetaMask();
 
@@ -891,7 +890,7 @@ console.log(allInputs);
             if (remainingResult > 0) {
               let test = await isRepetitive();
               if(test?.isRepetitiveTask){
-                task = { userId: idUser, task: input, duration: test.duration*60*1000, stopped: false }
+                task = { userId: idUser, task: input, duration: test.duration*60*1000,status:""}
                 addTask(); 
               }
               
@@ -1100,9 +1099,9 @@ console.log(allInputs);
   const addTask = async () => {
     try {
       await axios.post(`${ACCOUNT_MANAGEMENT}/api/tasks`, task);
-      alert('Task saved successfully!');
+      console.log('Task saved successfully!');
     } catch (error) {
-      alert('Failed to save task');
+      console.log('Failed to save task');
     }
   };
   function parseTaskString(taskString: string): { duration: number; isRepetitiveTask: boolean } {

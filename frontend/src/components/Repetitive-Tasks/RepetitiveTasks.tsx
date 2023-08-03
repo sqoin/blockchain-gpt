@@ -89,15 +89,16 @@ const RepetitiveTasks: React.FC = () => {
                                 <td >
                                     {convertMillisecondsToMinutes(task.duration)} min
                                 </td>
-                                <td >
-                                {task.status}
-                                {/* <button  className="normal" onClick={() => handleUpdateTask(task._id)}>Modify</button> */}
+                                <td>
+                              <span className="label1">{task.status}</span>
                                 
                                 {task.status === '' && (
-                                    <button  onClick={() => handleUpdateTask(task._id)}>
+                                    <button className="button" onClick={() => handleUpdateTask(task._id)}>
                                     Stop
                                     </button>
+                                   
                                 )}
+                                      
                                 </td>
                             </tr>
                         ))}
