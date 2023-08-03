@@ -14,6 +14,8 @@ import { loadStripe } from '@stripe/stripe-js';
 import Payment from "./payment";
 import Completion from "./Completion";
 import Charts from './components/Statistic/Charts';
+import LineChart from './components/Statistic/Line_Chart';
+
 
 
 
@@ -103,9 +105,10 @@ function App() {
                                 </SessionAuth>
                             </Route>
                             
+                            <Route
+                                path="/lineChart"><LineChart /></Route>
                             
                                
-
 
                         </Switch>
 

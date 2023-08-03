@@ -5,14 +5,17 @@ import 'chartjs-plugin-annotation';
 import { ChartDataset, ChartTypeRegistry, ScatterDataPoint, BubbleDataPoint } from 'chart.js/auto';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
-import { Line, Pie } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 import PieChart from './Pie_Chart';
+import LineChart from './Line_Chart'; 
+
+
 
 // Register the scales and elements
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement);
 
 // Interface for ChartData
-interface ChartData<TType extends keyof ChartTypeRegistry = keyof ChartTypeRegistry> {
+export interface ChartData<TType extends keyof ChartTypeRegistry = keyof ChartTypeRegistry> {
   labels: string[];
   datasets: ChartDataset<TType, (number | ScatterDataPoint | BubbleDataPoint | null)[]>[];
 }
@@ -186,6 +189,60 @@ const ChartComponent: React.FC = () => {
       <div className="chart">
         <Pie data={pieChartData} options={options} />
       </div>*/}
+
+
+
+// Line Chart 
+  <div className="chart">
+    {chartData && chartData.labels.length > 0 ? (
+      <Line
+        data={chartData as ChartData<'line'>}
+        options={{
+          responsive: true,
+          plugins: {
+            legend: {
+              display: true,
+              labels: {
+                generateLabels: function (chart: any) {
+                  const datasets = chart.data.datasets;
+                  return chartData.datasets.map((dataset: any, i: number) => ({
+                    datasetIndex: i,
+                    text: dataset.label,
+                    fillStyle: dataset.borderColor,
+                    strokeStyle: dataset.borderColor,
+                    lineWidth: 2,
+                    hidden: !chart.isDatasetVisible(i),
+                    index: i,
+                  }));
+                },
+                usePointStyle: true,
+                pointStyle: 'circle',
+                boxWidth: 10,
+                boxHeight: 10,
+              },
+            },
+            annotation: {
+              annotations: [
+                {
+                  type: 'line',
+                  scaleID: 'y',
+                  value: 0,
+                  borderColor: 'rgb(255, 0, 0)',
+                  borderWidth: 2,
+                  label: {
+                    enabled: true,
+                    content: 'Zero line',
+                  },
+                } as any,
+              ],
+            },
+          },
+        }}
+      />
+    ) : (
+      <p>No chart data available.</p>
+    )}
+  </div>
 
       
 
