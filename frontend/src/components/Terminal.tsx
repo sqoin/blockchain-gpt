@@ -22,6 +22,8 @@ import { ACCOUNT_MANAGEMENT } from "../utils/constants";
 import { fetchQuestionCategory } from "./QuestionCategory";
 
 
+
+
 interface ILink {
   name: string;
   onClick: () => void;
@@ -89,13 +91,11 @@ const Terminal: React.FC<{ idUser: string }> = ({ idUser }:any) => {
         .set("Access-Control-Allow-Origin", "*")
         .end((err: any, res: any) => {
           if (err) {
-            //console.log(err);
 
             setIsTyping(false)
             popLastItem();
             reject(err);
           } else {
-            //console.log(res);
 
             setIsTyping(false)
             popLastItem();
@@ -884,6 +884,7 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
     event: FormEvent<HTMLFormElement>
   ): Promise<void> => {
     event.preventDefault();
+
     let remainingResult = await remaining();
     if (input.trim().toLowerCase() === "clear") {
       setOutput([]);
@@ -936,7 +937,16 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
               else {
                 if(test?.isRepetitiveTask && test?.duration!==0){
                   task = { userId: idUser, task: input, duration: test.duration*60*1000 }
-                  addTask(); 
+                  addTask();
+                  //Chart Type  
+                  try {
+                    const res1 = await chartType();
+                    console.log(JSON.stringify(res1));
+                  }
+                   catch (error: any) {
+                    setError(error.message);
+                    handleOutput("", error.message, true)
+                   }
                   try {
                     const res = await getData(input);
                     result = await processServerResponse(res.text, handleOutput);
@@ -947,6 +957,15 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
                   }
                 }
                 else{
+                  try {
+                    //Chart Type
+                    const res1 = await chartType();
+                    console.log(JSON.stringify(res1));
+                  }
+                   catch (error: any) {
+                    setError(error.message);
+                    handleOutput("", error.message, true)
+                   }
                   try {
                     const res = await getData(input);
                     result = await processServerResponse(res.text, handleOutput);
@@ -989,6 +1008,7 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
 
 
     }
+    
   };
   const isRepetitive = async () => {
     let repetitiveQuerry = `L'utilisateur a tapé dans son command line:"${input}" est ce que 
@@ -1011,7 +1031,45 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
     }
     return rs;
   }
- 
+  
+
+  const chartType = async () => {
+    let repetitiveQuerry = `the user asked me this question:"${input}" can you just give me the
+    type of chart, answer me as follows no further text should be included in the answer: 
+    {"Chart": number} 
+    1:Bar Chart
+    2:Line Chart
+    3:Pie Chart
+    4:Scatter Plot
+    5:Bubble Chart
+    6:Histogram
+    7:Gantt Chart
+    8:Radar Chart 
+    9:Box Plot 
+    10:Waterfall Chart
+    11:Heatmap
+    12:TreeMap
+    13:Donut Chart
+    14:Funnel Chart
+    15:Area Chart`
+    let rq ;
+    try {
+      rq = await getData(repetitiveQuerry);
+      console.log("rq: " + rq.text);
+      
+    } catch (error: any) {
+      handleOutput("", error.message, true)
+    }
+    let rs = null;
+    if(rq){
+      rs = parseChartString(rq.text);
+    }
+    return rs;
+     
+  }
+  
+  
+  
 
   async function logoutClicked() {
     await signOut();
@@ -1142,40 +1200,23 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
     // Return the object with the parsed values
     return { duration, isRepetitiveTask };
   }
+  function parseChartString(inputString: string): { Chart: number } {
     
-  function extractJSON(str: string): { duration: number, isRepetitifTask: boolean } | null {
-    if (typeof str !== "string") {
-      return null; // Return early if str is not a string
+    let chartNumber : number = 0;
+    // Regular expression to match the object pattern
+    const regex = /{*\n*\s*"*Chart"*\s*:\s*(\d+)\n*}*/;
+  
+    // Search for the object pattern in the input string
+    const match = inputString.match(regex);
+  
+    if (match) {
+      // Extract the number from the matched object
+      chartNumber = parseFloat(match[1]);
+      
     }
-    let firstOpen = -1;
-    let firstClose: number, candidate: string;
   
-    do {
-      firstOpen = str.indexOf('{', firstOpen + 1);
-      firstClose = str.lastIndexOf('}');
-  
-      if (firstClose <= firstOpen) {
-        return null;
-      }
-  
-      do {
-        candidate = str.substring(firstOpen, firstClose + 1);
-  
-        try {
-          const parsedObj: { duration: number, isRepetitifTask: boolean } = JSON.parse(candidate);
-          if ('duration' in parsedObj && 'isRepetitifTask' in parsedObj) {
-            return parsedObj;
-          }
-        } catch (e) {
-          // Parsing failed, continue searching for the next JSON object
-        }
-  
-        firstClose = str.substr(0, firstClose).lastIndexOf('}');
-      } while (firstClose > firstOpen);
-  
-    } while (firstOpen !== -1);
-  
-    return null;
+    // Create and return the object
+    return { Chart: chartNumber };
   }
   
 
