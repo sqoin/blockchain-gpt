@@ -26,10 +26,9 @@ router.post('/saveUserId', async (req: Request, res: Response) => {
       console.log("existing user: "+JSON.stringify(existingUser))
       name=existingUser.name;
       lastName= existingUser.lastName;
-      const existingDate = existingUser.date.getTime();
+      const expiration_date = existingUser.expiration_date.getTime();
       const currentDate = new Date().getTime();
-      const dayDiff = Math.floor((currentDate - existingDate) / (1000 * 60 * 60 * 24));
-            if (dayDiff >= 30) {
+            if (currentDate >= expiration_date) {
         return res.status(200).json({ message: "Free trial expired" });
       }
     }
@@ -44,7 +43,8 @@ router.post('/saveUserId', async (req: Request, res: Response) => {
     ID_user=userId;
     console.log('User information: ',userInfo);
 
-    const dataToInsert: IRegister = { date: new Date(), ID: userId , name:'',lastName: '',email: userEmail};
+    const dataToInsert: IRegister = { creation_date: new Date(), ID: userId , name:'',lastName: '',email: userEmail,   expiration_date: new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000), 
+    account_status: 'freeAccount'};
     await insertData(dataToInsert);
 
     console.log('User ID:', userId, "name: ",name, "last name: ", lastName);
@@ -117,6 +117,30 @@ router.put('/updateUser',async (req: Request, res: Response) => {
   }
 })
 
+router.post('/updateUserStatus', async (req: Request, res: Response) => {
+  const id = req.body.id;
+
+  try {
+    const user = await Register.findOne({ ID: id });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const expirationDate = new Date(user.expiration_date);
+    expirationDate.setMonth(expirationDate.getMonth() + 2);
+
+    user.expiration_date = expirationDate;
+    user.account_status= "PaidAccount";
+
+    await user.save();
+
+    return res.json({ message: 'User status updated successfully', newExpirationDate: expirationDate });
+  } catch (error) {
+    console.error('Error updating user status:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 
 router.post('/tasks', tasksController.createTask);
