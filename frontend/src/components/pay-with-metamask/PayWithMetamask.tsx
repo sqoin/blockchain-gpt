@@ -4,11 +4,21 @@ import { FaRegCopy } from "react-icons/fa";
 import fox from "../../assets/images/fox.png";
 import QRCode from "qrcode.react";
 import { _connectToMetaMask, _getBalance } from "../../adapters/ethereum_fn";
-
+import Web3 from "web3";
+import { useSessionContext } from "supertokens-auth-react/recipe/session";
+import axios from "axios";
 const PayWithMetamask: React.FC = () => {
+  const session = useSessionContext();
+  let id='';
+  if(!session.loading)
+  {
+    id=session.userId;
+  }
+  console.log(id);
+
   const [display, setDisplay] = useState("none");
 
-  const web3 = new window.Web3();
+  const web3 = new window.Web3(window.ethereum);
 
   let signature: string = "";
 
@@ -21,37 +31,75 @@ const PayWithMetamask: React.FC = () => {
   const [link, setLink] = useState<string>("https://etherscan.io/tx/");
 
   async function sendTransactionFromMetaMask() {
-    let address;
-    let balance;
     try {
-      address = await _connectToMetaMask();
+      const address = await _connectToMetaMask();
       console.log("address", address);
-    } catch (error) {}
-    try {
-      balance = await _getBalance(address);
+  
+      const balance = await _getBalance(address);
       console.log("balance", balance);
-    } catch (error) {
-      console.log(error);
-    }
-    if (Number(balance) < Number(amountValue)) {
-      console.log("Insufficient funds in MetaMask account");
-      return;
-    }
-    console.log("amountValue", amountValue);
-    let transactionParam = {
-      to: ethAdress,
-      from: address,
-      value: Number(web3.utils.toWei(amountValue, "ether")).toString(16),
-    };
-    console.log("wei", transactionParam.value);
-    await window.ethereum
-      .request({ method: "eth_sendTransaction", params: [transactionParam] })
-      .then((txhash: any) => {
-        txhash ? setDisplay("flex") : setDisplay("hidden");
-        setLinkText(link+formAccount2(txhash));
-        setLink(link+txhash);
+  
+      console.log("amountValue", amountValue);
+  
+      if (Number(balance) < Number(amountValue)) {
+        console.log("Insufficient funds in MetaMask account");
+        return;
+      }
+  
+      let transactionParam = {
+        to: ethAdress,
+        from: address,
+        value: web3.utils.toWei(amountValue, "ether"),
+      };
+      console.log("wei", transactionParam.value);
+  
+      const txhash: string = await window.ethereum.request({
+        method: "eth_sendTransaction",
+        params: [transactionParam],
       });
+      console.log("test2");
+  
+      setDisplay("flex");
+      setLinkText(link + formAccount2(txhash));
+      setLink(link + txhash);
+  
+      // Function to check transaction receipt and handle confirmation
+      const checkReceiptAndConfirmation = async () => {
+        try {
+          const receipt = await web3.eth.getTransactionReceipt(txhash);
+          if (receipt) {
+            console.log("test3");
+            if (receipt.status) {
+              console.log("Transaction successful!");
+              try {
+
+                const res= await axios.post('http://localhost:3003/api/updateUserStatus',{ id });
+               } catch (error) {
+                console.log(error);    
+               }
+            } else {
+              console.log("Transaction failed!");
+            }
+            clearInterval(checkReceiptInterval); // Stop checking when receipt is available
+          }
+        } catch (error) {
+          console.error("Error while checking receipt:", error);
+        }
+      };
+  
+      // Start checking the receipt periodically
+      const checkReceiptInterval = setInterval(checkReceiptAndConfirmation, 3000); // Check every 3 seconds (adjust if needed)
+  
+    } catch (error) {
+      console.log("Error sending transaction:", error);
+    }
   }
+  
+    
+  
+  
+  
+  
+  
 
   function formAccount2(x: String) {
     var str = x;

@@ -23,7 +23,6 @@ import RepetitiveTasks from "./components/Repetitive-Tasks/RepetitiveTasks";
 
 
 SuperTokens.init(SuperTokensConfig);
-const stripePromise = loadStripe('YOUR_PUBLISHABLE_KEY');
 
 
 SuperTokens.init(SuperTokensConfig);
@@ -63,7 +62,9 @@ function App() {
 
                             <Route path="/paymentWithStripe"><Payment /></Route>
 
-                        <Route path="/completion"><Completion /></Route>
+                        <Route path="/completion">
+                        <SessionAuth>
+<Completion /> </SessionAuth></Route>
                         
                        <Route path="/sendNotif">
                         <SessionAuth>

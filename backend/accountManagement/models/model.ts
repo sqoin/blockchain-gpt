@@ -2,10 +2,12 @@ import mongoose from 'mongoose'
 
 interface IRegister{
     ID: string,
-    date: Date,
+    creation_date: Date,
+    expiration_date: Date,
     name: string,
     lastName: string
     email: string
+    account_status: string
     
   }
   interface RegisterModelInterface extends mongoose.Model<RegistertDoc> {
@@ -13,17 +15,23 @@ interface IRegister{
   }
   interface RegistertDoc extends mongoose.Document {
     ID: string,
-    date: Date,
+    creation_date: Date,
+    expiration_date: Date,
     name: string,
     lastName: string
     email :string
+    account_status: string
   }
 const registerSchema = new mongoose.Schema({
     ID: {
         type: String,
         required: false
       },
-    date: {
+    creation_date: {
+      type: Date,
+      required: false
+    },
+    expiration_date: {
       type: Date,
       required: false
     },
@@ -38,6 +46,10 @@ const registerSchema = new mongoose.Schema({
     email:{
       type: String,
       required:false
+    },
+    account_status: {
+      type: String,
+      required: false
     }
   })
   registerSchema.statics.build = (attr: IRegister) => {
