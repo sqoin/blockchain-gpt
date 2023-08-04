@@ -904,8 +904,8 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
             if (remainingResult > 0) {
               let test = await isRepetitive();
               if(test?.isRepetitiveTask){
-                task = { userId: idUser, task: input, duration: test.duration*60*1000,status:""}
-                addTask(); 
+                let task = { userId: idUser, task: input, duration: test.duration*60*1000,status:""}
+                addTask(task); 
               }
               
               if( input === 'Dessiner un graphique circulaire de la capitalisation boursière de Bitcoin, Ethereum et Binance.'){
@@ -1167,15 +1167,19 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
 
 
 
-  let task = {}
-  const addTask = async () => {
+
+
+  const addTask = async (task:any) => {
     try {
       await axios.post(`${ACCOUNT_MANAGEMENT}/api/tasks`, task);
       console.log('Task saved successfully!');
-    } catch (error) {
-      console.log('Failed to save task');
+    } catch (error:any) {
+      console.log(error?.message);
     }
   };
+
+  
+
   function parseTaskString(taskString: string): { duration: number; isRepetitiveTask: boolean } {
     // Initialize default values for the properties
     let duration: number = 0;

@@ -1,6 +1,5 @@
 import { Request, Response, Router } from 'express';
 import { Register, IRegister } from '../models/model';
-
 import {insertData} from "../databaseManager";
 import ThirdPartyEmailPassword from "supertokens-node/recipe/thirdpartyemailpassword";
 import SuperTokens from 'supertokens-node';
@@ -145,8 +144,12 @@ router.post('/updateUserStatus', async (req: Request, res: Response) => {
 
 router.post('/tasks', tasksController.createTask);
 router.get('/tasks/:userId', tasksController.getTasksByUserId);
-router.put('/tasks/:taskId', tasksController.updateTaskStopped);
 
 router.put('/tasks/stopTask', tasksController.updateTaskStopped);
+
+
+
+
+
 
 module.exports= router;
