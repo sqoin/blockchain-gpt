@@ -15,6 +15,10 @@ import Payment from "./payment";
 import Completion from "./Completion";
 import Charts from './components/Statistic/Charts';
 import SideBar from "./components/SideBar/SideBar";
+
+
+
+
 import TelegramMessage from "./components/telegram-message/TelegramMessage"
 import PaymentMode from "./components/payment-mode/PaymentMode";
 import SendSol from "./components/pay-with-phantom/SendSol";
@@ -118,6 +122,7 @@ function App() {
                                
 
 
+                        
                         </Switch>
 
                     </div>
