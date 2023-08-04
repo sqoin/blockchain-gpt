@@ -1094,9 +1094,6 @@ console.log(allInputs);
 
 
 
-
-
-
   const addTask = async (task:any) => {
     try {
       await axios.post(`${ACCOUNT_MANAGEMENT}/api/tasks`, task);
@@ -1105,8 +1102,8 @@ console.log(allInputs);
       console.log(error?.message);
     }
   };
-
   
+
 
   function parseTaskString(taskString: string): { duration: number; isRepetitiveTask: boolean } {
     // Initialize default values for the properties

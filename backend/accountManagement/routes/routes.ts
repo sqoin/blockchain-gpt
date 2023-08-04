@@ -4,6 +4,8 @@ import {insertData} from "../databaseManager";
 import ThirdPartyEmailPassword from "supertokens-node/recipe/thirdpartyemailpassword";
 import SuperTokens from 'supertokens-node';
 import axios from 'axios';
+
+
 let tasksController = require("../controller/tasksController");
 const router: Router = Router();
 const config=require('../config')
@@ -123,6 +125,8 @@ router.put('/tasks/stopTask', tasksController.updateTaskStopped);
 
 
 
+// Backend route to get tasks with non-null duration
+router.get('/tasksvalid/:userId',tasksController.getTasksWithNonZeroDuration);
 
 
 

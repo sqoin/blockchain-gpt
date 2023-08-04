@@ -61,7 +61,7 @@ const RepetitiveTasks: React.FC = () => {
         fetchTasksByUserId()
 
       };
-
+     
     return (
         <div className='repetitiveTasks'>
             <h1 className='title'>Repetitive Tasks</h1>
@@ -81,7 +81,7 @@ const RepetitiveTasks: React.FC = () => {
                 <table cellPadding="0" cellSpacing="0" >
                     <tbody>
 
-                        {tasks.map((task) => (
+                        {tasks.map((task:any) => (
                             <tr key={task._id}>
                                 <td >
                                     {task.task}
@@ -105,7 +105,10 @@ const RepetitiveTasks: React.FC = () => {
 
                     </tbody>
                 </table>
+
+               
             </div>
+            
         </div>
 
     );
