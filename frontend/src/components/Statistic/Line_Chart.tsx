@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
-import { ChartData } from './ChartComponent';
 import axios from 'axios'
 import { STATISTICS_BAR_CHART_URL } from '../../utils/constants';
 
