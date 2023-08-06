@@ -1181,9 +1181,6 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
   };
 
 
-
-
-
   const addTask = async (task:any) => {
     try {
       await axios.post(`${ACCOUNT_MANAGEMENT}/api/tasks`, task);
@@ -1192,8 +1189,8 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
       console.log(error?.message);
     }
   };
-
   
+
 
   function parseTaskString(taskString: string): { duration: number; isRepetitiveTask: boolean } {
     // Initialize default values for the properties
