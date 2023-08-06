@@ -1,15 +1,20 @@
 .pie-chart{
-    width: 500px;
+    width: 600px;
     margin: 0 auto;
     transform: translateY(100px);
-    padding: 20px;
 }
+
+.radar-chart{
+    width: 600px;
+    margin: 0 auto;
+    transform: translateY(100px);
+}
+
 
 .line-chart{
     width: 1000px;
     margin: 0 auto;
     transform: translateY(100px);
-    padding: 20px;
     border-radius: 10px;
     box-shadow: 0pc 2px 10px rgba(0,0,0,0.2);
 }
