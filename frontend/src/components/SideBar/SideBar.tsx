@@ -13,7 +13,6 @@ const SideBar: React.FC<{ remaining: number }> = ({ remaining }) => {
 
   const [currentWindow, setCurrentWindow] = useState(window.location.pathname);
 
-  console.log(currentWindow);
   
 
   function redirectToAccDetails() {

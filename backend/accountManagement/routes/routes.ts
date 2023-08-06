@@ -25,7 +25,7 @@ router.post('/saveUserId', async (req: Request, res: Response) => {
       console.log("existing user: "+JSON.stringify(existingUser))
       name=existingUser.name;
       lastName= existingUser.lastName;
-      const expiration_date = existingUser.expiration_date.getTime();
+      const expiration_date = existingUser.expiration_date?.getTime();
       const currentDate = new Date().getTime();
             if (currentDate >= expiration_date) {
         return res.status(200).json({ message: "Free trial expired" });

@@ -105,6 +105,28 @@ const Terminal: React.FC<{ idUser: string }> = ({ idUser }:any) => {
     });
   };
 
+  const getDataCustmised = (input: string): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      request
+        .post("/gpt-test")
+        .send({ command: input })
+        .set("Accept", "application/json")
+        .set("Access-Control-Allow-Origin", "*")
+        .end((err: any, res: any) => {
+          if (err) {
+
+            setIsTyping(false)
+            //popLastItemCustomised();
+            reject(err);
+          } else {
+
+            setIsTyping(false)
+            //popLastItemCustomised();
+            resolve(res);
+          }
+        });
+    });
+  };
   const _getCryptoCurrencyPrice = async (
     cryptoName: string,
     date?: string
@@ -880,6 +902,25 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
     setInput(event.target.value);
   };
 
+  async function handleRepetitiveTasks() {
+    let test = await isRepetitive();
+    if(test?.isRepetitiveTask){
+      let task = { userId: idUser, task: input, duration: test.duration*60*1000,status:""}
+      addTask(task); 
+    }
+  }
+
+ async function handleChartType(){
+   //Chart Type  
+   try {
+    const res1 = await chartType();
+    //console.log(JSON.stringify(res1));
+  }
+   catch (error: any) {
+    setError(error.message);
+    handleOutput("", error.message, true)
+   }
+ }
   const handleInputSubmit = async (
     event: FormEvent<HTMLFormElement>
   ): Promise<void> => {
@@ -902,11 +943,6 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
             setInput("");
             handleOutput(`Execution in progress ...`);
             if (remainingResult > 0) {
-              let test = await isRepetitive();
-              if(test?.isRepetitiveTask){
-                let task = { userId: idUser, task: input, duration: test.duration*60*1000,status:""}
-                addTask(task); 
-              }
               
               if( input === 'Dessiner un graphique circulaire de la capitalisation boursière de Bitcoin, Ethereum et Binance.'){
 
@@ -915,7 +951,7 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
                 setShowChart(true)
               }
               
-             else if (input === "Quelles ont été les nouvelles les plus importantes dans la blockchain ces trois derniers jours ?") {
+              else if (input === "Quelles ont été les nouvelles les plus importantes dans la blockchain ces trois derniers jours ?") {
                 // Add the static response to the output
                 sleep(5000)
                 handleOutput("Parmi les dernières tendances dans la technologie de la blockchain, Algofi, le plus gros protocole sur la blockchain Algorand, annonce la fin de la plupart de ses activités. La plate-forme se concentrera désormais sur le retrait uniquement, laissant de côté les prêts, les emprunts et les échanges. En parallèle, le Bitcoin, la plus importante crypto-monnaie au monde, connaît une nouvelle baisse de valeur, se situant en dessous de 30 500 $, avec une baisse de 0,70 % sur la dernière journée. Les investisseurs et traders s'inquiètent d'un mouvement de 10 000 bitcoins, d'une valeur de plus de 300 millions de dollars, initié par le gouvernement américain. Dans le même temps, les ventes minières de Bitcoin atteignent des sommets records, tandis que la complexité de l'extraction de Bitcoin atteint un niveau sans précédent.");
@@ -932,21 +968,12 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
               }
               else if (input !=="")
               {
-                handleUserInputRep(input);
-              }
-              else {
-                if(test?.isRepetitiveTask && test?.duration!==0){
-                  task = { userId: idUser, task: input, duration: test.duration*60*1000 }
-                  addTask();
-                  //Chart Type  
-                  try {
-                    const res1 = await chartType();
-                    console.log(JSON.stringify(res1));
-                  }
-                   catch (error: any) {
-                    setError(error.message);
-                    handleOutput("", error.message, true)
-                   }
+
+                 
+                  handleRepetitiveTasks();
+                  handleUserInputRep(input);
+                  handleChartType()
+                  
                   try {
                     const res = await getData(input);
                     result = await processServerResponse(res.text, handleOutput);
@@ -955,26 +982,7 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
                     setShowEye(true)
                     handleOutput("", error.message, true)
                   }
-                }
-                else{
-                  try {
-                    //Chart Type
-                    const res1 = await chartType();
-                    console.log(JSON.stringify(res1));
-                  }
-                   catch (error: any) {
-                    setError(error.message);
-                    handleOutput("", error.message, true)
-                   }
-                  try {
-                    const res = await getData(input);
-                    result = await processServerResponse(res.text, handleOutput);
-                  } catch (error: any) {
-                    setError(error.message);
-                    setShowEye(true)
-                    handleOutput("", error.message, true)
-                  }
-                }
+                
               }
 
 
@@ -1021,7 +1029,7 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
     {duration:0,isRepetitifTask:false}`
     let rq ;
     try {
-      rq = await getData(repetitiveQuerry);
+      rq = await getDataCustmised(repetitiveQuerry);
     } catch (error: any) {
       handleOutput("", error.message, true)
     }
@@ -1054,8 +1062,8 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
     15:Area Chart`
     let rq ;
     try {
-      rq = await getData(repetitiveQuerry);
-      console.log("rq: " + rq.text);
+      rq = await getDataCustmised(repetitiveQuerry);
+      //console.log("rq: " + rq.text);
       
     } catch (error: any) {
       handleOutput("", error.message, true)
@@ -1164,6 +1172,13 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
     });
   };
 
+  const popLastItemCustomised = (): void => {
+    setOutput((prevOutput: Output[]) => {
+      // Filter out items with command === "Execution in progress ..."
+      const updatedOutput = prevOutput.filter(item => item.command !== "Execution in progress ...");
+      return updatedOutput;
+    });
+  };
 
 
 
@@ -1172,7 +1187,7 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
   const addTask = async (task:any) => {
     try {
       await axios.post(`${ACCOUNT_MANAGEMENT}/api/tasks`, task);
-      console.log('Task saved successfully!');
+      //console.log('Task saved successfully!');
     } catch (error:any) {
       console.log(error?.message);
     }
