@@ -144,7 +144,7 @@ const Terminal: React.FC<{ idUser: string }> = ({ idUser }:any) => {
       throw new Error(data.error);
     }
 
-    return data.market_data.current_price.usd;
+    return data.market_data?.current_price?.usd;
   };
 
   const _getCurrentCryptoCurrencyPrice = async (
@@ -161,7 +161,7 @@ const Terminal: React.FC<{ idUser: string }> = ({ idUser }:any) => {
       throw new Error(data.error);
     }
 
-    return data.market_data.current_price.usd;
+    return data.market_data?.current_price?.usd;
   };
 
 
@@ -630,8 +630,7 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
     return () => clearInterval(interval);
   }, []);
 
-////////////////
-// Main function to handle user inputs
+/** handle some static user input */
  async function handleUserInputRep(input:string) {
   if (input === "get publickey every 5 min") {
     addInputToLocalStorage(input);
@@ -652,19 +651,16 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
     addInputToLocalStorage(input);
     const networkInfo = await _getNetworkInfo();
     handleOutput(`network info: ${networkInfo?.chainId}  ${networkInfo?.networkName}  ${networkInfo?.networkId}`);
-    return;
   }
   else if (input === userCommand1){
     addInputToLocalStorage(input);
     const pk = await getAndDisplayPublicKey();
     handleOutput(` PublicKey: ${pk} `);
-    return;
   
   } else if (input === userCommand2) {
     addInputToLocalStorage(input);
     const bl = await fetchBalanceFromMetaMask();
     handleOutput(` Blance: ${bl} `);
-    return;
   }
 
   else if (input === "get bitcoin price every 5min") {
@@ -694,7 +690,7 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
       await sleep(5 * 60 * 1000); // Attendre 5 minutes
     }
   }
-  else if (input === "What is Bitcoin?") {
+  else if (input === "What is Bitcoin") {
 
     handleOutput(`Bitcoin is a decentralized cryptocurrency based on blockchain technology. It is a form of digital currency that enables peer-to-peer transactions without the need for a central authority such as a bank.`);
   }
@@ -733,7 +729,11 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
   }  else {
     // Handle other cases if needed
     console.log("Unknown input:", input);
+    return false;
   }
+  popLastItem();
+  setIsTyping(false)
+  return true;
 }
    //solana functions
   const _connectToPhantomWallet = async (): Promise<null | PhantomWalletAdapter> => {
@@ -904,7 +904,7 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
 
   async function handleRepetitiveTasks() {
     let test = await isRepetitive();
-    if(test?.isRepetitiveTask){
+    if(test?.isRepetitiveTask && test?.duration>0){
       let task = { userId: idUser, task: input, duration: test.duration*60*1000,status:""}
       addTask(task); 
     }
@@ -969,19 +969,23 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
               else if (input !=="")
               {
 
-                 
+                try {
+                  let res = await handleUserInputRep(input);
+                  if(res){
+                    return;
+                  }
+
                   handleRepetitiveTasks();
-                  handleUserInputRep(input);
                   handleChartType()
-                  
-                  try {
-                    const res = await getData(input);
-                    result = await processServerResponse(res.text, handleOutput);
+                 
+                   
+                    const resData = await getData(input);
+                    result = await processServerResponse(resData.text, handleOutput);
                   } catch (error: any) {
                     setError(error.message);
                     setShowEye(true)
                     handleOutput("", error.message, true)
-                  }
+                  } 
                 
               }
 
@@ -990,7 +994,7 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
               showPieChart = input.toLocaleLowerCase().replace(/\s/g, '').includes('bitcoinethereumandbinancemarketcapitalization');
               showCharts = input.toLocaleLowerCase().replace(/\s/g, '').includes('cryptocurrenciespricesevolution');
               showMarketCapCharts = input.toLocaleLowerCase().replace(/\s/g, '').includes('cryptomarketcaps');
-              setInput("");
+              //setInput("");
               setRemainingRequests(remainingResult - 1);
               //await handleOutput(`Remaining requests: ${remainingResult}`);
 
@@ -1042,9 +1046,10 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
   
 
   const chartType = async () => {
-    let repetitiveQuerry = `the user asked me this question:"${input}" can you just give me the
-    type of chart, answer me as follows no further text should be included in the answer: 
-    {"Chart": number} 
+    let Querry = `the user asked me this question:"${input}" , could you decide if it's about draw a chart,
+    if so can you just give me the type of chart, answer me as follows no further text should be included in the answer: 
+    {"Chart": number}
+    -1: it's not about chart 
     1:Bar Chart
     2:Line Chart
     3:Pie Chart
@@ -1060,10 +1065,10 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
     13:Donut Chart
     14:Funnel Chart
     15:Area Chart`
+    
     let rq ;
     try {
-      rq = await getDataCustmised(repetitiveQuerry);
-      //console.log("rq: " + rq.text);
+      rq = await getDataCustmised(Querry);
       
     } catch (error: any) {
       handleOutput("", error.message, true)
@@ -1186,7 +1191,7 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
       await axios.post(`${ACCOUNT_MANAGEMENT}/api/tasks`, task);
       //console.log('Task saved successfully!');
     } catch (error:any) {
-      console.log(error?.message);
+      //console.log(error?.message);
     }
   };
   
@@ -1228,7 +1233,6 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
     if (match) {
       // Extract the number from the matched object
       chartNumber = parseFloat(match[1]);
-      
     }
   
     // Create and return the object

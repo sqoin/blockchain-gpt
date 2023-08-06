@@ -12,7 +12,7 @@ exports.createTask = async (req: Request, res: Response) => {
   
       if (existingTask) {
         // If a task with the same properties already exists, return a conflict response
-        return res.status(500).json({ message: "Task with the same properties already exists" });
+        return res.status(403).json({ message: "Task with the same properties already exists" });
       }
   
       // If the task is unique, create and save the new task
