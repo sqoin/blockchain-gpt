@@ -29,6 +29,7 @@ const PayWithMetamask: React.FC = () => {
   const [amountValue, setAmountValue] = useState<string>("0.01");
   const [linkText, setLinkText] = useState<string>("");
   const [link, setLink] = useState<string>("https://etherscan.io/tx/");
+  const [postExecuted, setPostExecuted] = useState(false);
 
   async function sendTransactionFromMetaMask() {
     try {
@@ -70,15 +71,18 @@ const PayWithMetamask: React.FC = () => {
             console.log("test3");
             if (receipt.status) {
               console.log("Transaction successful!");
-              try {
-
-                const res= await axios.post('http://localhost:3003/api/updateUserStatus',{ id });
-               } catch (error) {
-                console.log(error);    
-               }
+              if (!postExecuted) {
+                try {
+                  const res = await axios.post('http://localhost:3003/api/updateUserStatus', { id });
+                  setPostExecuted(true); // Set the flag to true after the post is executed
+                } catch (error) {
+                  console.log(error);
+                }
+              }
             } else {
               console.log("Transaction failed!");
             }
+            
             clearInterval(checkReceiptInterval); // Stop checking when receipt is available
           }
         } catch (error) {
