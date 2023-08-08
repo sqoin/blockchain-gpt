@@ -150,8 +150,6 @@ router.get('/tasks/:userId', tasksController.getTasksByUserId);
 router.put('/tasks/stopTask', tasksController.updateTaskStopped);
 
 
-
-// Backend route to get tasks with non-null duration
 router.get('/tasksvalid/:userId',tasksController.getTasksWithNonZeroDuration);
 
 
