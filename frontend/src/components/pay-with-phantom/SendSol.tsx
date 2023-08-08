@@ -5,13 +5,21 @@ import {  FaRegCopy } from 'react-icons/fa';
 import phantom from '../../assets/Phantom-Icon-Purple.png'
 import { _connectToPhantomWallet, _disconnectFromPhantomWallet, _getSolanaBalance, _getSolanaNetworkInfo, _getSolanaPublicKey, _sendSolana } from "../../adapters/solana_fn";
 import './SendSol.css';
-
+import { useSessionContext } from "supertokens-auth-react/recipe/session";
+import axios from 'axios';
 interface Info {
   amount: number;
   address: any;
 }
 
 const SendSol: React.FC = () => {
+  const [postExecuted, setPostExecuted] = useState(false);
+  let id='';
+  const session=useSessionContext();
+  if(!session.loading)
+  {
+    id=session.userId;
+  }
 
   const [info, setInfo] = useState<Info>({
     amount: 0.01,
@@ -30,7 +38,7 @@ const SendSol: React.FC = () => {
   
     let wallet:any; 
     let publicKey:any;
-    let balance; 
+    let balance:any; 
     let transaction:any;
 
     try {
@@ -43,6 +51,7 @@ const SendSol: React.FC = () => {
     } catch (error) {
       console.log(error); 
     }
+    console.log(publicKey);
     try {
       balance = await _getSolanaBalance(publicKey);
     } catch (error) {
@@ -60,7 +69,15 @@ const SendSol: React.FC = () => {
 
       let amount = info.amount * Math.pow(10, 9) 
 
-      transaction = _sendSolana(info.address, wallet, amount)
+      transaction = await _sendSolana(info.address, wallet, amount)
+      if (!postExecuted) {
+        try {
+          const res = await axios.post('http://localhost:3003/api/updateUserStatus', { id });
+          setPostExecuted(true); 
+        } catch (error) {
+          console.log(error);
+        }
+      }
     } catch (error) {
       console.log(error);
       

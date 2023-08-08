@@ -77,7 +77,7 @@ router.post('/getUserInfo', async (req: Request, res: Response) => {
     try {
     const userInfo = {
       userId: ID_user,
-      email: userEmail, // Replace with the actual email retrieved from the database
+      email: userEmail, 
       githubAccount:githubaccount,
       userName: name,
       userLastName: lastName
