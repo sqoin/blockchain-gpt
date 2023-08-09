@@ -17,6 +17,7 @@ import PieChart from "../pieChart.tsx"
 /// @ts-ignore
 import CryptomarketCapChart from "../cryptoMarketCapChart.tsx";
 
+import  DataSets  from "./datasets";
 import CryptoChart from "../cryptoCharts";
 import { ACCOUNT_MANAGEMENT } from "../utils/constants";
 import { fetchQuestionCategory } from "./QuestionCategory";
@@ -46,6 +47,7 @@ let showBitcoinChart = false;
 let showPieChart = false;
 let showCharts = false
 let showMarketCapCharts = false;
+let showDataSet=false;
 interface Output {
   input: string;
   command: string;
@@ -994,6 +996,7 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
               showPieChart = input.toLocaleLowerCase().replace(/\s/g, '').includes('bitcoinethereumandbinancemarketcapitalization');
               showCharts = input.toLocaleLowerCase().replace(/\s/g, '').includes('cryptocurrenciespricesevolution');
               showMarketCapCharts = input.toLocaleLowerCase().replace(/\s/g, '').includes('cryptomarketcaps');
+              showDataSet = input.toLocaleLowerCase().replace(/\s/g, '').includes('givemepriceevolutionofanyunitexample');
               //setInput("");
               setRemainingRequests(remainingResult - 1);
               //await handleOutput(`Remaining requests: ${remainingResult}`);
@@ -1312,8 +1315,12 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
             {/* {showBarChart ? <div className="bar-chart">
               <BarChart/>
             </div> : null} */}
+            {showDataSet? <div className="dataset">
+            <DataSets/>
+          </div>:null}
 
           </div>
+          
         </form>
        {/*  <div>
       <input type="text" onChange={handleInput} />
