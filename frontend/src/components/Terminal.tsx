@@ -8,6 +8,9 @@ import { SignOutIcon } from "../assets/images";
 import SideBar from "./SideBar/SideBar"
 import CmdOutput from "./CmdOutput/CmdOutput";
 import { _getCryptoCurrencyQuote } from "../adapters/market";
+import { TELEGRAM_NOTIFICATION } from '../../src/utils/constants';
+import getChatIdFromTelegram  from "../components/telegram-message/TelegramMessage";
+
 /// @ts-ignore
 import BarChart from "./Statistic/AccountChart.tsx";
 /// @ts-ignore
@@ -558,6 +561,7 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
   const userCommand1 = "donner moi le publickey refrech chaque 5min";
   const userCommand2 = "donner moi la balance chaque 5min";
   const userCommand3="get network info"
+  const userCommand4= "";
   useEffect(() => {
     // Vérifier si la commande a été précédemment entrée dans le localStorage
     const checkUserCommand = () => {
@@ -611,6 +615,8 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
 ////////////////
 // Main function to handle user inputs
  async function handleUserInputRep(input:string) {
+
+
   if (input === "get publickey every 5 min") {
     addInputToLocalStorage(input);
     getAndDisplayPublicKey();
@@ -708,7 +714,9 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
   else if (input === "get Latest Transactions") {
     fetchAndDisplayTransactions();
 
-  }  else {
+  } 
+  
+   else {
     // Handle other cases if needed
     console.log("Unknown input:", input);
   }
@@ -928,9 +936,43 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
                   await sleep(15 * 1000)
                 }
 
+
+              }
+              else if (input === "check solana wallet") {
+                let userId='';
+
+                // Add the static response to the output
+                await sleep(5000);
+                while (true) {
+                  let wallet: any = await _connectToPhantomWallet();
+                  let balance = await _getSolanaBalance(wallet?.publicKey?.toBase58());
+                  await sleep(15 * 1000);
+                  if (balance !== null && balance > 0.1) {
+                    try {
+                      window.open('http://t.me/sqoin2aout_bot', '_blank');
+                    const chatId = await getChatIdFromTelegram();
+                    await axios.post(`${TELEGRAM_NOTIFICATION}/api/telegram/chat`, { chatId,userId });
+
+                    }catch (error) {
+                      console.error('Error handling button click:', error);
+                    }
+                
+                    
+
+
+
+                    //console.log("Alert: Telegram");
+                    
+                  }
+                  else {
+                    alert("telegram");
+
+                  }
+                }
               }
               else if (input !=="")
               {
+                
                 handleUserInputRep(input);
               }
               else {
@@ -943,10 +985,10 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
                   } catch (error: any) {
                     setError(error.message);
                     setShowEye(true)
-                    handleOutput("", error.message, true)
+                    handleOutput("", error.message, true);
                   }
                 }
-                else{
+                else{ 
                   try {
                     const res = await getData(input);
                     result = await processServerResponse(res.text, handleOutput);
