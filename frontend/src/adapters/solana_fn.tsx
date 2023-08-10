@@ -2,6 +2,8 @@ import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
 import { Connection, PublicKey, Version, Transaction, SystemProgram } from "@solana/web3.js";
 import * as buffer from "buffer";
 import {  getConnection } from "../utils/headers";
+import { PAID_NODE_URL } from "../utils/constants";
+import { createWSEndpoint } from "../utils/headers";
 window.Buffer = buffer.Buffer;
 
 
@@ -105,9 +107,22 @@ export const _getSolanaNetworkInfo = async (rpcUrl: any): Promise<{ endpoint: st
 
 export const _getSolanaBalance = async (address: string): Promise<null | number> => {
   try {
-    let connection = getConnection();
+/*      const rpcUrl:any = PAID_NODE_URL;
+    const username = process.env.REACT_APP_RPC_USERNAME;
+    const password = process.env.REACT_APP_RPC_PASSWORD;
+
+
+const connection = new Connection(rpcUrl, {
+  httpHeaders: {
+      Authorization: `Basic ${btoa(`${username}:${password}`)}`,
+  },
+  wsEndpoint: createWSEndpoint(rpcUrl),
+});  */
+
+   let connection = getConnection();
     const publicKey = new PublicKey(address);
     const balance = await connection.getBalance(publicKey);
+    console.log("**********",balance)
     const lamportsToSol = balance / 1e9;
     return lamportsToSol;
   } catch (error: any) {

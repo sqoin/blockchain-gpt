@@ -20,7 +20,7 @@ import PaymentMode from "./components/payment-mode/PaymentMode";
 import SendSol from "./components/pay-with-phantom/SendSol";
 import PayWithMetamask from "./components/pay-with-metamask/PayWithMetamask";
 import RepetitiveTasks from "./components/Repetitive-Tasks/RepetitiveTasks";
-
+import History from "./components/history/history";
 
 SuperTokens.init(SuperTokensConfig);
 
@@ -64,14 +64,24 @@ function App() {
 
                         <Route path="/completion">
                         <SessionAuth>
-<Completion /> </SessionAuth></Route>
+                            <Completion /> 
+                        </SessionAuth></Route>
                         
                        <Route path="/sendNotif">
                         <SessionAuth>
                             <TelegramMessage/>
                         
                         </SessionAuth></Route> 
-                       
+                       <Route path="/history">
+
+                       <SessionAuth>
+                        <History/>
+                       </SessionAuth>
+
+
+                       </Route>
+
+
 
 
 
@@ -87,7 +97,7 @@ function App() {
                             <Route
                                 path="/notauthorized"><NotAuthorized /></Route> 
                             <Route
-                                path="/accountdetails"><div className="fix"><SideBar remaining={20}/><AccountDetails userId={user.userId} /></div></Route>
+                                path="/accountdetails"><div className="fix"><SideBar remaining={20} disabled={true}/><AccountDetails userId={user.userId} /></div></Route>
 
 
 
@@ -105,7 +115,7 @@ function App() {
                             <Route path="/repetitivetasks">
                                 <SessionAuth>
                                 <div className="fix">
-                                    <SideBar remaining={20}/>
+                                    <SideBar remaining={20} disabled={false}/>
                                     <RepetitiveTasks  />
                                     </div>
                                 </SessionAuth>
@@ -113,7 +123,7 @@ function App() {
                             
                             
                             <Route
-                                path="/statistics"><div className="fix"><SideBar remaining={20}/><Charts/></div>
+                                path="/statistics"><div className="fix"><SideBar remaining={20} disabled={false}/><Charts/></div>
                             </Route>
                                
 

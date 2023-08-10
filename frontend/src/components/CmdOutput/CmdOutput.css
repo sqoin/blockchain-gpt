@@ -46,3 +46,9 @@
   margin-top: 10px;
   z-index: 5;
 }
+
+.solana{
+  max-width:  180%;
+  height: auto;
+  overflow-wrap: break-word;
+}

@@ -17,7 +17,7 @@ let httpHeaders:HttpHeaders={
     wsEndpoint: createWSEndpoint(PAID_NODE_URL)
 };
 
-function createWSEndpoint(rpcUrl:any) {
+export function createWSEndpoint(rpcUrl:any) {
     const u = new URL(rpcUrl);
     u.protocol = u.protocol.replace("http", "ws");
     u.username = `${process.env.REACT_APP_RPC_USERNAME}`;
