@@ -213,12 +213,14 @@
   */
 
 
-  
+  body{
+    background-color: var(--color3);
+
+  }
   .terminal{
 
     display: flex;
     flex-direction: row;
-    background-color: var(--color3);
     color: white;
   }
 
@@ -227,6 +229,8 @@
     display: flex;
     flex-direction: column;
     align-items: start;
+    justify-content: start;
+
   }
 
   .terminal .cmd-line{
@@ -280,3 +284,15 @@
   .bitcoin-chart{
     width: 100%;
   }
+  .input-output.main-content-full {
+    margin-left: 0; 
+    width: 100%; 
+  }
+  
+
+  @media (min-width: 768px) {
+    .mobile-hamburger {
+      display: none;
+    }
+  }
+  

@@ -16,21 +16,21 @@ import BitcoinChart from "../charts.tsx";
 import PieChart from "../pieChart.tsx"
 /// @ts-ignore
 import CryptomarketCapChart from "../cryptoMarketCapChart.tsx";
-
+import Hamburger from 'hamburger-react'
 import  DataSets  from "./datasets";
 import CryptoChart from "../cryptoCharts";
 import { ACCOUNT_MANAGEMENT } from "../utils/constants";
 import { fetchQuestionCategory } from "./QuestionCategory";
+import axios, { AxiosResponse } from 'axios'; 
+import { useSessionContext } from "supertokens-auth-react/recipe/session";
 
-
-
+let id='';
 
 interface ILink {
   name: string;
   onClick: () => void;
   icon: string;
 }
-const axios = require('axios');
 
 
 interface Transaction {
@@ -56,14 +56,18 @@ interface Output {
 }
 
 const Terminal: React.FC<{ idUser: string }> = ({ idUser }:any) => {
+  const [isOpen, setOpen] = useState(false)
+
   const [questionCategory, setQuestionCategory] = useState<number | null>(null);
   const [showEye, setShowEye] = useState(false);
   const [error, setError] = useState("")
   const [isTyping, setIsTyping] = useState(false)
   const [input, setInput] = useState<string>("");
+  const [inputHistory, setInputHistory] = useState<string[]>([]);
+
   const [showChart, setShowChart] = useState(false);
   const [output, setOutput] = useState<Output[]>([]);
-  const [remainingRequests, setRemainingRequests] = useState(20); // Define the remainingRequests variable
+  const [remainingRequests, setRemainingRequests] = useState(20); 
   const [solanaNetwork, setSolanaNetwork] = useState<string>(
     "https://api.mainnet-beta.solana.com"
   );
@@ -79,8 +83,33 @@ const Terminal: React.FC<{ idUser: string }> = ({ idUser }:any) => {
 
   const MAX_REQUESTS_FREE_USER = 2;
   const MAX_REQUESTS_PAID_USER = 10;
-
+  const session=useSessionContext();
+  if(!session.loading)
+  {
+    id=session.userId;
+  }
+  const userId = id; 
   let userRequestCount: Map<string, number> = new Map();
+
+
+
+
+  
+  useEffect(() => {
+    const userId = id; 
+
+    axios.get(`${ACCOUNT_MANAGEMENT}/api/getInputHistory/${userId}`)
+      .then((response :AxiosResponse)=> {
+        const data = response.data;
+        setInputHistory(data.map((item: { input: string }) => item.input));
+      })
+      .catch((error:any) => {
+        console.error('Error fetching input history:', error);
+      });
+  }, []);
+
+
+
 
 
 
@@ -904,6 +933,11 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
     setInput(event.target.value);
   };
 
+  
+  
+
+
+
   async function handleRepetitiveTasks() {
     let test = await isRepetitive();
     if(test?.isRepetitiveTask && test?.duration>0){
@@ -935,6 +969,14 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
     } else {
       if (remainingResult < 21) {
         try {
+          axios.post(`${ACCOUNT_MANAGEMENT}/api/saveInput`, { userId, input: input })
+            .then(() => {
+              setInputHistory(prevInputHistory => [...prevInputHistory, input]);
+              setInput('');
+            })
+            .catch(error => {
+              console.error('Error saving input:', error);
+            });
           let result;
 
           setIsTyping(true)
@@ -1023,7 +1065,6 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
 
 
     }
-    
   };
   const isRepetitive = async () => {
     let repetitiveQuerry = `L'utilisateur a tapé dans son command line:"${input}" est ce que 
@@ -1261,12 +1302,20 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
     // window.open(SERVER_DOMAIN+"/accountdetails","_blank")
     history.push("/accountdetails");
   }
-  
+    useEffect(() => {
+    const isMobile = window.innerWidth <= 768; 
+    setOpen(isMobile);
+    console.log("not a mobile")
+  }, []); 
 
 
   return (
     <div className="terminal">
-      <SideBar remaining={remainingRequests} />
+      <SideBar remaining={remainingRequests} disabled={isOpen}  />
+      <div className="mobile-hamburger">
+  <Hamburger toggled={isOpen} toggle={setOpen} />
+</div>
+
       <div className="input-output">
 
         <div className="output-result">

@@ -4,6 +4,8 @@ import {insertData} from "../databaseManager";
 import ThirdPartyEmailPassword from "supertokens-node/recipe/thirdpartyemailpassword";
 import SuperTokens from 'supertokens-node';
 import axios from 'axios';
+import bodyParser from 'body-parser';
+import Input from '../models/input'; // Import the Input model
 
 
 let tasksController = require("../controller/tasksController");
@@ -16,6 +18,9 @@ let name='';
 let lastName='';
 let email ='';
 SuperTokens.init(config.supertokensConfig);
+
+router.use(bodyParser.json())
+
 
 
 router.post('/saveUserId', async (req: Request, res: Response) => {
@@ -142,6 +147,37 @@ router.post('/updateUserStatus', async (req: Request, res: Response) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+
+
+
+router.post('/saveInput', async (req, res) => {
+  const { userId, input } = req.body;
+
+  const newInput = new Input({ userId, input });
+  await newInput.save();
+
+  res.status(201).json({ message: 'Input saved successfully' });
+});
+
+router.get('/getInputHistory/:userId', async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const inputHistory = await Input.find({ userId });
+    res.status(200).json(inputHistory);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching input history' });
+  }
+});
+
+
+
+
+
+
+
+
 
 
 router.post('/tasks', tasksController.createTask);

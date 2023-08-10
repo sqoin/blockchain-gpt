@@ -4,12 +4,17 @@ import { useState } from 'react';
 import { useHistory } from "react-router-dom";
 import { signOut } from "supertokens-auth-react/recipe/session";
 import { BiConversation,BiTask } from "react-icons/bi"
+import { FaHistory } from 'react-icons/fa';
 import { FaRegEnvelope } from "react-icons/fa"
 import { ImExit } from "react-icons/im"
 import { CiSquareQuestion } from "react-icons/ci"
 import {AiOutlineBarChart, AiOutlineInfoCircle } from "react-icons/ai"
+import Hamburger from 'hamburger-react';
 
-const SideBar: React.FC<{ remaining: number }> = ({ remaining }) => {
+const SideBar: React.FC<{ remaining: number , disabled: boolean}> = ({ remaining , disabled}) => {
+
+
+
 
   const [currentWindow, setCurrentWindow] = useState(window.location.pathname);
 
@@ -24,6 +29,11 @@ const SideBar: React.FC<{ remaining: number }> = ({ remaining }) => {
     // window.open(SERVER_DOMAIN+"/accountdetails","_blank")
     history.push("/repetitivetasks");
     setCurrentWindow("/repetitivetasks");
+  }
+  function redirectToHistory() {
+    // window.open(SERVER_DOMAIN+"/accountdetails","_blank")
+    history.push("/history");
+    setCurrentWindow("/history");
   }
 
   const history = useHistory();
@@ -43,10 +53,14 @@ const SideBar: React.FC<{ remaining: number }> = ({ remaining }) => {
     setCurrentWindow("/")
   };
 
-
+ if(disabled)
+{
+  return null;
+}
   return (
     <div className="sidebar">
       <div className="chats">
+        
         <button className="sidebar-btn add-chat" style={{backgroundColor:currentWindow === "/" ? "#73648A" : ""}} onClick={toChat}><span className="icons">+</span>New chat</button>
       </div>
       <div className="options">
@@ -58,6 +72,7 @@ const SideBar: React.FC<{ remaining: number }> = ({ remaining }) => {
           <span className="icons"><BiTask/></span>
           Repetitive Tasks
         </button>
+        <button className="sidebar-btn" style={{backgroundColor:currentWindow === "/accountdetails" ? "#73648A" : ""}} onClick={redirectToHistory}><span className="icons"><FaHistory/></span>History</button>
         <button className="sidebar-btn" style={{backgroundColor:currentWindow === "/accountdetails" ? "#73648A" : ""}} onClick={redirectToAccDetails}><span className="icons"><AiOutlineInfoCircle/></span>Account details</button>
         <button className="sidebar-btn" style={{backgroundColor:currentWindow === "/statistic" ? "#73648A" : ""}} onClick={toStatistic}><span className="icons"><AiOutlineBarChart/></span>Statistic</button>
         <button className="sidebar-btn signout" onClick={logoutClicked}><span className="icons"><ImExit/></span>Sign out</button>
