@@ -22,6 +22,9 @@ import { ACCOUNT_MANAGEMENT } from "../utils/constants";
 import { fetchQuestionCategory } from "./QuestionCategory";
 
 
+import Hamburger from 'hamburger-react'
+
+
 interface ILink {
   name: string;
   onClick: () => void;
@@ -1198,16 +1201,26 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
     history.push("/accountdetails");
   }
   
-
+    const [showSection, setShowSection] = useState(true);
+    const [isOpen, setOpen]=useState(false);
+  
+    const toggleSection = () => {
+      setShowSection(!showSection);
+    };
 
   return (
-    <div className="terminal">
-      <SideBar remaining={remainingRequests} />
-      <div className="input-output">
 
+    
+    <div className="terminal">
+      <SideBar remaining={remainingRequests} disabled={isOpen} />
+      <div className="mobile-hamburger">
+           <Hamburger toggled={isOpen} toggle={setOpen} />
+          </div>
+
+      <div className="input-output">
         <div className="output-result">
           {output.map((line, index) => (
-            <CmdOutput oput={line} index={index} />
+            <CmdOutput oput={line} index={index} key={index} />
           ))}
         </div>
         <form onSubmit={handleInputSubmit} className="input-cmd">
@@ -1266,6 +1279,7 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
 
   )
 };
+
 
 export default Terminal;
 function setInputDisabled(arg0: boolean) {

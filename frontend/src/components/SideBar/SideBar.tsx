@@ -9,7 +9,7 @@ import { ImExit } from "react-icons/im"
 import { CiSquareQuestion } from "react-icons/ci"
 import {AiOutlineBarChart, AiOutlineInfoCircle } from "react-icons/ai"
 
-const SideBar: React.FC<{ remaining: number }> = ({ remaining }) => {
+const SideBar: React.FC<{ remaining: number,disabled:boolean }> = ({ remaining,disabled }) => {
 
   const [currentWindow, setCurrentWindow] = useState(window.location.pathname);
 
@@ -43,7 +43,9 @@ const SideBar: React.FC<{ remaining: number }> = ({ remaining }) => {
     history.push("/");
     setCurrentWindow("/")
   };
-
+  if (disabled){
+    return null;
+  }
 
   return (
     <div className="sidebar">

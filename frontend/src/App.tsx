@@ -86,7 +86,7 @@ function App() {
                             <Route
                                 path="/notauthorized"><NotAuthorized /></Route> 
                             <Route
-                                path="/accountdetails"><div className="fix"><SideBar remaining={20}/><AccountDetails userId={user.userId} /></div></Route>
+                                path="/accountdetails"><div className="fix"><SideBar remaining={20} disabled={false}/><AccountDetails userId={user.userId} /></div></Route>
 
 
 
@@ -104,7 +104,7 @@ function App() {
                             <Route path="/repetitivetasks">
                                 <SessionAuth>
                                 <div className="fix">
-                                    <SideBar remaining={20}/>
+                                    <SideBar remaining={20} disabled={false}/>
                                     <RepetitiveTasks  />
                                     </div>
                                 </SessionAuth>
@@ -112,7 +112,7 @@ function App() {
                             
                             
                             <Route
-                                path="/statistics"><div className="fix"><SideBar remaining={20}/><Charts/></div>
+                                path="/statistics"><div className="fix"><SideBar remaining={20} disabled={false}/><Charts/></div>
                             </Route>
                                
 

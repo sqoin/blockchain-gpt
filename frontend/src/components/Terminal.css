@@ -212,7 +212,10 @@
   } 
   */
 
+body{
+  background-color: var(--color3);
 
+}
   
   .terminal{
 
@@ -280,3 +283,24 @@
   .bitcoin-chart{
     width: 100%;
   }
+  
+
+@media  (max-width: 400px) {
+  .terminal {
+    font-size: 13px; 
+  }
+
+  .terminal-output div {
+    font-size: 15px; 
+  }
+}
+
+
+@media (min-width: 400px) {
+  .mobile-hamburger {
+    display: none;
+  }
+}
+
+
+
