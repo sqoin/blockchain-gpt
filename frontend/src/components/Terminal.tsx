@@ -631,7 +631,7 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
   }, []);
 
 /** handle some static user input */
- async function handleUserInputRep(input:string) {
+ async function handleUserStaticInputRep(input:string) {
   if (input === "get publickey every 5 min") {
     addInputToLocalStorage(input);
     getAndDisplayPublicKey();
@@ -908,17 +908,62 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
       let task = { userId: idUser, task: input, duration: test.duration*60*1000,status:""}
       addTask(task); 
     }
+    return test?.isRepetitiveTask
   }
 
  async function handleChartType(){
    //Chart Type  
    try {
-    const res1 = await chartType();
+    const res :any = await chartType();
+    let chartNmbr = getChartType(parseFloat(res.Chart))
+    alert(chartNmbr)
+
     //console.log(JSON.stringify(res1));
   }
    catch (error: any) {
     setError(error.message);
     handleOutput("", error.message, true)
+   }
+ }
+
+ function getChartType(n:number) {
+   switch (n) {
+      case -1:
+       return "it's not about chart "
+      case 0:
+        return "it's not about chart "
+      case 1:
+       return "Bar Chart"
+      case 2:
+       return "Line Chart"
+      case 3:
+       return "Pie Chart"
+      case 4:
+       return "Scatter Plot"
+      case 5:
+       return "Bubble Chart"
+      case 6:
+       return "Histogram"
+      case 7:
+       return "Gantt Chart"
+      case 8:
+        return "Radar Chart "
+      case 9:
+        return "Box Plot"
+      case 10:
+        return "Waterfall Chart"
+      case 11:
+        return "Heatmap"
+      case 12:
+        return "TreeMap"
+      case 13:
+        return "Donut Chart"
+      case 14:
+        return "Funnel Chart"
+      case 15:
+        return "Area Chart"
+      default:
+        return "it's not about chart "
    }
  }
   const handleInputSubmit = async (
@@ -958,6 +1003,7 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
               }
               else if (input === "Vérifier la valeur de mon portefeuille toutes les  15 secondes et m'envoyer une alerte Telegram si la valeur de mon portefeuille en dollars augmente de plus de 200$.") {
                 // Add the static response to the output
+               
                 sleep(5000)
                 while (true) {
                   let wallet: any = await _connectToPhantomWallet()
@@ -966,17 +1012,28 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
                 }
 
               }
+              else if("ccccccc"){
+                sleep(5000)
+                while (true) {
+                  let wallet: any = await _connectToPhantomWallet()
+                  let balnace = await _getSolanaBalance(wallet?.publicKey?.toBase58())
+                  await sleep(15 * 1000)
+                }
+              }
               else if (input !=="")
               {
 
                 try {
-                  let res = await handleUserInputRep(input);
+                  let res = await handleUserStaticInputRep(input);
                   if(res){
                     return;
                   }
 
-                  handleRepetitiveTasks();
-                  handleChartType()
+                  let bool = await handleRepetitiveTasks();
+                  if(bool) {
+                    alert("repetetive task")
+                  }
+                  await handleChartType()
                  
                    
                     const resData = await getData(input);
