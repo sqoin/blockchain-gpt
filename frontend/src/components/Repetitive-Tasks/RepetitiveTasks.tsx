@@ -64,52 +64,40 @@ const RepetitiveTasks: React.FC = () => {
      
     return (
         <div className='repetitiveTasks'>
-            <h1 className='title'>Repetitive Tasks</h1>
-            <div className="tbl-header">
-                <table className='task-table' cellPadding="0" cellSpacing="0">
-                    <thead>
-                        <tr>
-                            <th>Task</th>
-                            <th>Duration</th>
-                            <th>Status</th>
+  <h1 className='title'>Repetitive Tasks</h1>
+  <div className="tbl-header">
+    <table className='task-table' cellPadding="0" cellSpacing="0">
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Duration</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+  <div className="tbl-content">
+    <table className='task-table' cellPadding="0" cellSpacing="0">
+      <tbody>
+        {tasks.map((task: any) => (
+          <tr key={task._id}>
+            <td>{task.task}</td>
+            <td>{convertMillisecondsToMinutes(task.duration)} min</td>
+            <td>
+              <span className="label1">{task.status}</span>
+              {task.status === '' && (
+                <button className="button" onClick={() => handleUpdateTask(task._id)}>
+                  Stop
+                </button>
+              )}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</div>
 
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-            <div className="tbl-content">
-                <table className='task-table' cellPadding="0" cellSpacing="0" >
-                    <tbody>
-
-                        {tasks.map((task:any) => (
-                            <tr key={task._id}>
-                                <td >
-                                    {task.task}
-                                </td>
-                                <td >
-                                    {convertMillisecondsToMinutes(task.duration)} min
-                                </td>
-                                <td>
-                              <span className="label1">{task.status}</span>
-                                
-                                {task.status === '' && (
-                                    <button className="button" onClick={() => handleUpdateTask(task._id)}>
-                                    Stop
-                                    </button>
-                                   
-                                )}
-                                      
-                                </td>
-                            </tr>
-                        ))}
-
-                    </tbody>
-                </table>
-
-               
-            </div>
-            
-        </div>
 
     );
 };

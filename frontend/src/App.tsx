@@ -97,7 +97,7 @@ function App() {
                             <Route
                                 path="/notauthorized"><NotAuthorized /></Route> 
                             <Route
-                                path="/accountdetails"><div className="fix"><SideBar remaining={20} disabled={true}/><AccountDetails userId={user.userId} /></div></Route>
+                                path="/accountdetails"><div className="fix"><SideBar remaining={20} disabled={false}/><AccountDetails userId={user.userId} /></div></Route>
 
 
 

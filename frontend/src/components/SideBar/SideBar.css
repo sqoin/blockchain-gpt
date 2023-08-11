@@ -89,6 +89,6 @@ body{
 
 @media only screen and (max-width: 1200px) {
     .sidebar{
-        width: 400px;
+        width: 300px;
     }
 }

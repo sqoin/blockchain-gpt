@@ -31,9 +31,7 @@ const History: React.FC = () => {
 
 return (
     <div className='history-container'>
-        <div className='sidebar'>
             <SideBar remaining={20} disabled={false}/>
-        </div>
         <div className='history-items'>
           <h4>Your latest inputs</h4>
             {inputHistory.map((input, index) => (
