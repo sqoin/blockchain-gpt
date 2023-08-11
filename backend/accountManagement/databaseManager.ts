@@ -9,7 +9,6 @@ async function insertData(data: IRegister) {
     }
 
     data.creation_date = new Date();
-
     const insertResult = await Register.create(data);
     console.log('Inserted document:', insertResult);
   } catch (error) {

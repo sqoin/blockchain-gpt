@@ -45,18 +45,7 @@ router.post('/saveUserId', async (req: Request, res: Response) => {
     } catch (error) {
       console.error('Error fetching ThirdPartyEmailPassword.getUserById:', error);
     }
-    userEmail = userInfo?.email || "";
-    console.log("userEmail is: " + userEmail);
-    ID_user = userId;
-    console.log('User information: ', userInfo);
-
-    const dataToInsert: IRegister = {
-      creation_date: new Date(), ID: userId, name: '', lastName: '', email: userEmail, expiration_date: new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000),
-      account_status: 'freeAccount', telegram_user_name: ''
-    };
-    await insertData(dataToInsert);
-
-    console.log('User ID:', userId, "name: ", name, "last name: ", lastName);
+    console.log("userInfo are: ",userInfo?.thirdParty?.id)
 
     if (userInfo?.thirdParty?.id === 'github') {
       const url = 'https://api.github.com/user/' + userInfo?.thirdParty?.userId;
@@ -72,6 +61,18 @@ router.post('/saveUserId', async (req: Request, res: Response) => {
     else {
       githubaccount = 'unavailable';
     }
+    
+    userEmail = userInfo?.email || "";
+    console.log("userEmail is: " + userEmail);
+    ID_user = userId;
+    console.log('User information: ', userInfo);
+
+    const dataToInsert: IRegister = {
+      creation_date: new Date(), ID: userId, name: '', lastName: '', email: userEmail, expiration_date: new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000),
+      account_status: 'freeAccount', telegram_user_name: '', github_account: githubaccount
+    };
+    await insertData(dataToInsert);
+    
 
     return res.sendStatus(200);
   } catch (error) {
@@ -83,7 +84,7 @@ router.post('/saveUserId', async (req: Request, res: Response) => {
 router.get('/getUserById/:id', async (req: Request, res: Response) => {
   try {
     const userId: string = req.params.id;
-    console.log(userId);
+    console.log("found user: ",userId);
     const user = await Register.findOne({ ID: userId });
 
     if (!user) {
@@ -102,7 +103,6 @@ router.put('/updateUser', async (req: Request, res: Response) => {
   try {
 
     const userId = req.body.userId;
-    //search method here
     const user = await Register.findOne({ ID: userId });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });

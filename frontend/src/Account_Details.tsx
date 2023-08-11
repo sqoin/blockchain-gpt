@@ -16,6 +16,7 @@ interface IUser {
   email: string;
   account_status: string;
   telegram_user_name: string;
+  github_account: string;
 }
 
 const AccountDetails: React.FC<any> = ({ userId }) => {
@@ -66,8 +67,21 @@ const AccountDetails: React.FC<any> = ({ userId }) => {
 
   const getUserById = async (userId: any): Promise<IUser | null> => {
     try {
-      const response = await axios.get(`${ACCOUNT_MANAGEMENT}/api/getUserById/${userId}`);
-      return response.data;
+      let url = ACCOUNT_MANAGEMENT+'/api/getUserById/'+userId;
+      const response = await axios.get(url);
+      console.log(response.data)
+      
+      return {
+        ID: response.data.ID,
+        creation_date: response.data.creation_date,
+        expiration_date: response.data.expiration_date,
+        name: response.data.name,
+        lastName: response.data.lastName,
+        email: response.data.email,
+        account_status: response.data.account_status,
+        telegram_user_name:response.data.telegram_user_name,
+        github_account: response.data.github_account
+      }
     } catch (error) {
       console.error('Error fetching user by ID:', error);
       return null;
@@ -75,11 +89,10 @@ const AccountDetails: React.FC<any> = ({ userId }) => {
   };
 
   const fetchUser = async () => {
+    console.log("fetching user by the id: ",userId)
     const fetchedUser = await getUserById(userId);
     if (fetchedUser) {
       setUser(fetchedUser);
-      setName(fetchedUser.name);
-      setLastName(fetchedUser.lastName);
     }
   };
 
@@ -208,8 +221,8 @@ const AccountDetails: React.FC<any> = ({ userId }) => {
                   <div className="form-group">
                     <label htmlFor="githubAccount">Github Account</label>
                     <div className="account-links-container">
-                      <a href={userInfo.githubAccount} className="account-link github-account-link">
-                        {userInfo.githubAccount}
+                      <a href={user?.github_account} className="account-link github-account-link">
+                        {user?.github_account}
                       </a>
                     </div>
                   </div>
