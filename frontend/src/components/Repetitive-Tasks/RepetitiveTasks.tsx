@@ -12,13 +12,16 @@ interface Task {
     status: 'stopped' | '';
 }
 
+
 const RepetitiveTasks: React.FC = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
     const sessionContext = useSessionContext();
     const [userId, setUserId] = useState("");
+    const [seconds, setSeconds] = useState(0);
+    const [taskStatus, setTaskStatus] = useState('');
 
 
-    const fetchTasksByUserId = async () => {
+   const fetchTasksByUserId = async () => {
         if (sessionContext.loading === true) {
             return null;
         }
@@ -27,21 +30,23 @@ const RepetitiveTasks: React.FC = () => {
         try {
             const response = await axios.get(`${ACCOUNT_MANAGEMENT}/api/tasks/${sessionContext.userId}`);
             setTasks(response.data);
+            // Extract the status from tasks and store it in a variable
+        if (response.data.length > 0) {
+            const taskStatus = response.data[0].status;
+            // Now you can use 'taskStatus' variable as needed
+        }
         } catch (error) {
             console.error('Error fetching tasks:', error);
         }
     }
     useEffect(() => {
         fetchTasksByUserId();
+
     }, [userId])
 
     const convertMillisecondsToMinutes = (milliseconds: number): number => {
         return Math.floor(milliseconds / 60000);
       };
-
-    
-    
-   
 
     const updateTaskStopped = async (taskId: any)  => {
       try {
@@ -60,12 +65,15 @@ const RepetitiveTasks: React.FC = () => {
         }
       };
       
+
       const handleUpdateTask = async (taskId: any) => {
         await updateTaskStopped(taskId);
         fetchTasksByUserId()
 
       };
-
+    
+    
+    
      
     return (
         <div className='repetitiveTasks'>
@@ -95,10 +103,10 @@ const RepetitiveTasks: React.FC = () => {
                                     {convertMillisecondsToMinutes(task.duration)} min
                                 </td>
                                 <td>
-                              <span className="label1">{task.status}</span>
+                                <span className="label1">{task.status}</span>
                                 
                                 {task.status === '' && (
-                                    <button className="button" onClick={() => handleUpdateTask(task._id)}>
+                                    <button onClick={() => { handleUpdateTask(task._id); }} className="button">
                                     Stop
                                     </button>
                                    

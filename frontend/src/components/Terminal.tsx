@@ -95,6 +95,15 @@ const Terminal: React.FC<{ idUser: string }> = ({ idUser }:any) => {
   const userId = id; 
   let userRequestCount: Map<string, number> = new Map();
 
+interface Task {
+    _id: string;
+    userId: string;
+    task: string;
+    duration: number;
+    status: 'stopped' | '';
+}
+
+  const [tasks, setTasks] = useState<String[]>([]);
 
 
 
@@ -611,14 +620,12 @@ function addInputToLocalStorage(inputValue: string): void {
 
 ///////////////////////////
   const userCommand1 = "get publickey every 5min";
-  const userCommand2 = "get balance every 5min";
+  const userCommand2 = "get solana balance every 5min";
   const userCommand3="get network information every 5min"
   const userCommand4="get bitcoin price every 5min"
   const userCommand5="get bitcoin total volume every 5min"
-  const userCommand6="  get bitcoin MarketCap every 5min"
+  const userCommand6="get bitcoin MarketCap every 5min"
 
-
-    
   const fetchDataCondition = async () => {
     if (sessionContext.loading === true) {
         return null;
@@ -628,46 +635,45 @@ function addInputToLocalStorage(inputValue: string): void {
 
     try {
         const response = await axios.get(`${ACCOUNT_MANAGEMENT}/api/tasksvalid/${userId}`);
-        //setTasksc(tasksData);
-        return response;
+        const tasksData: Task[] = response.data; 
+    
+        const taskDescriptions = tasksData.map(task => task.task?.toLocaleLowerCase().replace(/\s/g, ''));
+        console.log(taskDescriptions);
+        setTasks(taskDescriptions);
+
+        return taskDescriptions;
       } catch (error) {
         console.error('Error fetching tasks:', error);
       }
     };
+ 
 
   useEffect(() => {
-    // Vérifier si la commande a été précédemment entrée dans le localStorage
     checkUserCommand();
+    fetchDataCondition();
   }, []); // Exécutez cette vérification une seule fois au chargement de la page
 
-  const getChatIdFromTelegram = async () => {
-    try {
-      const response = await axios.get('https://api.telegram.org/bot6468293397:AAEZk7NM3GHSnlRjvzg_t8zVxD0iM1Ba1UM/getUpdates'); // Replace with your bot token
-      const chatId = response.data.result[0]?.message?.chat?.id;
-      return chatId;
-    } catch (error) {
-      console.error('Error fetching chat ID from Telegram:', error);
-      return null;
-    }
-  };     
+     
   
-      
+ 
 
   const checkUserCommand = async() => {
+   
+      const storedCommand = await fetchDataCondition()|| [];
+      console.log("storedCommand",storedCommand)
 
-    //const storedCommand = localStorage.getItem('userCommand');
-   // const allInputs = JSON.parse(storedCommand || "[]");
 
-   const storedCommand = await fetchDataCondition() || [];
-   console.log("storedCommand",storedCommand)
-    if (Array.isArray(storedCommand) && storedCommand.includes(userCommand1)) {
+    if ( storedCommand.includes(userCommand1.toLocaleLowerCase().replace(/\s/g, ''))) {
       getAndDisplayPublicKey();
-      console.log("hello from pub")
-    } else if (Array.isArray(storedCommand) && storedCommand.includes(userCommand2)) {
+    } 
+    if( storedCommand.includes(userCommand2.toLocaleLowerCase().replace(/\s/g, ''))) {
       fetchBalanceFromMetaMask();
-    } else if (Array.isArray(storedCommand) && storedCommand.includes(userCommand3)) {
+    } 
+    
+    if (storedCommand.includes(userCommand3.toLocaleLowerCase().replace(/\s/g, ''))) {
       getNetworkInfoEvery5Minutes();
-    }else if (Array.isArray(storedCommand) && storedCommand.includes(userCommand4)) {
+    }
+    if ( storedCommand.includes(userCommand4.toLocaleLowerCase().replace(/\s/g, ''))) {
       while (true) {
         const price = await _getCryptoCurrencyQuote("bitcoin", "price");
         handleOutput(`Bitcoin Price: ${price}`);
@@ -676,14 +682,15 @@ function addInputToLocalStorage(inputValue: string): void {
         await sleep(5 * 60 * 1000); // Attendre 5 minutes
       }
     } 
-    else if (Array.isArray(storedCommand) && storedCommand.includes(userCommand5)){
+    if (storedCommand.includes(userCommand5.toLocaleLowerCase().replace(/\s/g, ''))){
       while (true) {
         const volume = await _getCryptoCurrencyQuote("bitcoin", 'volume');
         handleOutput(`Bitcoin Total Volume: ${volume}`);
         await sleep(5 * 60 * 1000); // Attendre 5 minutes
       }
     }
-    else if (Array.isArray(storedCommand) && storedCommand.includes(userCommand6)){
+    if (storedCommand.includes(userCommand6.toLocaleLowerCase().replace(/\s/g, ''))){
+      console.log("666666666")
       while (true) {
         const marketCap = await _getCryptoCurrencyQuote("bitcoin", "marketCap");
         handleOutput(`Bitcoin MarketCap: ${marketCap}`);
@@ -722,11 +729,10 @@ function addInputToLocalStorage(inputValue: string): void {
       }
       
       
-    }, 5 * 60 * 1000); // 5 minutes en millisecondes
+    }, 5 * 60 * 10000); // 5 minutes en millisecondes
 
     return () => clearInterval(interval);
   }, []);
-
 
 /** handle some static user input */
  async function handleUserStaticInputRep(input:string) {
@@ -743,52 +749,11 @@ function addInputToLocalStorage(inputValue: string): void {
   else if (input === "get network information every 5min") {
     //addInputToLocalStorage(input);
     getNetworkInfoEvery5Minutes();
+  }
+}
+ async function handleUserInputQ(input:string) {
 
-   }
-  else if (input === userCommand3) {
-    addInputToLocalStorage(input);
-    const networkInfo = await _getNetworkInfo();
-    handleOutput(`network info: ${networkInfo?.chainId}  ${networkInfo?.networkName}  ${networkInfo?.networkId}`);
-  }
-  else if (input === userCommand1){
-    addInputToLocalStorage(input);
-    const pk = await getAndDisplayPublicKey();
-    handleOutput(` PublicKey: ${pk} `);
-  
-  } else if (input === userCommand2) {
-    addInputToLocalStorage(input);
-    const bl = await fetchBalanceFromMetaMask();
-    handleOutput(` Blance: ${bl} `);
-  }
-
-  else if (input === "get bitcoin price every 5min") {
-    //addInputToLocalStorage(input);
-    while (true) {
-      const price = await _getCryptoCurrencyQuote("bitcoin", "price");
-      handleOutput(`Bitcoin Price: ${price}`);
-      console.log('Bitcoin Price: ',price);
-
-      await sleep(5 * 60 * 1000); // Attendre 5 minutes
-    }
-  }
-
-  else if (input === "get bitcoin total volume every 5min" ) {
-    addInputToLocalStorage(input);
-    while (true) {
-      const volume = await _getCryptoCurrencyQuote("bitcoin", 'volume');
-      handleOutput(`Bitcoin Total Volume: ${volume}`);
-      await sleep(5 * 60 * 1000); // Attendre 5 minutes
-    }
-  }
-  else if (input === "get bitcoin MarketCap every 5min") {
-    addInputToLocalStorage(input);
-    while (true) {
-      const marketCap = await _getCryptoCurrencyQuote("bitcoin", "marketCap");
-      handleOutput(`Bitcoin MarketCap: ${marketCap}`);
-      await sleep(5 * 60 * 1000); // Attendre 5 minutes
-    }
-  }
-  else if (input === "What is Bitcoin") {
+  if (input === "What is Bitcoin") {
 
     handleOutput(`Bitcoin is a decentralized cryptocurrency based on blockchain technology. It is a form of digital currency that enables peer-to-peer transactions without the need for a central authority such as a bank.`);
   }
@@ -1109,10 +1074,10 @@ function addInputToLocalStorage(inputValue: string): void {
         try {
           axios.post(`${ACCOUNT_MANAGEMENT}/api/saveInput`, { userId, input: input })
             .then(() => {
-              setInputHistory(prevInputHistory => [...prevInputHistory, input]);
+              setInputHistory((prevInputHistory:any) => [...prevInputHistory, input]);
               setInput('');
             })
-            .catch(error => {
+            .catch((error:any) => {
               console.error('Error saving input:', error);
             });
           let result;
@@ -1157,7 +1122,8 @@ function addInputToLocalStorage(inputValue: string): void {
               {
 
                 try {
-                  let res = await handleUserStaticInputRep(input);
+                  let res :any = await handleUserStaticInputRep(input);
+                  res = await handleUserInputQ(input);
                   if(res){
                     return;
                   }

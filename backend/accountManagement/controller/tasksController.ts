@@ -62,6 +62,7 @@ exports.updateTaskStopped = async (req: Request, res: Response) => {
 exports.getTasksWithNonZeroDuration = async (req: Request, res: Response) => {
   try {
     const userId = req.params.userId;
+
     console.log(userId);
     const tasks = await TaskModel.find({userId, duration: { $ne: 0 }  });
     res.status(200).json(tasks);
