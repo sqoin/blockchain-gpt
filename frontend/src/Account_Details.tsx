@@ -78,6 +78,8 @@ const AccountDetails: React.FC<any> = ({ userId }) => {
     const fetchedUser = await getUserById(userId);
     if (fetchedUser) {
       setUser(fetchedUser);
+      setName(fetchedUser.name);
+      setLastName(fetchedUser.lastName);
     }
   };
 
