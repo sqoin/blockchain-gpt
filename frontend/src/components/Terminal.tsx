@@ -29,6 +29,9 @@ import { useSessionContext } from "supertokens-auth-react/recipe/session";
 
 let id='';
 
+import Hamburger from 'hamburger-react'
+
+
 interface ILink {
   name: string;
   onClick: () => void;
@@ -59,7 +62,6 @@ interface Output {
 }
 
 const Terminal: React.FC<{ idUser: string }> = ({ idUser }:any) => {
-  const [isOpen, setOpen] = useState(false)
 
   const [questionCategory, setQuestionCategory] = useState<number | null>(null);
   const [showEye, setShowEye] = useState(false);
@@ -1398,25 +1400,35 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
     // window.open(SERVER_DOMAIN+"/accountdetails","_blank")
     history.push("/accountdetails");
   }
-    useEffect(() => {
-    const isMobile = window.innerWidth <= 768; 
-    setOpen(isMobile);
-    console.log("not a mobile")
-  }, []); 
+ 
+  
+    const [showSection, setShowSection] = useState(true);
+    const [isOpen, setOpen]=useState(false);
+  
+    const toggleSection = () => {
+      setShowSection(!showSection);
+    };
+ 
 
+    useEffect(() => {
+      const isMobile = window.innerWidth <= 768; 
+      setOpen(isMobile);
+      console.log("not a mobile")
+    }, []); 
 
   return (
+
+    
     <div className="terminal">
-      <SideBar remaining={remainingRequests} disabled={isOpen}  />
+      <SideBar remaining={remainingRequests} disabled={isOpen} />
       <div className="mobile-hamburger">
-  <Hamburger toggled={isOpen} toggle={setOpen} />
-</div>
+           <Hamburger toggled={isOpen} toggle={setOpen} />
+      </div>
 
       <div className="input-output">
-
         <div className="output-result">
           {output.map((line, index) => (
-            <CmdOutput oput={line} index={index} />
+            <CmdOutput oput={line} index={index} key={index} />
           ))}
         </div>
         <form onSubmit={handleInputSubmit} className="input-cmd">
@@ -1479,6 +1491,7 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
 
   )
 };
+
 
 export default Terminal;
 function setInputDisabled(arg0: boolean) {

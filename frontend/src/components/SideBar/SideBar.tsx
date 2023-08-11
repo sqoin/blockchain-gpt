@@ -14,8 +14,6 @@ import Hamburger from 'hamburger-react';
 const SideBar: React.FC<{ remaining: number , disabled: boolean}> = ({ remaining , disabled}) => {
 
 
-
-
   const [currentWindow, setCurrentWindow] = useState(window.location.pathname);
 
   
@@ -53,10 +51,11 @@ const SideBar: React.FC<{ remaining: number , disabled: boolean}> = ({ remaining
     setCurrentWindow("/")
   };
 
- if(disabled)
-{
-  return null;
-}
+  if (disabled){
+    return null;
+  }
+
+
   return (
     <div className="sidebar">
       <div className="chats">
