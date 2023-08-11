@@ -9,7 +9,7 @@ interface Task {
     userId: string;
     task: string;
     duration: number;
-    status: 'stopped' | '';
+    status: boolean;
 }
 
 
@@ -102,12 +102,18 @@ const RepetitiveTasks: React.FC = () => {
                                 <td >
                                     {convertMillisecondsToMinutes(task.duration)} min
                                 </td>
-                                <td>
-                                <span className="label1">{task.status}</span>
+                                <td className="button-column">
+                                {/* <span >{task.status}</span> */}
                                 
-                                {task.status === '' && (
-                                    <button onClick={() => { handleUpdateTask(task._id); }} className="button">
+                                {task.status === false&& (
+                                    <button onClick={() => { handleUpdateTask(task._id); }} className=" btn btn-Stop ">
                                     Stop
+                                    </button>
+                                   
+                                )}
+                                 {task.status === true && (
+                                    <button onClick={() => { handleUpdateTask(task._id); }} className="btn  btn-Restart">
+                                    Restart
                                     </button>
                                    
                                 )}

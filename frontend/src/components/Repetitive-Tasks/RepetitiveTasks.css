@@ -45,61 +45,43 @@
     color: #fff;
     border-bottom: solid 1px rgba(255,255,255,0.1);
   }
-    
-  /* Styles for the label */
-  .label {
-    display: block;
-    font-size: 16px;
-    margin-bottom: 8px;
-    color: #333;
+   
+  .button-column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espacement entre les boutons */
+    width: 200px; /* Largeur fixe pour la colonne */
+
   }
-
-
-  .button {
-    background-color: #6600ff;
-    color: #fff;
-    padding: 10px 20px;
+  
+  .btn {
+    flex: 1; /* Distribue l'espace vertical de manière égale entre les boutons */
+    padding: 12px 20px;
+    font-size: 18px;
+    font-weight: 500;
     border: none;
     border-radius: 4px;
-    font-size: 16px;
+    color: #fff;
     cursor: pointer;
-  
-    /* Add any additional styles you want */
-    &:hover {
-      background-color: #3b056b;
-    }
-  
-    &:focus {
-      outline: none;
-      box-shadow: 0 0 0 2px #007bff;
-    }
+    transition: background-color 0.3s, color 0.3s;
+    box-sizing: border-box;
   }
 
-/* Button style */
-.btn {
-  display: inline-block;
-  padding: 12px 20px;
-  font-size: 18px;
-  font-weight: 500;
-  text-transform: uppercase;
-  background-color: #fff;
-  color: #453750;
-  border: 2px solid #fff;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
+  .btn-Restart {   
+  background-color: #1a8851;
+  }
+  
+  .btn-Restart:hover {
+    background-color: #00994d;
+  }
+
+ .btn-Stop {
+  background-color: #951e00;
 }
 
-.btn:hover {
-  background-color: #453750;
-  color: #fff;
-}
+.btn-Stop:hover {
+  background-color: #b32400;
+}   
 
-/* Label style */
-.label1 {
-  font-size: 16px;
-  font-weight: 500;
-  color: #fff;
-  margin-bottom: 8px;
-  display: block;
-}
+  
+  
