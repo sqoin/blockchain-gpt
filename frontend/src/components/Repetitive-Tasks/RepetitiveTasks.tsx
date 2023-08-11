@@ -16,7 +16,8 @@ const RepetitiveTasks: React.FC = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
     const sessionContext = useSessionContext();
     const [userId, setUserId] = useState("");
-    
+
+
     const fetchTasksByUserId = async () => {
         if (sessionContext.loading === true) {
             return null;
@@ -39,6 +40,9 @@ const RepetitiveTasks: React.FC = () => {
       };
 
     
+    
+   
+
     const updateTaskStopped = async (taskId: any)  => {
       try {
         
@@ -61,6 +65,7 @@ const RepetitiveTasks: React.FC = () => {
         fetchTasksByUserId()
 
       };
+
      
     return (
         <div className='repetitiveTasks'>
@@ -108,7 +113,6 @@ const RepetitiveTasks: React.FC = () => {
 
                
             </div>
-            
         </div>
 
     );

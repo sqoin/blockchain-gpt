@@ -29,8 +29,6 @@ import { useSessionContext } from "supertokens-auth-react/recipe/session";
 
 let id='';
 
-import Hamburger from 'hamburger-react'
-
 
 interface ILink {
   name: string;
@@ -81,6 +79,7 @@ const Terminal: React.FC<{ idUser: string }> = ({ idUser }:any) => {
   );
   const [solanaWallet, setSolanaWallet]: any = useState(undefined);
   const [rpcUrlInitial, setRpcUrlInitial] = useState<string>("https://test.novafi.xyz/blockchainnode2");
+  const sessionContext = useSessionContext();
   const history = useHistory();
   // Set the value of `isUserPaid` based on some condition
   const isUserPaid = true; // Example value, replace with your own logic
@@ -608,29 +607,36 @@ function addInputToLocalStorage(inputValue: string): void {
 }
 
 
-//pour récupérer tous les inputs stockés dans le localStorage
-const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
 //console.log(allInputs);
 
 ///////////////////////////
-  const userCommand1 = "donner moi le publickey refrech chaque 5min";
-  const userCommand2 = "donner moi la balance chaque 5min";
-  const userCommand3="get network info"
-  const userCommand4= "";
-  useEffect(() => {
-    // Vérifier si la commande a été précédemment entrée dans le localStorage
-    const checkUserCommand = () => {
-      const storedCommand = localStorage.getItem('userCommand');
+  const userCommand1 = "get publickey every 5min";
+  const userCommand2 = "get balance every 5min";
+  const userCommand3="get network information every 5min"
+  const userCommand4="get bitcoin price every 5min"
+  const userCommand5="get bitcoin total volume every 5min"
+  const userCommand6="  get bitcoin MarketCap every 5min"
 
-      if (storedCommand === userCommand1) {
-        getAndDisplayPublicKey();
-      } else if (storedCommand === userCommand2) {
-        fetchBalanceFromMetaMask();
-      }else if (storedCommand === userCommand3) {
-        getNetworkInfoEvery5Minutes();
+
+    
+  const fetchDataCondition = async () => {
+    if (sessionContext.loading === true) {
+        return null;
+    }
+    console.log(sessionContext?.userId)
+    let userId = sessionContext?.userId.toString()
+
+    try {
+        const response = await axios.get(`${ACCOUNT_MANAGEMENT}/api/tasksvalid/${userId}`);
+        //setTasksc(tasksData);
+        return response;
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
       }
     };
 
+  useEffect(() => {
+    // Vérifier si la commande a été précédemment entrée dans le localStorage
     checkUserCommand();
   }, []); // Exécutez cette vérification une seule fois au chargement de la page
 
@@ -646,6 +652,47 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
   };     
   
       
+
+  const checkUserCommand = async() => {
+
+    //const storedCommand = localStorage.getItem('userCommand');
+   // const allInputs = JSON.parse(storedCommand || "[]");
+
+   const storedCommand = await fetchDataCondition() || [];
+   console.log("storedCommand",storedCommand)
+    if (Array.isArray(storedCommand) && storedCommand.includes(userCommand1)) {
+      getAndDisplayPublicKey();
+      console.log("hello from pub")
+    } else if (Array.isArray(storedCommand) && storedCommand.includes(userCommand2)) {
+      fetchBalanceFromMetaMask();
+    } else if (Array.isArray(storedCommand) && storedCommand.includes(userCommand3)) {
+      getNetworkInfoEvery5Minutes();
+    }else if (Array.isArray(storedCommand) && storedCommand.includes(userCommand4)) {
+      while (true) {
+        const price = await _getCryptoCurrencyQuote("bitcoin", "price");
+        handleOutput(`Bitcoin Price: ${price}`);
+        console.log('Bitcoin Price: ',price);
+  
+        await sleep(5 * 60 * 1000); // Attendre 5 minutes
+      }
+    } 
+    else if (Array.isArray(storedCommand) && storedCommand.includes(userCommand5)){
+      while (true) {
+        const volume = await _getCryptoCurrencyQuote("bitcoin", 'volume');
+        handleOutput(`Bitcoin Total Volume: ${volume}`);
+        await sleep(5 * 60 * 1000); // Attendre 5 minutes
+      }
+    }
+    else if (Array.isArray(storedCommand) && storedCommand.includes(userCommand6)){
+      while (true) {
+        const marketCap = await _getCryptoCurrencyQuote("bitcoin", "marketCap");
+        handleOutput(`Bitcoin MarketCap: ${marketCap}`);
+        await sleep(5 * 60 * 1000); // Attendre 5 minutes
+      }
+    }
+  };
+
+
     const fetchData = async () => {
         const categoryNumber = await fetchQuestionCategory(input);
         setQuestionCategory(categoryNumber);
@@ -674,6 +721,7 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
         getNetworkInfoEvery5Minutes();
       }
       
+      
     }, 5 * 60 * 1000); // 5 minutes en millisecondes
 
     return () => clearInterval(interval);
@@ -683,17 +731,17 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
 /** handle some static user input */
  async function handleUserStaticInputRep(input:string) {
   if (input === "get publickey every 5 min") {
-    addInputToLocalStorage(input);
+    //addInputToLocalStorage(input);
     getAndDisplayPublicKey();
 
   }
-  else if (input === "get balance every 5 min") {
-    addInputToLocalStorage(input);
+  else if (input === "get balance every 5min") {
+   // addInputToLocalStorage(input);
     fetchBalanceFromMetaMask();
 
   } 
   else if (input === "get network information every 5min") {
-    addInputToLocalStorage(input);
+    //addInputToLocalStorage(input);
     getNetworkInfoEvery5Minutes();
 
    }
@@ -1337,7 +1385,7 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
     }
   };
   
-
+ 
 
   function parseTaskString(taskString: string): { duration: number; isRepetitiveTask: boolean } {
     // Initialize default values for the properties
