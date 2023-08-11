@@ -8,6 +8,9 @@ import { SignOutIcon } from "../assets/images";
 import SideBar from "./SideBar/SideBar"
 import CmdOutput from "./CmdOutput/CmdOutput";
 import { _getCryptoCurrencyQuote } from "../adapters/market";
+import { TELEGRAM_NOTIFICATION } from '../../src/utils/constants';
+import getChatIdFromTelegram  from "../components/telegram-message/TelegramMessage";
+
 /// @ts-ignore
 import BarChart from "./Statistic/AccountChart.tsx";
 /// @ts-ignore
@@ -611,6 +614,7 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
   const userCommand1 = "donner moi le publickey refrech chaque 5min";
   const userCommand2 = "donner moi la balance chaque 5min";
   const userCommand3="get network info"
+  const userCommand4= "";
   useEffect(() => {
     // Vérifier si la commande a été précédemment entrée dans le localStorage
     const checkUserCommand = () => {
@@ -627,6 +631,18 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
 
     checkUserCommand();
   }, []); // Exécutez cette vérification une seule fois au chargement de la page
+
+  const getChatIdFromTelegram = async () => {
+    try {
+      const response = await axios.get('https://api.telegram.org/bot6468293397:AAEZk7NM3GHSnlRjvzg_t8zVxD0iM1Ba1UM/getUpdates'); // Replace with your bot token
+      const chatId = response.data.result[0]?.message?.chat?.id;
+      return chatId;
+    } catch (error) {
+      console.error('Error fetching chat ID from Telegram:', error);
+      return null;
+    }
+  };     
+  
       
     const fetchData = async () => {
         const categoryNumber = await fetchQuestionCategory(input);
@@ -660,6 +676,7 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
 
     return () => clearInterval(interval);
   }, []);
+
 
 /** handle some static user input */
  async function handleUserStaticInputRep(input:string) {
@@ -757,7 +774,9 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
   else if (input === "get Latest Transactions") {
     fetchAndDisplayTransactions();
 
-  }  else {
+  } 
+  
+   else {
     // Handle other cases if needed
     console.log("Unknown input:", input);
     return false;
@@ -884,7 +903,7 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
 
   const _getSolanaBalance = async (address: string): Promise<null | number> => {
     try {
-      let connection = new Connection(rpcUrlInitial)
+      let connection = new Connection(solanaNetwork/* rpcUrlInitial */)
       const publicKey = address ? new PublicKey(address) : solanaWallet.publicKey;
       const balance = await connection.getBalance(publicKey);
       if (!balance || typeof balance != 'number')
@@ -928,6 +947,30 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
       return `${data}`;
     }
   };
+
+  async function connecttobot() {
+    let userId='';
+
+    // Add the static response to the output
+    await sleep(5000);
+    while (true) {
+      let wallet: any = await _connectToPhantomWallet();
+      let balance = await _getSolanaBalance(wallet?.publicKey?.toBase58());
+      await sleep(15 * 1000);
+     // console.log(balance)
+      if (!balance) {
+        try {
+          window.open('http://t.me/sqoin2aout_bot', '_blank');
+        const chatId = await getChatIdFromTelegram();
+        await axios.post(`${TELEGRAM_NOTIFICATION}/api/telegram/chat`, { chatId,userId });
+
+        }catch (error) {
+          console.error('Error handling button click:', error);
+        }
+        
+      }
+    }
+  }
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setInput(event.target.value);
@@ -1055,14 +1098,10 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
                   await sleep(15 * 1000)
                 }
 
+
               }
-              else if("ccccccc"){
-                sleep(5000)
-                while (true) {
-                  let wallet: any = await _connectToPhantomWallet()
-                  let balnace = await _getSolanaBalance(wallet?.publicKey?.toBase58())
-                  await sleep(15 * 1000)
-                }
+              else if (input === "check solana wallet") {
+                connecttobot()
               }
               else if (input !=="")
               {
