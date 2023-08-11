@@ -8,7 +8,7 @@ interface IRegister{
     lastName: string
     email: string
     account_status: string
-    
+    telegram_user_name :string
   }
   interface RegisterModelInterface extends mongoose.Model<RegistertDoc> {
     build(attr: IRegister):RegistertDoc
@@ -21,6 +21,7 @@ interface IRegister{
     lastName: string
     email :string
     account_status: string
+    telegram_user_name :string
   }
 const registerSchema = new mongoose.Schema({
     ID: {
@@ -50,6 +51,10 @@ const registerSchema = new mongoose.Schema({
     account_status: {
       type: String,
       required: false
+    },
+    telegram_user_name :{
+      type:String,
+      required:false
     }
   })
   registerSchema.statics.build = (attr: IRegister) => {

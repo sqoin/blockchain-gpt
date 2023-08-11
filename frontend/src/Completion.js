@@ -3,6 +3,7 @@ import "./completion.css";
 import tick  from "./assets/verifier.png"
 import { useSessionContext } from 'supertokens-auth-react/recipe/session';
 import axios from 'axios';
+import { ACCOUNT_MANAGEMENT } from './utils/constants';
 function Completion(props) {
 
   const session=useSessionContext();
@@ -23,7 +24,7 @@ function Completion(props) {
 
    try {
 
-    const res= await axios.post('http://localhost:3003/api/updateUserStatus',{ id });
+    const res= await axios.post(`${ACCOUNT_MANAGEMENT}/api/updateUserStatus`,{ id });
    } catch (error) {
     console.log(error);    
    }

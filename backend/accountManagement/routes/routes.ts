@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express';
 import { Register, IRegister } from '../models/model';
-import {insertData} from "../databaseManager";
+import { insertData } from "../databaseManager";
 import ThirdPartyEmailPassword from "supertokens-node/recipe/thirdpartyemailpassword";
 import SuperTokens from 'supertokens-node';
 import axios from 'axios';
@@ -10,13 +10,14 @@ import Input from '../models/input'; // Import the Input model
 
 let tasksController = require("../controller/tasksController");
 const router: Router = Router();
-const config=require('../config')
-let ID_user='';
-let userEmail='';
-let githubaccount='';
-let name='';
-let lastName='';
-let email ='';
+const config = require('../config')
+let ID_user = '';
+let userEmail = '';
+let githubaccount = '';
+let name = '';
+let lastName = '';
+let telegramUserName = '';
+let email = '';
 SuperTokens.init(config.supertokensConfig);
 
 router.use(bodyParser.json())
@@ -29,32 +30,34 @@ router.post('/saveUserId', async (req: Request, res: Response) => {
   try {
     const existingUser = await Register.findOne({ ID: userId });
     if (existingUser) {
-      console.log("existing user: "+JSON.stringify(existingUser))
-      name=existingUser.name;
-      lastName= existingUser.lastName;
+      console.log("existing user: " + JSON.stringify(existingUser))
+      name = existingUser.name;
+      lastName = existingUser.lastName;
       const expiration_date = existingUser.expiration_date?.getTime();
       const currentDate = new Date().getTime();
-            if (currentDate >= expiration_date) {
+      if (currentDate >= expiration_date) {
         return res.status(200).json({ message: "Free trial expired" });
       }
     }
     let userInfo;
-    try{
-      userInfo= await ThirdPartyEmailPassword.getUserById(userId);
+    try {
+      userInfo = await ThirdPartyEmailPassword.getUserById(userId);
     } catch (error) {
       console.error('Error fetching ThirdPartyEmailPassword.getUserById:', error);
     }
-    userEmail=userInfo?.email||"";
-    console.log("userEmail is: "+userEmail);
-    ID_user=userId;
-    console.log('User information: ',userInfo);
+    userEmail = userInfo?.email || "";
+    console.log("userEmail is: " + userEmail);
+    ID_user = userId;
+    console.log('User information: ', userInfo);
 
-    const dataToInsert: IRegister = { creation_date: new Date(), ID: userId , name:'',lastName: '',email: userEmail,   expiration_date: new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000), 
-    account_status: 'freeAccount'};
+    const dataToInsert: IRegister = {
+      creation_date: new Date(), ID: userId, name: '', lastName: '', email: userEmail, expiration_date: new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000),
+      account_status: 'freeAccount', telegram_user_name: ''
+    };
     await insertData(dataToInsert);
 
-    console.log('User ID:', userId, "name: ",name, "last name: ", lastName);
-    
+    console.log('User ID:', userId, "name: ", name, "last name: ", lastName);
+
     if (userInfo?.thirdParty?.id === 'github') {
       const url = 'https://api.github.com/user/' + userInfo?.thirdParty?.userId;
       try {
@@ -66,8 +69,8 @@ router.post('/saveUserId', async (req: Request, res: Response) => {
         console.error('Error fetching GitHub URL:', error);
       }
     }
-    else{
-      githubaccount='unavailable';
+    else {
+      githubaccount = 'unavailable';
     }
 
     return res.sendStatus(200);
@@ -76,48 +79,42 @@ router.post('/saveUserId', async (req: Request, res: Response) => {
     return res.sendStatus(500);
   }
 });
-router.post('/getUserInfo', async (req: Request, res: Response) => {
-  const ID_user=req.body;
-  console.log("connected user id is: ",ID_user);
-    try {
-    const userInfo = {
-      userId: ID_user,
-      email: userEmail, 
-      githubAccount:githubaccount,
-      userName: name,
-      userLastName: lastName
-    };
-  console.log("informations: "+JSON.stringify(userInfo));
-    // Return the user information as a response
-    return res.json(userInfo);
+
+router.get('/getUserById/:id', async (req: Request, res: Response) => {
+  try {
+    const userId: string = req.params.id;
+    console.log(userId);
+    const user = await Register.findOne({ ID: userId });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json(user);
   } catch (error) {
-    console.error('Error fetching user information:', error);
-    return res.sendStatus(500);
+    res.status(500).json({ message: "Failed to fetch user by ID" });
   }
 });
 
-router.put('/updateUser',async (req: Request, res: Response) => {
+
+router.put('/updateUser', async (req: Request, res: Response) => {
 
   try {
 
-      const userId= req.body.userId;
-      //search method here
+    const userId = req.body.userId;
+    //search method here
     const user = await Register.findOne({ ID: userId });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
     user.name = req.body.userName;
-    user.lastName= req.body.userLastName;
-
-
-
-    //update method here
+    user.lastName = req.body.userLastName;
+    user.telegram_user_name = req.body.telegram_user_name;
     await user.save();
-    }
-
-
-   catch (error) {
+    return res.status(200).json({ message: 'User updated successfully' });
+  }
+  catch (error) {
     console.error('Error Updating user:', error);
     return res.sendStatus(500);
   }
@@ -137,7 +134,7 @@ router.post('/updateUserStatus', async (req: Request, res: Response) => {
     expirationDate.setMonth(expirationDate.getMonth() + 2);
 
     user.expiration_date = expirationDate;
-    user.account_status= "PaidAccount";
+    user.account_status = "PaidAccount";
 
     await user.save();
 
@@ -186,10 +183,8 @@ router.get('/tasks/:userId', tasksController.getTasksByUserId);
 router.put('/tasks/stopTask', tasksController.updateTaskStopped);
 
 
-
-// Backend route to get tasks with non-null duration
 router.get('/tasksvalid/:userId',tasksController.getTasksWithNonZeroDuration);
 
 
 
-module.exports= router;
+module.exports = router;
