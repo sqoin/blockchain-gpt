@@ -7,6 +7,7 @@ import { _connectToMetaMask, _getBalance } from "../../adapters/ethereum_fn";
 import Web3 from "web3";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import axios from "axios";
+import { ACCOUNT_MANAGEMENT } from "../../utils/constants";
 const PayWithMetamask: React.FC = () => {
   const session = useSessionContext();
   let id='';
@@ -73,7 +74,7 @@ const PayWithMetamask: React.FC = () => {
               console.log("Transaction successful!");
               if (!postExecuted) {
                 try {
-                  const res = await axios.post('http://localhost:3003/api/updateUserStatus', { id });
+                  const res = await axios.post(`${ACCOUNT_MANAGEMENT}/api/updateUserStatus`, { id });
                   setPostExecuted(true); // Set the flag to true after the post is executed
                 } catch (error) {
                   console.log(error);

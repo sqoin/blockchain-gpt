@@ -17,7 +17,7 @@ if (!session.loading)
   const toMessage = async() => {
     try {
       // Call the backend API to send hello messages to all chats
-      await axios.post('http://localhost:3006/sendHelloToAll');
+      await axios.post(`${TELEGRAM_NOTIFICATION}/sendHelloToAll`);
       console.log('Hello messages sent to all chats.');
     } catch (error) {
       console.error('Error sending hello messages:', error);

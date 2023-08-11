@@ -7,6 +7,7 @@ import { _connectToPhantomWallet, _disconnectFromPhantomWallet, _getSolanaBalanc
 import './SendSol.css';
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import axios from 'axios';
+import { ACCOUNT_MANAGEMENT } from '../../utils/constants';
 interface Info {
   amount: number;
   address: any;
@@ -72,7 +73,7 @@ const SendSol: React.FC = () => {
       transaction = await _sendSolana(info.address, wallet, amount)
       if (!postExecuted) {
         try {
-          const res = await axios.post('http://localhost:3003/api/updateUserStatus', { id });
+          const res = await axios.post(`${ACCOUNT_MANAGEMENT}/api/updateUserStatus`, { id });
           setPostExecuted(true); 
         } catch (error) {
           console.log(error);

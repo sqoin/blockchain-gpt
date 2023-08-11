@@ -3,7 +3,7 @@ import './Account_Details.css';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { useSessionContext } from 'supertokens-auth-react/recipe/session';
-import { ACCOUNT_MANAGEMENT } from './utils/constants';
+import { ACCOUNT_MANAGEMENT, TELEGRAM_NOTIFICATION } from './utils/constants';
 import './Account_Details.css';
 import { FaTelegram } from "react-icons/fa"
 
@@ -129,7 +129,7 @@ const AccountDetails: React.FC<any> = ({ userId }) => {
             telegramusername = await getUsernameFromTelegram(chatId);
           }
           UpdateUserInformation(userId, Name, lastName, telegramusername);
-          await axios.post('http://localhost:3006/api/telegram/chat', { chatId, userId });
+          await axios.post(`${TELEGRAM_NOTIFICATION}/api/telegram/chat` , { chatId, userId });
           console.log('Button clicked, chat ID collected, and sent to the backend.');
         } catch (error: any) {
           console.error('Error handling button click:', error);
@@ -137,17 +137,17 @@ const AccountDetails: React.FC<any> = ({ userId }) => {
         }
       })();
     }
-    setIsToggled((prevIsToggled) => !prevIsToggled);
+    setIsToggled((prevIsToggled:any) => !prevIsToggled);
   };
 
 
   useEffect(() => {
     if (userId) {
-      axios.get(`http://localhost:3006/api/telegram/chat/${userId}`)
-        .then(response => {
+      axios.get(`${TELEGRAM_NOTIFICATION}/api/telegram/chat/${userId}`)
+        .then((response:any) => {
           setIsToggled(response.data.length > 0);
         })
-        .catch(error => {
+        .catch((error:any) => {
           console.error('Error fetching data:', error);
         });
     }
