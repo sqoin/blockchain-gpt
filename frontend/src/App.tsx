@@ -2,7 +2,7 @@ import "./App.css";
 import "./payment.css";
 import SuperTokens, { SuperTokensWrapper, getSuperTokensRoutesForReactRouterDom } from "supertokens-auth-react";
 import { SessionAuth } from "supertokens-auth-react/recipe/session";
-import { Switch, BrowserRouter as Router, Route } from "react-router-dom";
+import { Switch, BrowserRouter as Router, Route, HashRouter } from "react-router-dom";
 import Home from "./Home";
 import { SuperTokensConfig } from "./config";
 import Tester from "./tester";
@@ -43,6 +43,7 @@ function App() {
                 
                 <Router>
                     <div className="fill">
+                    <HashRouter>
                         <Switch>
                             {/* This shows the login UI on "/auth" route */}
                             {getSuperTokensRoutesForReactRouterDom(require("react-router-dom"))} 
@@ -130,7 +131,7 @@ function App() {
 
                         
                         </Switch>
-
+                    </HashRouter>
                     </div>
                 </Router>
             </div>
