@@ -4,6 +4,20 @@ import { insertData } from "../databaseManager";
 import ThirdPartyEmailPassword from "supertokens-node/recipe/thirdpartyemailpassword";
 import SuperTokens from 'supertokens-node';
 import axios from 'axios';
+import multer from 'multer';
+import imageController from '../controller/imageController';
+
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  },
+});
+const upload = multer({ storage: storage });
+
 
 
 let tasksController = require("../controller/tasksController");
@@ -145,12 +159,12 @@ router.post('/tasks', tasksController.createTask);
 router.get('/tasks/:userId', tasksController.getTasksByUserId);
 
 router.put('/tasks/stopTask', tasksController.updateTaskStopped);
-
-
-
 // Backend route to get tasks with non-null duration
 router.get('/tasksvalid/:userId', tasksController.getTasksWithNonZeroDuration);
 
 
+
+router.post('/uploadimage', upload.single('image'), imageController.uploadImage);
+router.get('/getimage/:userId', imageController.getImagesByUser);
 
 module.exports = router;

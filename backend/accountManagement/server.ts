@@ -9,6 +9,7 @@ const port = 3003;
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use('/uploads', express.static('uploads'));
 app.use('/api', routes);
 
 app.listen(port, () => {
