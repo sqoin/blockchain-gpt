@@ -17,8 +17,6 @@ const RepetitiveTasks: React.FC = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
     const sessionContext = useSessionContext();
     const [userId, setUserId] = useState("");
-    const [seconds, setSeconds] = useState(0);
-    const [taskStatus, setTaskStatus] = useState('');
 
 
    const fetchTasksByUserId = async () => {
@@ -69,10 +67,19 @@ const RepetitiveTasks: React.FC = () => {
       const handleUpdateTask = async (taskId: any) => {
         await updateTaskStopped(taskId);
         fetchTasksByUserId()
-
       };
-    
-    
+      const handleDeleteTask = async (userId:any, taskId:any) => {
+        try {
+          const response = await axios.delete(`${ACCOUNT_MANAGEMENT}/api/tasks/${userId}/${taskId}`);
+          console.log(response.data); // Assuming you want to log the response data
+          fetchTasksByUserId(); // To refresh the task list
+        } catch (error) {
+          console.error('Error deleting task:', error);
+        }
+      };
+      
+      
+      
     
      
     return (
@@ -84,7 +91,8 @@ const RepetitiveTasks: React.FC = () => {
                         <tr>
                             <th>Task</th>
                             <th>Duration</th>
-                            <th>Status</th>
+                            <th>Status</th> 
+                            <th></th>
 
                         </tr>
                     </thead>
@@ -102,22 +110,27 @@ const RepetitiveTasks: React.FC = () => {
                                 <td >
                                     {convertMillisecondsToMinutes(task.duration)} min
                                 </td>
-                                <td className="button-column">
+                                <td >
                                 {/* <span >{task.status}</span> */}
                                 
                                 {task.status === false&& (
-                                    <button onClick={() => { handleUpdateTask(task._id); }} className=" btn btn-Stop ">
+                                    <button onClick={() => { handleUpdateTask(task._id); }} className=" common-button button-2">
                                     Stop
                                     </button>
                                    
                                 )}
                                  {task.status === true && (
-                                    <button onClick={() => { handleUpdateTask(task._id); }} className="btn  btn-Restart">
+                                    <button onClick={() => { handleUpdateTask(task._id); }} className="common-button button-3">
                                     Restart
                                     </button>
                                    
                                 )}
                                       
+                                </td>
+                                <td >
+                                <button onClick={() => { handleDeleteTask (task.userId, task._id); }} className="common-button button-1">
+                                    Delete
+                                    </button>
                                 </td>
                             </tr>
                         ))}

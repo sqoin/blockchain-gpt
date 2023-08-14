@@ -75,3 +75,21 @@ exports.getTasksWithNonZeroDuration = async (req: Request, res: Response) => {
   }
 
 };
+exports.deleteTask = async (req: Request, res: Response) => {
+  try {
+    const taskId = req.params.taskId;
+    const userId = req.params.userId;
+
+    // Find the task by its ID and user ID
+    const taskToDelete = await TaskModel.findOneAndDelete({ _id: taskId, userId });
+
+    if (!taskToDelete) {
+      return res.status(404).json({ message: "Task not found." });
+    }
+
+    res.status(200).json({ message: "Task deleted successfully." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to delete task." });
+  }
+};

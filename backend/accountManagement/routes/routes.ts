@@ -152,6 +152,7 @@ router.put('/tasks/stopTask', tasksController.updateTaskStopped);
 
 router.get('/tasksvalid/:userId',tasksController.getTasksWithNonZeroDuration);
 
+router.delete('/tasks/:userId/:taskId',tasksController.deleteTask);
 
 
 module.exports= router;
