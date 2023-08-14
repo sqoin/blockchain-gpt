@@ -26,3 +26,27 @@
     transform: translateY(60px);
     width: 1000px;
   } 
+
+  @media  (max-width: 768px) {
+    .pie-chart,
+    .radar-chart,
+    .line-chart,
+    .chart {
+      transform: translateY(60px); 
+    }
+  }
+  
+  @media  (max-width: 400px) {
+    .radar-chart,
+    .line-chart,
+    .chart {
+      transform: translateY(30px); 
+      width: 400px;
+    }
+  }
+
+  @media  (max-width: 400px) {
+    .pie-chart{
+      width: 200px;
+    }
+}
