@@ -1,37 +1,52 @@
 import { Request, Response } from 'express';
+import fs from 'fs';
 import Image from '../models/Image';
-
-interface ExtendedRequest extends Request {
-    file: any;
-}
 
 class ImageController {
     async uploadImage(req: Request, res: Response) {
         try {
-            if (!(req as ExtendedRequest).file) {
+            if (!req.file) {
                 return res.status(400).json({ message: 'No image provided' });
             }
 
             const userId = req.body.userId;
-            const name = (req as ExtendedRequest).file.originalname;
-            const path = (req as ExtendedRequest).file.path;
+            const name = req.file.originalname;
+            const imagePath = req.file.path;
 
-            const image = new Image({ userId, name, path });
+            // Read image file and convert to base64
+            const imageBuffer = fs.readFileSync(imagePath);
+            const base64Image = imageBuffer.toString('base64');
+
+            // Create or update image in MongoDB
+            let image = await Image.findOne({ userId });
+
+            if (!image) {
+                image = new Image({
+                    userId,
+                    name,
+                    data: base64Image,
+                });
+            } else {
+                image.name = name;
+                image.data = base64Image;
+            }
+
             const savedImage = await image.save();
-            // const imageUrl = `http://localhost:3003/${(req as ExtendedRequest).file.path}`;
-            // res.status(200).json({ message: 'Image uploaded successfully', imageUrl });
+
+            // Delete the temporary image file
+            fs.unlinkSync(imagePath);
+
             res.status(200).json(savedImage);
         } catch (error) {
-            console.error('Error uploading image', error);
-            res.status(500).json({ message: 'Error uploading image' });
+            console.error('Error storing image', error);
+            res.status(500).json({ message: 'Error storing image' });
         }
     }
 
     async getImagesByUser(req: Request, res: Response) {
         try {
             const userId = req.params.userId;
-            const images = await Image.find({ userId });
-
+            const images = await Image.findOne({ userId });
             res.status(200).json(images);
         } catch (error) {
             console.error('Error fetching images by user', error);

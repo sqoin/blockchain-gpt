@@ -1,10 +1,12 @@
-import React, { useState,useEffect  } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import "./ImageUpload.css"
 interface Image {
     _id: string;
+    userId: string;
     name: string;
-    path: string;
-  }
+    data: string;
+}
 const ImageUpload: React.FC = () => {
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -19,9 +21,8 @@ const ImageUpload: React.FC = () => {
         try {
             const response = await axios.get(`http://localhost:3003/api/getimage/${userId}`);
             setImage(response.data);
-            console.log('====================================');
-            console.log("image : ",image);
-            console.log('====================================');
+            console.log("image  : ", response.data);
+
         } catch (error) {
             console.error('Error fetching images by user', error);
         }
@@ -47,17 +48,21 @@ const ImageUpload: React.FC = () => {
             });
 
             console.log('Image uploaded successfully');
-            setImageUrl(`http://localhost:3003/${response.data.path}`);
+            setImage(response.data);
         } catch (error) {
             console.error('Error uploading image', error);
         }
     };
 
     return (
-        <div>
-            <input type="file" accept="image/*" onChange={handleImageChange} />
-            <button onClick={handleUpload}>Upload Image</button>
-            {imageUrl && <img src={imageUrl} alt="Uploaded" />}
+        <div className='ImageUpload'>
+            {image?.data && <img className='profile' src={`data:image/jpeg;base64,${image?.data}`} alt={image?.name} />}
+            <div className="file-input-container">
+                <input type="file" accept="image/*" onChange={handleImageChange} className="file-input" />
+                <label className="file-input-label" htmlFor="fileInput">Choose Image</label>
+            </div>
+            <button className='confirm' onClick={handleUpload}>Upload Image</button>
+            
         </div>
     );
 };
