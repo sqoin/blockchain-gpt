@@ -114,7 +114,7 @@ const RepetitiveTasks: React.FC = () => {
                   </button>
                   
               )}
-                {task.status === true && (
+                {(task.status == undefined || task.status === true )&& (
                   <button onClick={() => { handleUpdateTask(task._id); }} className="btn  btn-Restart">
                   Restart
                   </button>

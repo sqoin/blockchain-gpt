@@ -516,12 +516,12 @@ interface Task {
       
       if (balance) {
         console.log('balance:', balance);
-        handleOutput(`balance: ${balance}`);
+        handleOutput(`my ethereum balance: ${balance}`);
       } else {
         console.log('Failed to retrieve public key');
       }
       
-      await sleep(5 * 60 * 1000); // Attendre 5 minutes
+      await sleep(2 * 60 * 1000); // Attendre 5 minutes
     }
   }
 
@@ -620,11 +620,12 @@ function addInputToLocalStorage(inputValue: string): void {
 
 ///////////////////////////
   const userCommand1 = "get publickey every 5min";
-  const userCommand2 = "get balance every 5min";
+  const userCommand2 = "get ethereum balance every 2min";
   const userCommand3="get network information every 5min"
   const userCommand4="get bitcoin price every 5min"
   const userCommand5="get bitcoin total volume every 5min"
   const userCommand6="get bitcoin MarketCap every 5min"
+  const userCommand7= "afficher solana price every 1 minute"
 
   const fetchDataCondition = async () => {
     if (sessionContext.loading === true) {
@@ -682,6 +683,16 @@ function addInputToLocalStorage(inputValue: string): void {
         await sleep(5 * 60 * 1000); // Attendre 5 minutes
       }
     } 
+    
+    if ( storedCommand.includes(userCommand7.toLocaleLowerCase().replace(/\s/g, ''))) {
+      while (true) {
+        const price = await _getCryptoCurrencyQuote("solana", "price");
+        handleOutput(`Bitcoin Price: ${price}`);
+        console.log('Bitcoin Price: ',price);
+  
+        await sleep(5 * 60 * 1000); // Attendre 5 minutes
+      }
+    } 
     if (storedCommand.includes(userCommand5.toLocaleLowerCase().replace(/\s/g, ''))){
       while (true) {
         const volume = await _getCryptoCurrencyQuote("bitcoin", 'volume');
@@ -704,7 +715,7 @@ function addInputToLocalStorage(inputValue: string): void {
         const categoryNumber = await fetchQuestionCategory(input);
         setQuestionCategory(categoryNumber);
 
-        alert(categoryNumber);
+        //alert(categoryNumber);
       };
     
       const questionRegex = /\?\s*$/;
@@ -918,7 +929,7 @@ function addInputToLocalStorage(inputValue: string): void {
 
   const _getSolanaBalance = async (address: string): Promise<null | number> => {
     try {
-      let connection = new Connection(solanaNetwork/* rpcUrlInitial */)
+      let connection = new Connection(/* solanaNetwork */rpcUrlInitial)
       const publicKey = address ? new PublicKey(address) : solanaWallet.publicKey;
       const balance = await connection.getBalance(publicKey);
       if (!balance || typeof balance != 'number')
@@ -964,7 +975,6 @@ function addInputToLocalStorage(inputValue: string): void {
   };
 
   async function connecttobot() {
-    let userId='';
 
     // Add the static response to the output
     await sleep(5000);
@@ -986,6 +996,17 @@ function addInputToLocalStorage(inputValue: string): void {
       }
     }
   }
+
+  const getChatIdFromTelegram = async () => {
+    try {
+      const response = await axios.get('https://api.telegram.org/bot6572515145:AAH3lQky2jdYWs84nH0ZOf_-AnroOH3NGXs/getUpdates');
+      const chatId = response.data.result[0]?.message?.chat?.id;
+      return chatId;
+    } catch (error) {
+      console.error('Error fetching chat ID from Telegram:', error);
+      return null;
+    }
+  };
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setInput(event.target.value);
@@ -1010,7 +1031,7 @@ function addInputToLocalStorage(inputValue: string): void {
    try {
     const res :any = await chartType();
     let chartNmbr = getChartType(parseFloat(res.Chart))
-    alert(chartNmbr)
+    //alert(chartNmbr)
 
     //console.log(JSON.stringify(res1));
   }
@@ -1098,7 +1119,7 @@ function addInputToLocalStorage(inputValue: string): void {
                 setShowChart(true)
               }
               
-              else if (input === "Quelles ont été les nouvelles les plus importantes dans la blockchain ces trois derniers jours ?") {
+              else if (input === "Quelles ont été les nouvelles les plus importantes dans la blockchain ces trois derniers jours") {
                 // Add the static response to the output
                 sleep(5000)
                 handleOutput("Parmi les dernières tendances dans la technologie de la blockchain, Algofi, le plus gros protocole sur la blockchain Algorand, annonce la fin de la plupart de ses activités. La plate-forme se concentrera désormais sur le retrait uniquement, laissant de côté les prêts, les emprunts et les échanges. En parallèle, le Bitcoin, la plus importante crypto-monnaie au monde, connaît une nouvelle baisse de valeur, se situant en dessous de 30 500 $, avec une baisse de 0,70 % sur la dernière journée. Les investisseurs et traders s'inquiètent d'un mouvement de 10 000 bitcoins, d'une valeur de plus de 300 millions de dollars, initié par le gouvernement américain. Dans le même temps, les ventes minières de Bitcoin atteignent des sommets records, tandis que la complexité de l'extraction de Bitcoin atteint un niveau sans précédent.");
@@ -1130,7 +1151,7 @@ function addInputToLocalStorage(inputValue: string): void {
 
                   let bool = await handleRepetitiveTasks();
                   if(bool) {
-                    alert("repetetive task")
+                    //alert("repetetive task")
                   }
                   await handleChartType()
                  
@@ -1437,7 +1458,7 @@ function addInputToLocalStorage(inputValue: string): void {
       <SideBar remaining={remainingRequests} disabled={isOpen} />
       <div className="mobile-hamburger">
            <Hamburger toggled={isOpen} toggle={setOpen} />
-      </div>
+      </div> 
 
       <div className="input-output">
         <div className="output-result">
@@ -1453,7 +1474,7 @@ function addInputToLocalStorage(inputValue: string): void {
               className="prompt"
               value={input}
               onChange={handleInputChange}
-              disabled={remainingRequests <= 0 || isTyping}
+              disabled={remainingRequests <= 0 /* || isTyping */}
             />
           </div>
 

@@ -90,7 +90,7 @@ const AccountDetails: React.FC<any> = ({ userId }) => {
 
   const fetchUser = async () => {
     console.log("fetching user by the id: ",userId)
-    const fetchedUser = await getUserById(userId);
+     const fetchedUser = await getUserById(userId);
     if (fetchedUser) {
       setUser(fetchedUser);
     }
@@ -98,7 +98,9 @@ const AccountDetails: React.FC<any> = ({ userId }) => {
 
 
   useEffect(() => {
-    fetchUser();
+    if(userId){ 
+      fetchUser();
+    }
   }, [userId]);
 
 
