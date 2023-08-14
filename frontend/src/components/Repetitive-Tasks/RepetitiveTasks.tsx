@@ -114,7 +114,7 @@ const RepetitiveTasks: React.FC = () => {
                                 {/* <span >{task.status}</span> */}
                                 
                                 {task.status === false&& (
-                                    <button onClick={() => { handleUpdateTask(task._id); }} className=" common-button button-2">
+                                    <button onClick={() => { handleUpdateTask(task._id); }} className=" common-button button-1">
                                     Stop
                                     </button>
                                    
