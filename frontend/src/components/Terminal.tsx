@@ -100,7 +100,7 @@ interface Task {
     userId: string;
     task: string;
     duration: number;
-    status: 'stopped' | '';
+    status:boolean;
 }
 
   const [tasks, setTasks] = useState<String[]>([]);
@@ -620,7 +620,7 @@ function addInputToLocalStorage(inputValue: string): void {
 
 ///////////////////////////
   const userCommand1 = "get publickey every 5min";
-  const userCommand2 = "get solana balance every 5min";
+  const userCommand2 = "get balance every 5min";
   const userCommand3="get network information every 5min"
   const userCommand4="get bitcoin price every 5min"
   const userCommand5="get bitcoin total volume every 5min"
@@ -999,7 +999,7 @@ function addInputToLocalStorage(inputValue: string): void {
   async function handleRepetitiveTasks() {
     let test = await isRepetitive();
     if(test?.isRepetitiveTask && test?.duration>0){
-      let task = { userId: idUser, task: input, duration: test.duration*60*1000,status:""}
+      let task = { userId: idUser, task: input, duration: test.duration*60*1000,status:false}
       addTask(task); 
     }
     return test?.isRepetitiveTask

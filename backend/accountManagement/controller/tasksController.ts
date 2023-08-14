@@ -34,27 +34,31 @@ exports.getTasksByUserId = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Failed to fetch tasks by userId" });
   }
 };
-
 exports.updateTaskStopped = async (req: Request, res: Response) => {
   try {
     const taskId = req.body.taskId;
-    const userId= req.body.userId;
+    const userId = req.body.userId;
 
-    console.log(taskId)
-    const filter = {  "_id": taskId,userId: userId};
-    const update = { status: "stopped" };
+    const filter = { _id: taskId, userId: userId };
+    
+    // Find the task and get its current status
+    const task = await TaskModel.findOne(filter);
+    if (!task) {
+      return res.status(404).json({ message: "Task not found." });
+    }
 
+    const newStatus = !task.status;
+
+    // Update the status field
+    const update = { status: newStatus };
 
     const updatedTask = await TaskModel.findOneAndUpdate(filter, update, {
       new: true
     });
-    if (!updatedTask) {
-      return res.status(404).json({ message: "Task not found." });
-    } 
 
     res.status(200).json(updatedTask);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).json({ message: "Failed to update task." });
   }
 };
@@ -64,7 +68,7 @@ exports.getTasksWithNonZeroDuration = async (req: Request, res: Response) => {
     const userId = req.params.userId;
 
     console.log(userId);
-    const tasks = await TaskModel.find({userId, duration: { $ne: 0 }  });
+    const tasks = await TaskModel.find({userId, duration: { $ne: 0 },status:{ $ne: true} });
     res.status(200).json(tasks);
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch tasks" });
