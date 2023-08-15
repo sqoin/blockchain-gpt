@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import "./SideBar.css";
 import { useState } from 'react';
 import { useHistory } from "react-router-dom";
@@ -10,13 +10,47 @@ import { ImExit } from "react-icons/im"
 import { CiSquareQuestion } from "react-icons/ci"
 import {AiOutlineBarChart, AiOutlineInfoCircle } from "react-icons/ai"
 import Hamburger from 'hamburger-react';
-
+import { useSessionContext } from 'supertokens-auth-react/recipe/session';
+import { ACCOUNT_MANAGEMENT } from '../../utils/constants';
+import axios from 'axios';
 const SideBar: React.FC<{ remaining: number , disabled: boolean}> = ({ remaining , disabled}) => {
 
 
   const [currentWindow, setCurrentWindow] = useState(window.location.pathname);
 
+  const session=useSessionContext();
+ // const [userId, setUserId] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+  let userId :any =null;
+  if(!session.loading){
+    userId = session.userId;
+  }
+
   
+  const getEmail =async (id: string) => {
+    
+  console.log("user id is: "+id)
+
+  try{
+    let url = ACCOUNT_MANAGEMENT+'/api/getUserById/'+id;
+  const response = await axios.get(url);
+  
+  setUserEmail(response.data.email);
+  }catch(error){
+    console.log(error)
+  }
+  }
+  
+  useEffect(() => {
+    
+    if(userId){
+      getEmail(userId);
+    }
+      
+    
+  }, [userId]);
+
+
 
   function redirectToAccDetails() {
     // window.open(SERVER_DOMAIN+"/accountdetails","_blank")
@@ -64,7 +98,7 @@ const SideBar: React.FC<{ remaining: number , disabled: boolean}> = ({ remaining
       </div>
       <div className="options">
         <p className="sidebar-text"><span className="icons"><CiSquareQuestion/></span>Remaining Requests: {remaining}</p>
-        <p className="sidebar-text"><span className="icons"><FaRegEnvelope/></span>exemple@gmail.com</p>
+        <p className="sidebar-text"><span className="icons"><FaRegEnvelope/></span>{userEmail}</p>
         <button className="sidebar-btn" 
                 style={{backgroundColor:currentWindow === "/repetitivetasks" ? "#73648A" : ""}} 
                 onClick={redirectToTasks}>
