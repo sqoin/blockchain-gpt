@@ -999,7 +999,7 @@ function addInputToLocalStorage(inputValue: string): void {
 
   const getChatIdFromTelegram = async () => {
     try {
-      const response = await axios.get('https://api.telegram.org/bot6572515145:AAH3lQky2jdYWs84nH0ZOf_-AnroOH3NGXs/getUpdates');
+      const response = await axios.get('https://api.telegram.org/bot6468293397:AAEZk7NM3GHSnlRjvzg_t8zVxD0iM1Ba1UM/getUpdates');
       const chatId = response.data.result[0]?.message?.chat?.id;
       return chatId;
     } catch (error) {
@@ -1024,7 +1024,57 @@ function addInputToLocalStorage(inputValue: string): void {
       addTask(task); 
     }
     return test?.isRepetitiveTask
+
+
+
   }
+  const toMessage = async() => {
+    try {
+      // Call the backend API to send hello messages to all chats
+      await axios.post(`${TELEGRAM_NOTIFICATION}/sendHelloToAll`);
+      console.log('Hello messages sent to all chats.');
+    } catch (error) {
+      console.error('Error sending hello messages:', error);
+    }
+  }
+
+
+
+
+
+  const notifs = async () => {
+    let telegramQ = `L'utilisateur a tapé dans son command line:"${input}"  c'est a dire est ce qu'il s'agit d'une alerte telegram ou non?Retourner moi un object 
+    {alerteTelegram:boolean} exemple la tache "Renvoie-moi une alerte Telegram "  
+    tu vas retourner {alerteTelegram: true} `
+    let rq ;
+    try {
+      rq = await getDataCustmised(telegramQ);
+      console.log("data received")
+    } catch (error: any) {
+      handleOutput("", error.message, true)
+    }
+    let rs = null;
+    if(rq){
+      rs = parseBotchart1(rq.text);
+    }
+    console.log("****rs***",rs)
+    return rs;
+  }
+  async function handletelegram() {
+    try {
+        const test: any = await notifs();
+
+        if (test?.alerteTelegram) {
+            toMessage();
+        }
+
+        return test?.alerteTelegram;
+    } catch (error: any) {
+        setError(error.message);
+        handleOutput("", error.message, true);
+    }
+}
+
 
  async function handleChartType(){
    //Chart Type  
@@ -1154,6 +1204,9 @@ function addInputToLocalStorage(inputValue: string): void {
                     //alert("repetetive task")
                   }
                   await handleChartType()
+                  await handletelegram()
+
+
                  
                    
                     const resData = await getData(input);
@@ -1374,17 +1427,19 @@ function addInputToLocalStorage(inputValue: string): void {
   
  
 
+  
   function parseTaskString(taskString: string): { duration: number; isRepetitiveTask: boolean } {
     // Initialize default values for the properties
     let duration: number = 0;
     let isRepetitiveTask: boolean = false;
-  
+    
     // Regular expressions to check for duration and repetitive task patterns in the string
     const durationRegex = /(\d+(\.\d+)?)(\s*(min|minute|hour|hr|h))/i;
     const repetitiveRegex = /(repetitive|repeat|daily|weekly|monthly|yearly)/i;
   
     // Check for duration in the string and extract the number value
     const durationMatch = taskString.match(durationRegex);
+    
     if (durationMatch) {
       duration = parseFloat(durationMatch[1]);
     }
@@ -1397,7 +1452,49 @@ function addInputToLocalStorage(inputValue: string): void {
   
     // Return the object with the parsed values
     return { duration, isRepetitiveTask };
+
   }
+ 
+
+const parseBotchart = (inputString: string) => {
+    const keyword = "envoyer une alerte telegram";
+    const regex = new RegExp(`\\b${escapeRegExp(keyword)}\\b`, 'i');
+
+    if (regex.test(inputString)) {
+        return { alerteTelegram: true };
+    } else {
+        return { alerteTelegram: false };
+    }
+};
+const escapeRegExp = (str: string): string => {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escapes special characters
+};
+
+
+
+
+  
+function parseBotchart1(inputString: string): { alerteTelegram: boolean } {
+  // Regular expression to match the phrase "alerte telegram" (case-insensitive)
+  const regex = /\balerte\s+telegram\b/i;
+
+  // Search for the phrase in the input string
+  const match = inputString.match(regex);
+
+  let alerte: boolean = false;
+  if (match) {
+      // If the phrase is found, set alerte to true
+      alerte = true;
+  }
+
+  // Create and return the object
+  return { alerteTelegram: alerte };
+}
+
+
+  
+  
+
   function parseChartString(inputString: string): { Chart: number } {
     
     let chartNumber : number = 0;
