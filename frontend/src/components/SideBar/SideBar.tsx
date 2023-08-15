@@ -71,7 +71,7 @@ const SideBar: React.FC<{ remaining: number , disabled: boolean}> = ({ remaining
           <span className="icons"><BiTask/></span>
           Repetitive Tasks
         </button>
-        <button className="sidebar-btn" style={{backgroundColor:currentWindow === "/accountdetails" ? "#73648A" : ""}} onClick={redirectToHistory}><span className="icons"><FaHistory/></span>History</button>
+        <button className="sidebar-btn" style={{backgroundColor:currentWindow === "/history" ? "#73648A" : ""}} onClick={redirectToHistory}><span className="icons"><FaHistory/></span>History</button>
         <button className="sidebar-btn" style={{backgroundColor:currentWindow === "/accountdetails" ? "#73648A" : ""}} onClick={redirectToAccDetails}><span className="icons"><AiOutlineInfoCircle/></span>Account details</button>
         <button className="sidebar-btn" style={{backgroundColor:currentWindow === "/statistic" ? "#73648A" : ""}} onClick={toStatistic}><span className="icons"><AiOutlineBarChart/></span>Statistic</button>
         <button className="sidebar-btn signout" onClick={logoutClicked}><span className="icons"><ImExit/></span>Sign out</button>
