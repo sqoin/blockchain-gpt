@@ -91,34 +91,65 @@
     width: 200px; /* Largeur fixe pour la colonne */
   }
   
-  .btn {
-    flex: 1; /* Distribue l'espace vertical de manière égale entre les boutons */
-    padding: 12px 20px;
-    font-size: 18px;
-    font-weight: 500;
-    border: none;
-    border-radius: 4px;
-    color: #fff;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-    box-sizing: border-box;
-  }
+  /* Common button styles */
+.common-button {
+  appearance: none;
+  border: 1px solid rgba(27, 31, 35, .15);
+  border-radius: 6px;
+  box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-block;
+  font-family: -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  padding: 6px 16px;
+  width: 120px; /* Set a fixed width */
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  white-space: nowrap;
+  color: #fff;
 
-  .btn-Restart {   
-  background-color: #1a8851;
-  }
-  
-  .btn-Restart:hover {
-    background-color: #00994d;
-  }
-
- .btn-Stop {
-  background-color: #951e00;
 }
 
-.btn-Stop:hover {
-  background-color: #b32400;
-}   
+.common-button:focus:not(:focus-visible):not(.focus-visible) {
+  box-shadow: none;
+  outline: none;
+}
 
+.common-button:focus {
+  box-shadow: rgba(46, 164, 79, .4) 0 0 0 3px;
+  outline: none;
+}
+
+/* Apply specific colors to different buttons */
+.button-1 {
+  background-color: #CB2027;
+}
+
+.button-1:hover {
+  background-color: #af1e1e;
+}
+
+.button-2 {
+  background-color: #f74e05;
   
-  
+}
+
+.button-2:hover {
+  background-color: #b83700
+}
+
+.button-3 {
+  background-color: #2ea44f;
+}
+
+.button-3:hover {
+  background-color: #2c974b;
+}
