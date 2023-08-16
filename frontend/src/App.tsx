@@ -39,8 +39,8 @@ function App() {
         blockchainAccount: "--",
         lastName: ""
     };
-    const [imageUpdated,setImageUpdated] = useState(false);
-    function updateImage(){
+    const [imageUpdated, setImageUpdated] = useState(false);
+    function updateImage() {
         setImageUpdated(!imageUpdated);
     }
 
@@ -76,28 +76,28 @@ function App() {
                                         <SessionAuth>
                                             <Completion /> </SessionAuth></Route>
 
-                        <Route path="/completion">
-                        <SessionAuth>
-                            <Completion /> 
-                        </SessionAuth></Route>
-                        
-                       <Route path="/sendNotif">
-                        <SessionAuth>
-                            <TelegramMessage/>
-                        
-                        </SessionAuth></Route> 
-                       <Route path="/history">
+                                    <Route path="/completion">
+                                        <SessionAuth>
+                                            <Completion />
+                                        </SessionAuth></Route>
 
-                       <SessionAuth>
-                        <History/>
-                       </SessionAuth>
-
-
-                       </Route>
-
-
+                                    <Route path="/sendNotif">
+                                        <SessionAuth>
+                                            <TelegramMessage />
 
                                         </SessionAuth></Route>
+                                    <Route path="/history">
+
+                                        <SessionAuth>
+                                            <History />
+                                        </SessionAuth>
+
+
+                                    </Route>
+
+
+
+
 
                                     <Route
                                         path="/ServiceUnavailable"><ServiceNotAvailable /></Route>
@@ -106,7 +106,7 @@ function App() {
                                     <Route
                                         path="/notauthorized"><NotAuthorized /></Route>
                                     <Route
-                                        path="/accountdetails"><AccountDetails userId={user.userId} updateImage={updateImage}/></Route>
+                                        path="/accountdetails"><AccountDetails userId={user.userId} updateImage={updateImage} /></Route>
 
 
 
@@ -114,15 +114,15 @@ function App() {
                                         path="/paywithmetamask"><PayWithMetamask /></Route>
 
 
-                            
-                           <Route
-                                path="/ServiceUnavailable"><ServiceNotAvailable /></Route>
-                            <Route
-                                path="/InternalServerError"><ServerErrorPage /></Route>
-                            <Route
-                                path="/notauthorized"><NotAuthorized /></Route> 
-                            <Route
-                                path="/accountdetails"><AccountDetails userId={user.userId} /></Route>
+
+                                    <Route
+                                        path="/ServiceUnavailable"><ServiceNotAvailable /></Route>
+                                    <Route
+                                        path="/InternalServerError"><ServerErrorPage /></Route>
+                                    <Route
+                                        path="/notauthorized"><NotAuthorized /></Route>
+                                    <Route
+                                        path="/accountdetails"><AccountDetails userId={user.userId} /></Route>
 
                                     <Route
                                         path="/paywithphantom"><SendSol /></Route>
@@ -143,33 +143,32 @@ function App() {
                                         path="/statistics"><Charts />
                                     </Route>
 
-                            <Route path="/repetitivetasks">
-                                <SessionAuth>
-                                
-                                    <
+                                    <Route path="/repetitivetasks">
+                                        <SessionAuth>
+
+                                            
                                     <RepetitiveTasks  />
-                                     
-                                </SessionAuth>
-                            </Route>
-                            
-                            
-                            <Route
-                                path="/statistics"><div className="fix"><Charts/>
-                            </Route>
-                               
+
+                                        </SessionAuth>
+                                    </Route>
+
+
+                                    <Route
+                                        path="/statistics"><Charts />
+                                    </Route>
+
 
                                     <Route
                                         path="/imageupload"><ImageUpload /></Route>
-
                                 </div>
+
+                            
                             </div>
                         </Switch>
-                    </div>
-                </Router>
-            </div>
-        </SuperTokensWrapper>
-
-
+                    </div >
+                </Router >
+            </div >
+        </SuperTokensWrapper >
 
     );
 }

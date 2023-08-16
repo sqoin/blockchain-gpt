@@ -807,6 +807,7 @@ interface Task {
     console.log("Unknown input:", input);
     return false;
   }
+}
   //solana functions
   const _connectToPhantomWallet = async (): Promise<null | PhantomWalletAdapter> => {
 

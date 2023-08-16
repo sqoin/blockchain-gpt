@@ -16,7 +16,7 @@ import axios from 'axios';
 import DropdownMenu from '../DropDownMenu/DropDownMenu';
 
 
-const SideBar: React.FC<{ remaining: number , disabled: boolean,imageUpdated:boolean}> = ({ remaining , disabled, imageUpdated}) => {
+const SideBar: React.FC<{ remaining: number ,imageUpdated:boolean}> = ({ remaining , imageUpdated}) => {
 
 
   const [currentWindow, setCurrentWindow] = useState(window.location.pathname);
@@ -96,9 +96,7 @@ const SideBar: React.FC<{ remaining: number , disabled: boolean,imageUpdated:boo
     setCurrentWindow("/")
   };
 
-  if (disabled){
-    return null;
-  }
+ 
 
 
   return (

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { useSessionContext } from 'supertokens-auth-react/recipe/session';
 import { ACCOUNT_MANAGEMENT } from '../../utils/constants';
-import SideBar from '../SideBar/SideBar';
 import './history.css';
 
 const History: React.FC = () => {
@@ -39,7 +38,6 @@ const History: React.FC = () => {
 
 return (
     <div className='history-container'>
-        <SideBar remaining={20} disabled={false}/>
 
         <div className="box-container">
           
