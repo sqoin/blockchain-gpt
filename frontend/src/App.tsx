@@ -76,10 +76,7 @@ function App() {
                                         <SessionAuth>
                                             <Completion /> </SessionAuth></Route>
 
-                                    <Route path="/completion">
-                                        <SessionAuth>
-                                            <Completion />
-                                        </SessionAuth></Route>
+
 
                                     <Route path="/sendNotif">
                                         <SessionAuth>
@@ -95,16 +92,6 @@ function App() {
 
                                     </Route>
 
-
-
-
-
-                                    <Route
-                                        path="/ServiceUnavailable"><ServiceNotAvailable /></Route>
-                                    <Route
-                                        path="/InternalServerError"><ServerErrorPage /></Route>
-                                    <Route
-                                        path="/notauthorized"><NotAuthorized /></Route>
                                     <Route
                                         path="/accountdetails"><AccountDetails userId={user.userId} updateImage={updateImage} /></Route>
 
@@ -121,8 +108,7 @@ function App() {
                                         path="/InternalServerError"><ServerErrorPage /></Route>
                                     <Route
                                         path="/notauthorized"><NotAuthorized /></Route>
-                                    <Route
-                                        path="/accountdetails"><AccountDetails userId={user.userId} /></Route>
+
 
                                     <Route
                                         path="/paywithphantom"><SendSol /></Route>
@@ -143,26 +129,12 @@ function App() {
                                         path="/statistics"><Charts />
                                     </Route>
 
-                                    <Route path="/repetitivetasks">
-                                        <SessionAuth>
-
-                                            
-                                    <RepetitiveTasks  />
-
-                                        </SessionAuth>
-                                    </Route>
-
-
-                                    <Route
-                                        path="/statistics"><Charts />
-                                    </Route>
-
 
                                     <Route
                                         path="/imageupload"><ImageUpload /></Route>
                                 </div>
 
-                            
+
                             </div>
                         </Switch>
                     </div >
