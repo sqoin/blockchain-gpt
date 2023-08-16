@@ -22,14 +22,15 @@ body{
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    width: 24vw;
+    width: 20vw;
     height: 100vh;
     background-color: var(--color1);
     gap: 4px;
     padding: 4px 6px;
     font-family: 'Rubik';
     padding: 10px 0;
-    position: sticky;
+    position:fixed ;
+    overflow-y: auto;
     top: 0;
     bottom: 0;
     left: 0;

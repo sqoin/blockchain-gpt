@@ -30,3 +30,13 @@
     display: flex;
     flex-direction: row;
 }
+
+.sidebar-container{
+    display: flex;
+    width: 20vw;
+}
+
+.pages-container{
+    display: flex;
+    width: 80vw;
+}

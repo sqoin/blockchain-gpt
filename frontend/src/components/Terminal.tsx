@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, FormEvent ,useEffect} from "react";
+import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import "./Terminal.css";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
 import { Connection, PublicKey, Version } from "@solana/web3.js";
@@ -50,10 +50,10 @@ interface Output {
   input: string;
   command: string;
   error: string;
-  eye:boolean;
+  eye: boolean;
 }
 
-const Terminal: React.FC<{ idUser: string }> = ({ idUser }:any) => {
+const Terminal: React.FC<{ idUser: string }> = ({ idUser }: any) => {
   const [questionCategory, setQuestionCategory] = useState<number | null>(null);
   const [showEye, setShowEye] = useState(false);
   const [error, setError] = useState("")
@@ -466,59 +466,59 @@ const Terminal: React.FC<{ idUser: string }> = ({ idUser }:any) => {
         console.log('Failed to connect to MetaMask');
         return;
       }
-      
-      const publicKey = await _getPublicKey();     
+
+      const publicKey = await _getPublicKey();
       const balance = await _getBalance(publicKey);
-      
+
       if (balance) {
         console.log('balance:', balance);
         handleOutput(`balance: ${balance}`);
       } else {
         console.log('Failed to retrieve public key');
       }
-      
+
       await sleep(5 * 60 * 1000); // Attendre 5 minutes
     }
   }
 
   async function getNetworkInfoEvery5Minutes() {
-  while (true) {
-    let wallet = await _connectToMetaMask();
-    if (!wallet) {
-      console.log('Failed to connect to MetaMask');
-      return;
-    }
-    const network = await _getNetworkInfo();
-    if (network) {
-      handleOutput(`Network Information:
+    while (true) {
+      let wallet = await _connectToMetaMask();
+      if (!wallet) {
+        console.log('Failed to connect to MetaMask');
+        return;
+      }
+      const network = await _getNetworkInfo();
+      if (network) {
+        handleOutput(`Network Information:
         Chain ID: ${network.chainId}
         Network ID: ${network.networkId}
         Network Name: ${network.networkName}`);
-    } else {
-      console.log('Failed to retrieve network information');
+      } else {
+        console.log('Failed to retrieve network information');
+      }
+      await sleep(5 * 60 * 1000); // Attendre 5 minutes
     }
-    await sleep(5 * 60 * 1000); // Attendre 5 minutes
   }
-}
 
-async function fetchAndDisplayTransactions() {
-  try {
-    let wallet = await _connectToMetaMask();
-    if (!wallet) {
-      console.log('Failed to connect to MetaMask');
-      return;
-    }
+  async function fetchAndDisplayTransactions() {
+    try {
+      let wallet = await _connectToMetaMask();
+      if (!wallet) {
+        console.log('Failed to connect to MetaMask');
+        return;
+      }
 
-    const publicKey = await _getPublicKey();
-    const apiKey = '13899XRJ6IPW6PJXJDQ9DMJ6ZMNP51PY7I'; // Replace with your Etherscan API key
-    const apiUrl = `https://api.etherscan.io/api?module=account&action=txlist&address=${publicKey}&sort=desc&apikey=${apiKey}`;
-    const response = await axios.get(apiUrl);
+      const publicKey = await _getPublicKey();
+      const apiKey = '13899XRJ6IPW6PJXJDQ9DMJ6ZMNP51PY7I'; // Replace with your Etherscan API key
+      const apiUrl = `https://api.etherscan.io/api?module=account&action=txlist&address=${publicKey}&sort=desc&apikey=${apiKey}`;
+      const response = await axios.get(apiUrl);
 
-    if (response.data.status === '1') {
-      const transactions = response.data.result;
-      transactions.forEach((transaction: Transaction) => {
-        console.log('success');
-        handleOutput(`Transaction Information:
+      if (response.data.status === '1') {
+        const transactions = response.data.result;
+        transactions.forEach((transaction: Transaction) => {
+          console.log('success');
+          handleOutput(`Transaction Information:
         Transaction Hash: ${transaction.hash}
         From: ${transaction.from}
         To: ${transaction.to}
@@ -526,60 +526,60 @@ async function fetchAndDisplayTransactions() {
         Gas Price: ${transaction.gasPrice}
         Timestamp: ${transaction.timeStamp}
         ----------------------------------`);
-      });
-    } else {
-      console.log('Failed to fetch transactions:', response.data.message);
-      handleOutput(`Failed to fetch transactions:${response.data.message} `);
-      console.log('Full Response:', response.data);
+        });
+      } else {
+        console.log('Failed to fetch transactions:', response.data.message);
+        handleOutput(`Failed to fetch transactions:${response.data.message} `);
+        console.log('Full Response:', response.data);
+      }
+    } catch (error: any) {
+      console.log('Error occurred:', error.message);
+
     }
-  } catch (error:any) {
-    console.log('Error occurred:', error.message);
-  
   }
-}
 
-// Interface pour définir le type de données stockées dans le localStorage
-interface InputData {
-  inputValue: string;
-}
-// Fonction pour vérifier si l'input existe déjà dans le localStorage
-function isInputExists(inputValue: string): boolean {
-  const storedInputs: InputData[] = JSON.parse(localStorage.getItem("inputs") || "[]");
-  return storedInputs.some((data) => data.inputValue === inputValue);
-}
+  // Interface pour définir le type de données stockées dans le localStorage
+  interface InputData {
+    inputValue: string;
+  }
+  // Fonction pour vérifier si l'input existe déjà dans le localStorage
+  function isInputExists(inputValue: string): boolean {
+    const storedInputs: InputData[] = JSON.parse(localStorage.getItem("inputs") || "[]");
+    return storedInputs.some((data) => data.inputValue === inputValue);
+  }
 
-// Fonction pour ajouter un nouvel input dans le localStorage s'il n'existe pas déjà
-function addInputToLocalStorage(inputValue: string): void {
-  // Vérifier si l'input existe déjà
-  if (!isInputExists(inputValue)) {
-    // Vérifier si le localStorage est supporté par le navigateur
-    if (typeof Storage !== "undefined") {
-      // Récupérer les inputs précédents (s'ils existent) depuis le localStorage
-      const storedInputs: InputData[] = JSON.parse(localStorage.getItem("inputs") || "[]");
+  // Fonction pour ajouter un nouvel input dans le localStorage s'il n'existe pas déjà
+  function addInputToLocalStorage(inputValue: string): void {
+    // Vérifier si l'input existe déjà
+    if (!isInputExists(inputValue)) {
+      // Vérifier si le localStorage est supporté par le navigateur
+      if (typeof Storage !== "undefined") {
+        // Récupérer les inputs précédents (s'ils existent) depuis le localStorage
+        const storedInputs: InputData[] = JSON.parse(localStorage.getItem("inputs") || "[]");
 
-      // Ajouter le nouvel input à la liste des inputs
-      storedInputs.push({ inputValue });
+        // Ajouter le nouvel input à la liste des inputs
+        storedInputs.push({ inputValue });
 
-      // Mettre à jour le localStorage avec la nouvelle liste d'inputs
-      localStorage.setItem("inputs", JSON.stringify(storedInputs));
+        // Mettre à jour le localStorage avec la nouvelle liste d'inputs
+        localStorage.setItem("inputs", JSON.stringify(storedInputs));
+      } else {
+        // Le localStorage n'est pas supporté par le navigateur
+        console.error("LocalStorage n'est pas supporté par ce navigateur.");
+      }
     } else {
-      // Le localStorage n'est pas supporté par le navigateur
-      console.error("LocalStorage n'est pas supporté par ce navigateur.");
+      console.log("L'input existe déjà dans le localStorage.");
     }
-  } else {
-    console.log("L'input existe déjà dans le localStorage.");
   }
-}
 
 
-//pour récupérer tous les inputs stockés dans le localStorage
-const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
-//console.log(allInputs);
+  //pour récupérer tous les inputs stockés dans le localStorage
+  const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
+  //console.log(allInputs);
 
-///////////////////////////
+  ///////////////////////////
   const userCommand1 = "donner moi le publickey refrech chaque 5min";
   const userCommand2 = "donner moi la balance chaque 5min";
-  const userCommand3="get network info"
+  const userCommand3 = "get network info"
   useEffect(() => {
     // Vérifier si la commande a été précédemment entrée dans le localStorage
     const checkUserCommand = () => {
@@ -589,28 +589,27 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
         getAndDisplayPublicKey();
       } else if (storedCommand === userCommand2) {
         fetchBalanceFromMetaMask();
-      }else if (storedCommand === userCommand3) {
+      } else if (storedCommand === userCommand3) {
         getNetworkInfoEvery5Minutes();
       }
     };
 
     checkUserCommand();
   }, []); // Exécutez cette vérification une seule fois au chargement de la page
-      
-    const fetchData = async () => {
-        const categoryNumber = await fetchQuestionCategory(input);
-        setQuestionCategory(categoryNumber);
 
-        alert(categoryNumber);
-      };
-    
-      const questionRegex = /\?\s*$/;
-      if(questionRegex.test(input))
-      {
-        fetchData();
-        
-        setInput("");
-      }
+  const fetchData = async () => {
+    const categoryNumber = await fetchQuestionCategory(input);
+    setQuestionCategory(categoryNumber);
+
+    alert(categoryNumber);
+  };
+
+  const questionRegex = /\?\s*$/;
+  if (questionRegex.test(input)) {
+    fetchData();
+
+    setInput("");
+  }
 
   // Mettre à jour le stockage local toutes les 5 minutes
   useEffect(() => {
@@ -624,118 +623,118 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
       else if (storedCommand === userCommand3) {
         getNetworkInfoEvery5Minutes();
       }
-      
+
     }, 5 * 60 * 1000); // 5 minutes en millisecondes
 
     return () => clearInterval(interval);
   }, []);
 
-/** handle some static user input */
- async function handleUserInputRep(input:string) {
-  if (input === "get publickey every 5 min") {
-    addInputToLocalStorage(input);
-    getAndDisplayPublicKey();
+  /** handle some static user input */
+  async function handleUserInputRep(input: string) {
+    if (input === "get publickey every 5 min") {
+      addInputToLocalStorage(input);
+      getAndDisplayPublicKey();
 
-  }
-  else if (input === "get balance every 5 min") {
-    addInputToLocalStorage(input);
-    fetchBalanceFromMetaMask();
-
-  } 
-  else if (input === "get network information every 5min") {
-    addInputToLocalStorage(input);
-    getNetworkInfoEvery5Minutes();
-
-   }
-  else if (input === userCommand3) {
-    addInputToLocalStorage(input);
-    const networkInfo = await _getNetworkInfo();
-    handleOutput(`network info: ${networkInfo?.chainId}  ${networkInfo?.networkName}  ${networkInfo?.networkId}`);
-  }
-  else if (input === userCommand1){
-    addInputToLocalStorage(input);
-    const pk = await getAndDisplayPublicKey();
-    handleOutput(` PublicKey: ${pk} `);
-  
-  } else if (input === userCommand2) {
-    addInputToLocalStorage(input);
-    const bl = await fetchBalanceFromMetaMask();
-    handleOutput(` Blance: ${bl} `);
-  }
-
-  else if (input === "get bitcoin price every 5min") {
-    //addInputToLocalStorage(input);
-    while (true) {
-      const price = await _getCryptoCurrencyQuote("bitcoin", "price");
-      handleOutput(`Bitcoin Price: ${price}`);
-      console.log('Bitcoin Price: ',price);
-
-      await sleep(5 * 60 * 1000); // Attendre 5 minutes
     }
-  }
+    else if (input === "get balance every 5 min") {
+      addInputToLocalStorage(input);
+      fetchBalanceFromMetaMask();
 
-  else if (input === "get bitcoin total volume every 5min" ) {
-    addInputToLocalStorage(input);
-    while (true) {
-      const volume = await _getCryptoCurrencyQuote("bitcoin", 'volume');
-      handleOutput(`Bitcoin Total Volume: ${volume}`);
-      await sleep(5 * 60 * 1000); // Attendre 5 minutes
     }
-  }
-  else if (input === "get bitcoin MarketCap every 5min") {
-    addInputToLocalStorage(input);
-    while (true) {
-      const marketCap = await _getCryptoCurrencyQuote("bitcoin", "marketCap");
-      handleOutput(`Bitcoin MarketCap: ${marketCap}`);
-      await sleep(5 * 60 * 1000); // Attendre 5 minutes
+    else if (input === "get network information every 5min") {
+      addInputToLocalStorage(input);
+      getNetworkInfoEvery5Minutes();
+
     }
-  }
-  else if (input === "What is Bitcoin") {
+    else if (input === userCommand3) {
+      addInputToLocalStorage(input);
+      const networkInfo = await _getNetworkInfo();
+      handleOutput(`network info: ${networkInfo?.chainId}  ${networkInfo?.networkName}  ${networkInfo?.networkId}`);
+    }
+    else if (input === userCommand1) {
+      addInputToLocalStorage(input);
+      const pk = await getAndDisplayPublicKey();
+      handleOutput(` PublicKey: ${pk} `);
 
-    handleOutput(`Bitcoin is a decentralized cryptocurrency based on blockchain technology. It is a form of digital currency that enables peer-to-peer transactions without the need for a central authority such as a bank.`);
-  }
-  else if (input === "How does Bitcoin work?") {
+    } else if (input === userCommand2) {
+      addInputToLocalStorage(input);
+      const bl = await fetchBalanceFromMetaMask();
+      handleOutput(` Blance: ${bl} `);
+    }
 
-    handleOutput(`Bitcoin operates on a decentralized network of nodes, where transactions are recorded in a public ledger called the blockchain. Transactions are secured using cryptographic techniques, 
+    else if (input === "get bitcoin price every 5min") {
+      //addInputToLocalStorage(input);
+      while (true) {
+        const price = await _getCryptoCurrencyQuote("bitcoin", "price");
+        handleOutput(`Bitcoin Price: ${price}`);
+        console.log('Bitcoin Price: ', price);
+
+        await sleep(5 * 60 * 1000); // Attendre 5 minutes
+      }
+    }
+
+    else if (input === "get bitcoin total volume every 5min") {
+      addInputToLocalStorage(input);
+      while (true) {
+        const volume = await _getCryptoCurrencyQuote("bitcoin", 'volume');
+        handleOutput(`Bitcoin Total Volume: ${volume}`);
+        await sleep(5 * 60 * 1000); // Attendre 5 minutes
+      }
+    }
+    else if (input === "get bitcoin MarketCap every 5min") {
+      addInputToLocalStorage(input);
+      while (true) {
+        const marketCap = await _getCryptoCurrencyQuote("bitcoin", "marketCap");
+        handleOutput(`Bitcoin MarketCap: ${marketCap}`);
+        await sleep(5 * 60 * 1000); // Attendre 5 minutes
+      }
+    }
+    else if (input === "What is Bitcoin") {
+
+      handleOutput(`Bitcoin is a decentralized cryptocurrency based on blockchain technology. It is a form of digital currency that enables peer-to-peer transactions without the need for a central authority such as a bank.`);
+    }
+    else if (input === "How does Bitcoin work?") {
+
+      handleOutput(`Bitcoin operates on a decentralized network of nodes, where transactions are recorded in a public ledger called the blockchain. Transactions are secured using cryptographic techniques, 
                   and miners validate transactions by solving complex mathematical problems.`);
-  }
-  else if (input === "Who created Bitcoin?") {
+    }
+    else if (input === "Who created Bitcoin?") {
 
-    handleOutput(`Bitcoin was created by an individual or group of individuals using the pseudonym Satoshi Nakamoto. The true identity of Satoshi Nakamoto remains unknown to this day.`);
-  }
-  else if (input === "What is the difference between Bitcoin and traditional currencies?") {
+      handleOutput(`Bitcoin was created by an individual or group of individuals using the pseudonym Satoshi Nakamoto. The true identity of Satoshi Nakamoto remains unknown to this day.`);
+    }
+    else if (input === "What is the difference between Bitcoin and traditional currencies?") {
 
-    handleOutput(`Bitcoin differs from traditional currencies because it is not issued or controlled by a central authority like a central bank. It relies on blockchain technology and operates in a decentralized manner.`);
-  }
-  else if (input === "What is a Bitcoin address?") {
+      handleOutput(`Bitcoin differs from traditional currencies because it is not issued or controlled by a central authority like a central bank. It relies on blockchain technology and operates in a decentralized manner.`);
+    }
+    else if (input === "What is a Bitcoin address?") {
 
-    handleOutput(`A Bitcoin address is a unique alphanumeric string that represents the location where Bitcoins are stored. You can share this address with others to receive Bitcoins.`);
-  }
-  else if (input === "How can I securely store my Bitcoins?") {
+      handleOutput(`A Bitcoin address is a unique alphanumeric string that represents the location where Bitcoins are stored. You can share this address with others to receive Bitcoins.`);
+    }
+    else if (input === "How can I securely store my Bitcoins?") {
 
-    handleOutput(`You can store your Bitcoins in a Bitcoin wallet. Wallets can be either software wallets on electronic devices or physical hardware wallets that offer additional security.`);
-  }
-  else if (input === "How can I use Bitcoin to make transactions?") {
+      handleOutput(`You can store your Bitcoins in a Bitcoin wallet. Wallets can be either software wallets on electronic devices or physical hardware wallets that offer additional security.`);
+    }
+    else if (input === "How can I use Bitcoin to make transactions?") {
 
-    handleOutput(`To make a Bitcoin transaction, you need to know the recipient's Bitcoin address. You can send Bitcoins from your wallet using that address, specifying the amount and signing the transaction.`);
-  }
-  else if (input === "Is Bitcoin legal?") {
+      handleOutput(`To make a Bitcoin transaction, you need to know the recipient's Bitcoin address. You can send Bitcoins from your wallet using that address, specifying the amount and signing the transaction.`);
+    }
+    else if (input === "Is Bitcoin legal?") {
 
-    handleOutput(`The legality of Bitcoin varies from country to country. In many countries, Bitcoin is considered a legal form of digital asset, but some jurisdictions may restrict its use or regulation.`);
-  }
-  else if (input === "get Latest Transactions") {
-    fetchAndDisplayTransactions();
+      handleOutput(`The legality of Bitcoin varies from country to country. In many countries, Bitcoin is considered a legal form of digital asset, but some jurisdictions may restrict its use or regulation.`);
+    }
+    else if (input === "get Latest Transactions") {
+      fetchAndDisplayTransactions();
 
-  }  else {
-    // Handle other cases if needed
-    console.log("Unknown input:", input);
-    return false;
+    } else {
+      // Handle other cases if needed
+      console.log("Unknown input:", input);
+      return false;
+    }
+    popLastItem();
+    setIsTyping(false)
+    return true;
   }
-  popLastItem();
-  setIsTyping(false)
-  return true;
-}
-   //solana functions
+  //solana functions
   const _connectToPhantomWallet = async (): Promise<null | PhantomWalletAdapter> => {
 
     //@ts-ignore
@@ -859,7 +858,7 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
       if (!balance || typeof balance != 'number')
         return null
 
-        const lamportsToSol = balance / 1e9;
+      const lamportsToSol = balance / 1e9;
       handleOutput("Your balance is " + lamportsToSol)
       return lamportsToSol;
     } catch (error: any) {
@@ -904,23 +903,23 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
 
   async function handleRepetitiveTasks() {
     let test = await isRepetitive();
-    if(test?.isRepetitiveTask && test?.duration>0){
-      let task = { userId: idUser, task: input, duration: test.duration*60*1000,status:""}
-      addTask(task); 
+    if (test?.isRepetitiveTask && test?.duration > 0) {
+      let task = { userId: idUser, task: input, duration: test.duration * 60 * 1000, status: "" }
+      addTask(task);
     }
   }
 
- async function handleChartType(){
-   //Chart Type  
-   try {
-    const res1 = await chartType();
-    //console.log(JSON.stringify(res1));
+  async function handleChartType() {
+    //Chart Type  
+    try {
+      const res1 = await chartType();
+      //console.log(JSON.stringify(res1));
+    }
+    catch (error: any) {
+      setError(error.message);
+      handleOutput("", error.message, true)
+    }
   }
-   catch (error: any) {
-    setError(error.message);
-    handleOutput("", error.message, true)
-   }
- }
   const handleInputSubmit = async (
     event: FormEvent<HTMLFormElement>
   ): Promise<void> => {
@@ -943,14 +942,14 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
             setInput("");
             handleOutput(`Execution in progress ...`);
             if (remainingResult > 0) {
-              
-              if( input === 'Dessiner un graphique circulaire de la capitalisation boursière de Bitcoin, Ethereum et Binance.'){
+
+              if (input === 'Dessiner un graphique circulaire de la capitalisation boursière de Bitcoin, Ethereum et Binance.') {
 
                 //handleOutput("Exécution en progress ...")
                 // sleep(5000)
                 setShowChart(true)
               }
-              
+
               else if (input === "Quelles ont été les nouvelles les plus importantes dans la blockchain ces trois derniers jours ?") {
                 // Add the static response to the output
                 sleep(5000)
@@ -966,27 +965,26 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
                 }
 
               }
-              else if (input !=="")
-              {
+              else if (input !== "") {
 
                 try {
                   let res = await handleUserInputRep(input);
-                  if(res){
+                  if (res) {
                     return;
                   }
 
                   handleRepetitiveTasks();
                   handleChartType()
-                 
-                   
-                    const resData = await getData(input);
-                    result = await processServerResponse(resData.text, handleOutput);
-                  } catch (error: any) {
-                    setError(error.message);
-                    setShowEye(true)
-                    handleOutput("", error.message, true)
-                  } 
-                
+
+
+                  const resData = await getData(input);
+                  result = await processServerResponse(resData.text, handleOutput);
+                } catch (error: any) {
+                  setError(error.message);
+                  setShowEye(true)
+                  handleOutput("", error.message, true)
+                }
+
               }
 
 
@@ -1020,7 +1018,7 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
 
 
     }
-    
+
   };
   const isRepetitive = async () => {
     let repetitiveQuerry = `L'utilisateur a tapé dans son command line:"${input}" est ce que 
@@ -1031,19 +1029,19 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
     tu vas retourner {duration:5,isRepetitifTask:true}
     et la tache "give me bitcoin price"  est non repetitive tu vas retourner 
     {duration:0,isRepetitifTask:false}`
-    let rq ;
+    let rq;
     try {
       rq = await getDataCustmised(repetitiveQuerry);
     } catch (error: any) {
       handleOutput("", error.message, true)
     }
     let rs = null;
-    if(rq){
+    if (rq) {
       rs = parseTaskString(rq.text);
     }
     return rs;
   }
-  
+
 
   const chartType = async () => {
     let Querry = `the user asked me this question:"${input}" , could you decide if it's about draw a chart,
@@ -1065,24 +1063,24 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
     13:Donut Chart
     14:Funnel Chart
     15:Area Chart`
-    
-    let rq ;
+
+    let rq;
     try {
       rq = await getDataCustmised(Querry);
-      
+
     } catch (error: any) {
       handleOutput("", error.message, true)
     }
     let rs = null;
-    if(rq){
+    if (rq) {
       rs = parseChartString(rq.text);
     }
     return rs;
-     
+
   }
-  
-  
-  
+
+
+
 
   async function logoutClicked() {
     await signOut();
@@ -1128,7 +1126,7 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
     }
   }
   const handleOutput = (command: string, error: string = "", eye: boolean = false): void => {
-    setOutput((prevOutput:any) => {
+    setOutput((prevOutput: any) => {
       const lastOutput = prevOutput[prevOutput.length - 1];
       const isNewOutput = lastOutput?.input !== input.trim() || lastOutput?.command !== command;
 
@@ -1186,59 +1184,59 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
   };
 
 
-  const addTask = async (task:any) => {
+  const addTask = async (task: any) => {
     try {
       await axios.post(`${ACCOUNT_MANAGEMENT}/api/tasks`, task);
       //console.log('Task saved successfully!');
-    } catch (error:any) {
+    } catch (error: any) {
       //console.log(error?.message);
     }
   };
-  
+
 
 
   function parseTaskString(taskString: string): { duration: number; isRepetitiveTask: boolean } {
     // Initialize default values for the properties
     let duration: number = 0;
     let isRepetitiveTask: boolean = false;
-  
+
     // Regular expressions to check for duration and repetitive task patterns in the string
     const durationRegex = /(\d+(\.\d+)?)(\s*(min|minute|hour|hr|h))/i;
     const repetitiveRegex = /(repetitive|repeat|daily|weekly|monthly|yearly)/i;
-  
+
     // Check for duration in the string and extract the number value
     const durationMatch = taskString.match(durationRegex);
     if (durationMatch) {
       duration = parseFloat(durationMatch[1]);
     }
-  
+
     // Check for repetitive task keywords in the string
     const repetitiveMatch = taskString.match(repetitiveRegex);
     if (repetitiveMatch) {
       isRepetitiveTask = true;
     }
-  
+
     // Return the object with the parsed values
     return { duration, isRepetitiveTask };
   }
   function parseChartString(inputString: string): { Chart: number } {
-    
-    let chartNumber : number = 0;
+
+    let chartNumber: number = 0;
     // Regular expression to match the object pattern
     const regex = /{*\n*\s*"*Chart"*\s*:\s*(\d+)\n*}*/;
-  
+
     // Search for the object pattern in the input string
     const match = inputString.match(regex);
-  
+
     if (match) {
       // Extract the number from the matched object
       chartNumber = parseFloat(match[1]);
     }
-  
+
     // Create and return the object
     return { Chart: chartNumber };
   }
-  
+
 
 
   /*  const _getStatics = async (
@@ -1258,14 +1256,12 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
     // window.open(SERVER_DOMAIN+"/accountdetails","_blank")
     history.push("/accountdetails");
   }
-  
+
 
 
   return (
     <div className="terminal">
-      <SideBar remaining={remainingRequests} />
       <div className="input-output">
-
         <div className="output-result">
           {output.map((line, index) => (
             <CmdOutput oput={line} index={index} />
@@ -1307,7 +1303,7 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
             {showMarketCapCharts ? <div className="marketcap-charts">
               <CryptomarketCapChart />
             </div> : null}
-            
+
 
             {/* {showBarChart ? <div className="bar-chart">
               <BarChart/>
@@ -1315,15 +1311,15 @@ const allInputs = JSON.parse(localStorage.getItem("inputs") || "[]");
 
           </div>
         </form>
-       {/*  <div>
+        {/*  <div>
       <input type="text" onChange={handleInput} />
       </div> */}
 
       </div>
-     
+
     </div>
-      
-   
+
+
 
   )
 };

@@ -1,11 +1,9 @@
 .accountdetails {
-  font-family: "Roboto", sans-serif;
-  display: flex;
   background: var(--color3); 
-  width: 100vw;
+  font-family: 'Roboto', sans-serif;
   height: 100vh;
-  padding-top: 30px;
-
+  width: 80vw;
+  padding: 40px;
 } 
 .accountdetails .form {
   display: flex;

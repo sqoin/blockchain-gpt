@@ -11,7 +11,7 @@ interface Image {
   data: string;
 }
 
-const ImageUpload: React.FC = () => {
+const ImageUpload: React.FC <any>= ({updateImage}) => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [userId, setUserId] = useState<string>('user123');
   const [image, setImage] = useState<Image | undefined>();
@@ -54,6 +54,7 @@ const ImageUpload: React.FC = () => {
 
       console.log('Image uploaded successfully');
       setImage(response.data);
+      updateImage()
     } catch (error) {
       console.error('Error uploading image', error);
     }

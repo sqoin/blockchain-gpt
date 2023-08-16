@@ -8,6 +8,7 @@ import ProfileImage from "../../assets/images/ProfileImage.jpg"
 interface DropdownMenuProps {
     onLogout: () => void;
     onAccountDetails: () => void;
+    imageUpdated:boolean
 }
 
 interface IUser {
@@ -28,7 +29,7 @@ interface Image {
     data: string;
 }
 
-const DropdownMenu: React.FC<DropdownMenuProps> = ({ onLogout, onAccountDetails }) => {
+const DropdownMenu: React.FC<DropdownMenuProps> = ({ onLogout, onAccountDetails ,imageUpdated}) => {
     const [isOpen, setIsOpen] = useState(false);
     const [user, setUser] = useState<IUser | null>(null);
     const [userId, setUserId] = useState<string>('user123');
@@ -57,7 +58,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ onLogout, onAccountDetails 
 
     useEffect(() => {
         fetchImagesByUser(userId);
-    }, [userId]);
+    }, [userId,imageUpdated]);
 
     const fetchImagesByUser = async (userId: string) => {
         try {
