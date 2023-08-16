@@ -1,0 +1,73 @@
+
+.ImageUpload {
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 20px;
+}
+
+
+.profile {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    border: 2px solid var(--color3);
+    filter: drop-shadow(0 0 7px var(--color2));
+    margin-right:110px ;
+}
+
+
+.confirm {
+    background: #6b5c80;
+    color: white;
+    border-radius: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    height: 52px;
+    
+    border-color: white;
+    font-size: 1.1em;
+  }
+  .confirm:hover{
+    cursor: pointer;
+    background-color: var(--color2);
+  
+  }
+  
+  /* Styles for the file input container */
+.file-input-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  /* Styles for the actual file input element */
+  .file-input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+  }
+  
+  /* Styles for the custom button-like element */
+  .file-input-label {
+    background: #6b5c80;
+    color: white;
+    border-radius: 10px;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    height: 52px;
+    border: 1px solid white;
+    font-size: 1.1em;
+    cursor: pointer;
+  }
+  
+  .file-input-label:hover {
+    background-color: var(--color2);
+  }
+  

@@ -6,6 +6,7 @@ import { useSessionContext } from 'supertokens-auth-react/recipe/session';
 import { ACCOUNT_MANAGEMENT, TELEGRAM_NOTIFICATION } from './utils/constants';
 import './Account_Details.css';
 import { FaTelegram } from "react-icons/fa"
+import ImageUpload from './components/ImageUpload/ImageUpload';
 
 interface IUser {
   ID: string;
@@ -46,14 +47,14 @@ const AccountDetails: React.FC<any> = ({ userId }) => {
   async function UpdateUserInformation(userId: string, userName: string, userLastName: string, telegramusername?: string) {
     try {
       const response = await axios.put(`${ACCOUNT_MANAGEMENT}/api/updateUser`, {
-        
-          userId,
-          userName:userName,
-          userLastName:userLastName,
-          telegram_user_name: telegramusername,
-        
+
+        userId,
+        userName: userName,
+        userLastName: userLastName,
+        telegram_user_name: telegramusername,
+
       });
-  
+
       if (response.status === 200) {
         console.log('User updated successfully!');
       } else {
@@ -63,7 +64,7 @@ const AccountDetails: React.FC<any> = ({ userId }) => {
       console.error('Error updating the user:', error);
     }
   }
-  
+
 
   const getUserById = async (userId: any): Promise<IUser | null> => {
     try {
@@ -176,12 +177,16 @@ const AccountDetails: React.FC<any> = ({ userId }) => {
       <div className="form">
         <div className="bg-white shadow rounded-lg d-block d-sm-flex">
           <div className="tab-content p-4 p-md-5" id="v-pills-tabContent">
+
             <div
               className="tab-pane fade show active"
               id="account"
               role="tabpanel"
               aria-labelledby="account-tab"
             >
+              <div className="profile-image-container">
+                <ImageUpload />
+              </div>
               <h2 className="mb-4">Account Details</h2>
               <div className="row">
                 <div className="col-md-6">

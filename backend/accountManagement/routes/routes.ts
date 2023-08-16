@@ -6,6 +6,20 @@ import SuperTokens from 'supertokens-node';
 import axios from 'axios';
 import bodyParser from 'body-parser';
 import Input from '../models/input'; // Import the Input model
+import multer from 'multer';
+import imageController from '../controller/imageController';
+
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  },
+});
+const upload = multer({ storage: storage });
+
 
 
 let tasksController = require("../controller/tasksController");
@@ -184,5 +198,9 @@ router.get('/tasksvalid/:userId',tasksController.getTasksWithNonZeroDuration);
 
 router.delete('/tasks/:userId/:taskId',tasksController.deleteTask);
 
+
+
+router.post('/uploadimage', upload.single('image'), imageController.uploadImage);
+router.get('/getimage/:userId', imageController.getImagesByUser);
 
 module.exports = router;

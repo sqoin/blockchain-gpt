@@ -13,11 +13,19 @@ import Hamburger from 'hamburger-react';
 import { useSessionContext } from 'supertokens-auth-react/recipe/session';
 import { ACCOUNT_MANAGEMENT } from '../../utils/constants';
 import axios from 'axios';
+import DropdownMenu from '../DropDownMenu/DropDownMenu';
+
 const SideBar: React.FC<{ remaining: number , disabled: boolean}> = ({ remaining , disabled}) => {
 
 
   const [currentWindow, setCurrentWindow] = useState(window.location.pathname);
+  const [showMenu, setShowMenu] = useState(false);
 
+  const handleMainButtonClick = () => {
+    setShowMenu(!showMenu);
+  };
+
+<<<<<<< HEAD
   const session=useSessionContext();
  // const [userId, setUserId] = useState('');
   const [userEmail, setUserEmail] = useState('');
@@ -51,6 +59,8 @@ const SideBar: React.FC<{ remaining: number , disabled: boolean}> = ({ remaining
   }, [userId]);
 
 
+=======
+>>>>>>> e124c01a80
 
   function redirectToAccDetails() {
     // window.open(SERVER_DOMAIN+"/accountdetails","_blank")
@@ -69,6 +79,8 @@ const SideBar: React.FC<{ remaining: number , disabled: boolean}> = ({ remaining
   }
 
   const history = useHistory();
+
+
 
   async function logoutClicked() {
     await signOut();
@@ -108,10 +120,11 @@ const SideBar: React.FC<{ remaining: number , disabled: boolean}> = ({ remaining
         <button className="sidebar-btn" style={{backgroundColor:currentWindow === "/history" ? "#73648A" : ""}} onClick={redirectToHistory}><span className="icons"><FaHistory/></span>History</button>
         <button className="sidebar-btn" style={{backgroundColor:currentWindow === "/accountdetails" ? "#73648A" : ""}} onClick={redirectToAccDetails}><span className="icons"><AiOutlineInfoCircle/></span>Account details</button>
         <button className="sidebar-btn" style={{backgroundColor:currentWindow === "/statistic" ? "#73648A" : ""}} onClick={toStatistic}><span className="icons"><AiOutlineBarChart/></span>Statistic</button>
-        <button className="sidebar-btn signout" onClick={logoutClicked}><span className="icons"><ImExit/></span>Sign out</button>
+        {/* <button className="sidebar-btn signout" onClick={logoutClicked}><span className="icons"><ImExit/></span>Sign out</button> */}
+        <DropdownMenu onLogout={logoutClicked} onAccountDetails={redirectToAccDetails}/>
       </div>
     </div>
-    
+
   );
 };
 
