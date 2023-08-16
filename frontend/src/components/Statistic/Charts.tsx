@@ -5,7 +5,7 @@ import LineChart from "./Line_Chart"
 
 const Charts = () => {
     return (
-        <div>
+        <div className="charts">
             <BarChart/>
             <PieChart/>
             <LineChart/>

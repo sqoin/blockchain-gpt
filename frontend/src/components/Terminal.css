@@ -221,6 +221,8 @@ body{
 
     display: flex;
     flex-direction: row;
+    height: 100vh;
+    width: 80vw;
     color: white;
   }
 
@@ -233,44 +235,44 @@ body{
 
   }
 
-  .terminal .cmd-line{
-    width: 90%;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-    padding: 16px;
-    justify-content: start;
-    align-items: star;
-    margin-left: 32px;
-  }
+.terminal .cmd-line {
+  width: 90%;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  padding: 16px;
+  justify-content: start;
+  align-items: star;
+  margin-left: 32px;
+}
 
-  .terminal .output-result{
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    gap: 20px;
-    margin-top: 28px;
-  }
+.terminal .output-result {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 20px;
+  margin-top: 28px;
+}
 
-  .terminal .input-cmd{
-    display: flex;
-    justify-content: start;
-    align-items: flex-start;
-    flex-direction: column;
-    width: 90%;
-    margin-left: 32px;
-  }
+.terminal .input-cmd {
+  display: flex;
+  justify-content: start;
+  align-items: flex-start;
+  flex-direction: column;
+  width: 90%;
+  margin-left: 32px;
+}
 
-  .terminal .line{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    gap: 10px;
-    font-size: 1.1em;
-  }
+.terminal .line {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+  font-size: 1.1em;
+}
 
   .terminal .prompt{
     background-color: rgba(0, 0, 0, 0);

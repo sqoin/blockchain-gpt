@@ -21,6 +21,9 @@ import SendSol from "./components/pay-with-phantom/SendSol";
 import PayWithMetamask from "./components/pay-with-metamask/PayWithMetamask";
 import RepetitiveTasks from "./components/Repetitive-Tasks/RepetitiveTasks";
 import History from "./components/history/history";
+import ImageUpload from "./components/ImageUpload/ImageUpload";
+import { useState } from "react";
+
 
 SuperTokens.init(SuperTokensConfig);
 
@@ -28,7 +31,7 @@ SuperTokens.init(SuperTokensConfig);
 SuperTokens.init(SuperTokensConfig);
 function App() {
     const user = {
-        userId:'',
+        userId: '',
         email: "",
         name: "",
         password: "*********",
@@ -36,31 +39,42 @@ function App() {
         blockchainAccount: "--",
         lastName: ""
     };
-    
+    const [imageUpdated,setImageUpdated] = useState(false);
+    function updateImage(){
+        setImageUpdated(!imageUpdated);
+    }
+
     return (
         <SuperTokensWrapper>
             <div className="App app-container">
-                
+
                 <Router>
                     <div className="fill">
                         <Switch>
                             {/* This shows the login UI on "/auth" route */}
-                            {getSuperTokensRoutesForReactRouterDom(require("react-router-dom"))} 
+                            {getSuperTokensRoutesForReactRouterDom(require("react-router-dom"))}
+                            <div className="fix">
+                                <div className="sidebar-container">
+                                    <SideBar remaining={20} imageUpdated={imageUpdated} />
+                                </div>
+                                <div className="pages-container">
+                                    <Route exact path="/">
+                                        <SessionAuth>
+                                            <Home />
+                                        </SessionAuth>
+
+                                    </Route>
 
 
-                            <Route exact path="/">
-                                <SessionAuth>
-                                    <Home />
-                                </SessionAuth>
+                                    <Route exact path="/test">
+                                        <Tester />
+                                    </Route>
 
-                            </Route>
+                                    <Route path="/paymentWithStripe"><Payment /></Route>
 
-
-                            <Route exact path="/test">
-                                <Tester />
-                            </Route>
-
-                            <Route path="/paymentWithStripe"><Payment /></Route>
+                                    <Route path="/completion">
+                                        <SessionAuth>
+                                            <Completion /> </SessionAuth></Route>
 
                         <Route path="/completion">
                         <SessionAuth>
@@ -83,10 +97,21 @@ function App() {
 
 
 
+                                        </SessionAuth></Route>
+
+                                    <Route
+                                        path="/ServiceUnavailable"><ServiceNotAvailable /></Route>
+                                    <Route
+                                        path="/InternalServerError"><ServerErrorPage /></Route>
+                                    <Route
+                                        path="/notauthorized"><NotAuthorized /></Route>
+                                    <Route
+                                        path="/accountdetails"><AccountDetails userId={user.userId} updateImage={updateImage}/></Route>
 
 
 
-
+                                    <Route
+                                        path="/paywithmetamask"><PayWithMetamask /></Route>
 
 
                             
@@ -97,43 +122,55 @@ function App() {
                             <Route
                                 path="/notauthorized"><NotAuthorized /></Route> 
                             <Route
-                                path="/accountdetails"><div className="fix"><SideBar remaining={20} disabled={false}/><AccountDetails userId={user.userId} /></div></Route>
+                                path="/accountdetails"><AccountDetails userId={user.userId} /></Route>
+
+                                    <Route
+                                        path="/paywithphantom"><SendSol /></Route>
+                                    <Route
+                                        path="/paymentmode"><PaymentMode /></Route>
 
 
+                                    <Route path="/repetitivetasks">
+                                        <SessionAuth>
 
-                            <Route
-                                path="/paywithmetamask"><PayWithMetamask /></Route>
+                                            <RepetitiveTasks />
+
+                                        </SessionAuth>
+                                    </Route>
 
 
-
-                            <Route
-                                path="/paywithphantom"><SendSol /></Route>
-                            <Route
-                                path="/paymentmode"><PaymentMode /></Route>
-
+                                    <Route
+                                        path="/statistics"><Charts />
+                                    </Route>
 
                             <Route path="/repetitivetasks">
                                 <SessionAuth>
-                                <div className="fix">
-                                    <SideBar remaining={20} disabled={false}/>
+                                
+                                    <
                                     <RepetitiveTasks  />
-                                    </div>
+                                     
                                 </SessionAuth>
                             </Route>
                             
                             
                             <Route
-                                path="/statistics"><div className="fix"><SideBar remaining={20} disabled={false}/><Charts/></div>
+                                path="/statistics"><div className="fix"><Charts/>
                             </Route>
                                
 
+                                    <Route
+                                        path="/imageupload"><ImageUpload /></Route>
 
-                        
+                                </div>
+                            </div>
                         </Switch>
                     </div>
                 </Router>
             </div>
         </SuperTokensWrapper>
+
+
+
     );
 }
 

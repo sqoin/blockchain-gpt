@@ -15,7 +15,8 @@ import { ACCOUNT_MANAGEMENT } from '../../utils/constants';
 import axios from 'axios';
 import DropdownMenu from '../DropDownMenu/DropDownMenu';
 
-const SideBar: React.FC<{ remaining: number , disabled: boolean}> = ({ remaining , disabled}) => {
+
+const SideBar: React.FC<{ remaining: number , disabled: boolean,imageUpdated:boolean}> = ({ remaining , disabled, imageUpdated}) => {
 
 
   const [currentWindow, setCurrentWindow] = useState(window.location.pathname);
@@ -62,13 +63,11 @@ const SideBar: React.FC<{ remaining: number , disabled: boolean}> = ({ remaining
 
 
   function redirectToAccDetails() {
-    // window.open(SERVER_DOMAIN+"/accountdetails","_blank")
-    history.push("/accountdetails");
+    window.location.href = "/accountdetails";
     setCurrentWindow("/accountdetails");
   }
   function redirectToTasks() {
-    // window.open(SERVER_DOMAIN+"/accountdetails","_blank")
-    history.push("/repetitivetasks");
+    window.location.href = "/repetitivetasks";
     setCurrentWindow("/repetitivetasks");
   }
   function redirectToHistory() {
@@ -82,17 +81,18 @@ const SideBar: React.FC<{ remaining: number , disabled: boolean}> = ({ remaining
 
 
   async function logoutClicked() {
-    await signOut();
-    history.push("/auth");
+      
+    // await signOut();
+    // window.location.href = "/auth";
   }
 
   const toStatistic = () => {
-    history.push("/statistics");
+    window.location.href = "/statistics";
     setCurrentWindow("/statistics")
   };
 
   const toChat = () => {
-    history.push("/");
+    window.location.href = "/";
     setCurrentWindow("/")
   };
 
@@ -120,7 +120,7 @@ const SideBar: React.FC<{ remaining: number , disabled: boolean}> = ({ remaining
         <button className="sidebar-btn" style={{backgroundColor:currentWindow === "/accountdetails" ? "#73648A" : ""}} onClick={redirectToAccDetails}><span className="icons"><AiOutlineInfoCircle/></span>Account details</button>
         <button className="sidebar-btn" style={{backgroundColor:currentWindow === "/statistic" ? "#73648A" : ""}} onClick={toStatistic}><span className="icons"><AiOutlineBarChart/></span>Statistic</button>
         {/* <button className="sidebar-btn signout" onClick={logoutClicked}><span className="icons"><ImExit/></span>Sign out</button> */}
-        <DropdownMenu onLogout={logoutClicked} onAccountDetails={redirectToAccDetails}/>
+        <DropdownMenu onLogout={logoutClicked} onAccountDetails={redirectToAccDetails} imageUpdated={imageUpdated}/>
       </div>
     </div>
 

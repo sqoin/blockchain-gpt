@@ -20,7 +20,7 @@ interface IUser {
   github_account: string;
 }
 
-const AccountDetails: React.FC<any> = ({ userId }) => {
+const AccountDetails: React.FC<any> = ({ userId ,updateImage}) => {
   const [user, setUser] = useState<IUser | null>(null);
   const [isToggled, setIsToggled] = useState(false);
   const history = useHistory();
@@ -177,7 +177,6 @@ const AccountDetails: React.FC<any> = ({ userId }) => {
       <div className="form">
         <div className="bg-white shadow rounded-lg d-block d-sm-flex">
           <div className="tab-content p-4 p-md-5" id="v-pills-tabContent">
-
             <div
               className="tab-pane fade show active"
               id="account"
@@ -185,7 +184,7 @@ const AccountDetails: React.FC<any> = ({ userId }) => {
               aria-labelledby="account-tab"
             >
               <div className="profile-image-container">
-                <ImageUpload />
+                <ImageUpload updateImage={updateImage}/>
               </div>
               <h2 className="mb-4">Account Details</h2>
               <div className="row">

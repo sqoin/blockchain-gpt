@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, FormEvent ,useEffect} from "react";
+import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import "./Terminal.css";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
 import { Connection, PublicKey, Version } from "@solana/web3.js";
@@ -56,7 +56,7 @@ interface Output {
   input: string;
   command: string;
   error: string;
-  eye:boolean;
+  eye: boolean;
 }
 
 const Terminal: React.FC<{ idUser: string }> = ({ idUser }:any) => {
@@ -510,10 +510,10 @@ interface Task {
         console.log('Failed to connect to MetaMask');
         return;
       }
-      
-      const publicKey = await _getPublicKey();     
+
+      const publicKey = await _getPublicKey();
       const balance = await _getBalance(publicKey);
-      
+
       if (balance) {
         console.log('balance:', balance);
         handleOutput(`my ethereum balance: ${balance}`);
@@ -526,43 +526,43 @@ interface Task {
   }
 
   async function getNetworkInfoEvery5Minutes() {
-  while (true) {
-    let wallet = await _connectToMetaMask();
-    if (!wallet) {
-      console.log('Failed to connect to MetaMask');
-      return;
-    }
-    const network = await _getNetworkInfo();
-    if (network) {
-      handleOutput(`Network Information:
+    while (true) {
+      let wallet = await _connectToMetaMask();
+      if (!wallet) {
+        console.log('Failed to connect to MetaMask');
+        return;
+      }
+      const network = await _getNetworkInfo();
+      if (network) {
+        handleOutput(`Network Information:
         Chain ID: ${network.chainId}
         Network ID: ${network.networkId}
         Network Name: ${network.networkName}`);
-    } else {
-      console.log('Failed to retrieve network information');
+      } else {
+        console.log('Failed to retrieve network information');
+      }
+      await sleep(5 * 60 * 1000); // Attendre 5 minutes
     }
-    await sleep(5 * 60 * 1000); // Attendre 5 minutes
   }
-}
 
-async function fetchAndDisplayTransactions() {
-  try {
-    let wallet = await _connectToMetaMask();
-    if (!wallet) {
-      console.log('Failed to connect to MetaMask');
-      return;
-    }
+  async function fetchAndDisplayTransactions() {
+    try {
+      let wallet = await _connectToMetaMask();
+      if (!wallet) {
+        console.log('Failed to connect to MetaMask');
+        return;
+      }
 
-    const publicKey = await _getPublicKey();
-    const apiKey = '13899XRJ6IPW6PJXJDQ9DMJ6ZMNP51PY7I'; // Replace with your Etherscan API key
-    const apiUrl = `https://api.etherscan.io/api?module=account&action=txlist&address=${publicKey}&sort=desc&apikey=${apiKey}`;
-    const response = await axios.get(apiUrl);
+      const publicKey = await _getPublicKey();
+      const apiKey = '13899XRJ6IPW6PJXJDQ9DMJ6ZMNP51PY7I'; // Replace with your Etherscan API key
+      const apiUrl = `https://api.etherscan.io/api?module=account&action=txlist&address=${publicKey}&sort=desc&apikey=${apiKey}`;
+      const response = await axios.get(apiUrl);
 
-    if (response.data.status === '1') {
-      const transactions = response.data.result;
-      transactions.forEach((transaction: Transaction) => {
-        console.log('success');
-        handleOutput(`Transaction Information:
+      if (response.data.status === '1') {
+        const transactions = response.data.result;
+        transactions.forEach((transaction: Transaction) => {
+          console.log('success');
+          handleOutput(`Transaction Information:
         Transaction Hash: ${transaction.hash}
         From: ${transaction.from}
         To: ${transaction.to}
@@ -570,50 +570,50 @@ async function fetchAndDisplayTransactions() {
         Gas Price: ${transaction.gasPrice}
         Timestamp: ${transaction.timeStamp}
         ----------------------------------`);
-      });
-    } else {
-      console.log('Failed to fetch transactions:', response.data.message);
-      handleOutput(`Failed to fetch transactions:${response.data.message} `);
-      console.log('Full Response:', response.data);
+        });
+      } else {
+        console.log('Failed to fetch transactions:', response.data.message);
+        handleOutput(`Failed to fetch transactions:${response.data.message} `);
+        console.log('Full Response:', response.data);
+      }
+    } catch (error: any) {
+      console.log('Error occurred:', error.message);
+
     }
-  } catch (error:any) {
-    console.log('Error occurred:', error.message);
-  
   }
-}
 
-// Interface pour définir le type de données stockées dans le localStorage
-interface InputData {
-  inputValue: string;
-}
-// Fonction pour vérifier si l'input existe déjà dans le localStorage
-function isInputExists(inputValue: string): boolean {
-  const storedInputs: InputData[] = JSON.parse(localStorage.getItem("inputs") || "[]");
-  return storedInputs.some((data) => data.inputValue === inputValue);
-}
+  // Interface pour définir le type de données stockées dans le localStorage
+  interface InputData {
+    inputValue: string;
+  }
+  // Fonction pour vérifier si l'input existe déjà dans le localStorage
+  function isInputExists(inputValue: string): boolean {
+    const storedInputs: InputData[] = JSON.parse(localStorage.getItem("inputs") || "[]");
+    return storedInputs.some((data) => data.inputValue === inputValue);
+  }
 
-// Fonction pour ajouter un nouvel input dans le localStorage s'il n'existe pas déjà
-function addInputToLocalStorage(inputValue: string): void {
-  // Vérifier si l'input existe déjà
-  if (!isInputExists(inputValue)) {
-    // Vérifier si le localStorage est supporté par le navigateur
-    if (typeof Storage !== "undefined") {
-      // Récupérer les inputs précédents (s'ils existent) depuis le localStorage
-      const storedInputs: InputData[] = JSON.parse(localStorage.getItem("inputs") || "[]");
+  // Fonction pour ajouter un nouvel input dans le localStorage s'il n'existe pas déjà
+  function addInputToLocalStorage(inputValue: string): void {
+    // Vérifier si l'input existe déjà
+    if (!isInputExists(inputValue)) {
+      // Vérifier si le localStorage est supporté par le navigateur
+      if (typeof Storage !== "undefined") {
+        // Récupérer les inputs précédents (s'ils existent) depuis le localStorage
+        const storedInputs: InputData[] = JSON.parse(localStorage.getItem("inputs") || "[]");
 
-      // Ajouter le nouvel input à la liste des inputs
-      storedInputs.push({ inputValue });
+        // Ajouter le nouvel input à la liste des inputs
+        storedInputs.push({ inputValue });
 
-      // Mettre à jour le localStorage avec la nouvelle liste d'inputs
-      localStorage.setItem("inputs", JSON.stringify(storedInputs));
+        // Mettre à jour le localStorage avec la nouvelle liste d'inputs
+        localStorage.setItem("inputs", JSON.stringify(storedInputs));
+      } else {
+        // Le localStorage n'est pas supporté par le navigateur
+        console.error("LocalStorage n'est pas supporté par ce navigateur.");
+      }
     } else {
-      // Le localStorage n'est pas supporté par le navigateur
-      console.error("LocalStorage n'est pas supporté par ce navigateur.");
+      console.log("L'input existe déjà dans le localStorage.");
     }
-  } else {
-    console.log("L'input existe déjà dans le localStorage.");
   }
-}
 
 
 //console.log(allInputs);
@@ -766,39 +766,39 @@ function addInputToLocalStorage(inputValue: string): void {
 
   if (input === "What is Bitcoin") {
 
-    handleOutput(`Bitcoin is a decentralized cryptocurrency based on blockchain technology. It is a form of digital currency that enables peer-to-peer transactions without the need for a central authority such as a bank.`);
-  }
-  else if (input === "How does Bitcoin work?") {
+      handleOutput(`Bitcoin is a decentralized cryptocurrency based on blockchain technology. It is a form of digital currency that enables peer-to-peer transactions without the need for a central authority such as a bank.`);
+    }
+    else if (input === "How does Bitcoin work?") {
 
-    handleOutput(`Bitcoin operates on a decentralized network of nodes, where transactions are recorded in a public ledger called the blockchain. Transactions are secured using cryptographic techniques, 
+      handleOutput(`Bitcoin operates on a decentralized network of nodes, where transactions are recorded in a public ledger called the blockchain. Transactions are secured using cryptographic techniques, 
                   and miners validate transactions by solving complex mathematical problems.`);
-  }
-  else if (input === "Who created Bitcoin?") {
+    }
+    else if (input === "Who created Bitcoin?") {
 
-    handleOutput(`Bitcoin was created by an individual or group of individuals using the pseudonym Satoshi Nakamoto. The true identity of Satoshi Nakamoto remains unknown to this day.`);
-  }
-  else if (input === "What is the difference between Bitcoin and traditional currencies?") {
+      handleOutput(`Bitcoin was created by an individual or group of individuals using the pseudonym Satoshi Nakamoto. The true identity of Satoshi Nakamoto remains unknown to this day.`);
+    }
+    else if (input === "What is the difference between Bitcoin and traditional currencies?") {
 
-    handleOutput(`Bitcoin differs from traditional currencies because it is not issued or controlled by a central authority like a central bank. It relies on blockchain technology and operates in a decentralized manner.`);
-  }
-  else if (input === "What is a Bitcoin address?") {
+      handleOutput(`Bitcoin differs from traditional currencies because it is not issued or controlled by a central authority like a central bank. It relies on blockchain technology and operates in a decentralized manner.`);
+    }
+    else if (input === "What is a Bitcoin address?") {
 
-    handleOutput(`A Bitcoin address is a unique alphanumeric string that represents the location where Bitcoins are stored. You can share this address with others to receive Bitcoins.`);
-  }
-  else if (input === "How can I securely store my Bitcoins?") {
+      handleOutput(`A Bitcoin address is a unique alphanumeric string that represents the location where Bitcoins are stored. You can share this address with others to receive Bitcoins.`);
+    }
+    else if (input === "How can I securely store my Bitcoins?") {
 
-    handleOutput(`You can store your Bitcoins in a Bitcoin wallet. Wallets can be either software wallets on electronic devices or physical hardware wallets that offer additional security.`);
-  }
-  else if (input === "How can I use Bitcoin to make transactions?") {
+      handleOutput(`You can store your Bitcoins in a Bitcoin wallet. Wallets can be either software wallets on electronic devices or physical hardware wallets that offer additional security.`);
+    }
+    else if (input === "How can I use Bitcoin to make transactions?") {
 
-    handleOutput(`To make a Bitcoin transaction, you need to know the recipient's Bitcoin address. You can send Bitcoins from your wallet using that address, specifying the amount and signing the transaction.`);
-  }
-  else if (input === "Is Bitcoin legal?") {
+      handleOutput(`To make a Bitcoin transaction, you need to know the recipient's Bitcoin address. You can send Bitcoins from your wallet using that address, specifying the amount and signing the transaction.`);
+    }
+    else if (input === "Is Bitcoin legal?") {
 
-    handleOutput(`The legality of Bitcoin varies from country to country. In many countries, Bitcoin is considered a legal form of digital asset, but some jurisdictions may restrict its use or regulation.`);
-  }
-  else if (input === "get Latest Transactions") {
-    fetchAndDisplayTransactions();
+      handleOutput(`The legality of Bitcoin varies from country to country. In many countries, Bitcoin is considered a legal form of digital asset, but some jurisdictions may restrict its use or regulation.`);
+    }
+    else if (input === "get Latest Transactions") {
+      fetchAndDisplayTransactions();
 
   } 
   
@@ -807,11 +807,7 @@ function addInputToLocalStorage(inputValue: string): void {
     console.log("Unknown input:", input);
     return false;
   }
-  popLastItem();
-  setIsTyping(false)
-  return true;
-}
-   //solana functions
+  //solana functions
   const _connectToPhantomWallet = async (): Promise<null | PhantomWalletAdapter> => {
 
     //@ts-ignore
@@ -935,7 +931,7 @@ function addInputToLocalStorage(inputValue: string): void {
       if (!balance || typeof balance != 'number')
         return null
 
-        const lamportsToSol = balance / 1e9;
+      const lamportsToSol = balance / 1e9;
       handleOutput("Your balance is " + lamportsToSol)
       return lamportsToSol;
     } catch (error: any) {
@@ -1161,8 +1157,8 @@ function addInputToLocalStorage(inputValue: string): void {
             setInput("");
             handleOutput(`Execution in progress ...`);
             if (remainingResult > 0) {
-              
-              if( input === 'Dessiner un graphique circulaire de la capitalisation boursière de Bitcoin, Ethereum et Binance.'){
+
+              if (input === 'Dessiner un graphique circulaire de la capitalisation boursière de Bitcoin, Ethereum et Binance.') {
 
                 //handleOutput("Exécution en progress ...")
                 // sleep(5000)
@@ -1189,8 +1185,7 @@ function addInputToLocalStorage(inputValue: string): void {
               else if (input === "check solana wallet") {
                 connecttobot()
               }
-              else if (input !=="")
-              {
+              else if (input !== "") {
 
                 try {
                   let res :any = await handleUserStaticInputRep(input);
@@ -1261,19 +1256,19 @@ function addInputToLocalStorage(inputValue: string): void {
     tu vas retourner {duration:5,isRepetitifTask:true}
     et la tache "give me bitcoin price"  est non repetitive tu vas retourner 
     {duration:0,isRepetitifTask:false}`
-    let rq ;
+    let rq;
     try {
       rq = await getDataCustmised(repetitiveQuerry);
     } catch (error: any) {
       handleOutput("", error.message, true)
     }
     let rs = null;
-    if(rq){
+    if (rq) {
       rs = parseTaskString(rq.text);
     }
     return rs;
   }
-  
+
 
   const chartType = async () => {
     let Querry = `the user asked me this question:"${input}" , could you decide if it's about draw a chart,
@@ -1295,24 +1290,24 @@ function addInputToLocalStorage(inputValue: string): void {
     13:Donut Chart
     14:Funnel Chart
     15:Area Chart`
-    
-    let rq ;
+
+    let rq;
     try {
       rq = await getDataCustmised(Querry);
-      
+
     } catch (error: any) {
       handleOutput("", error.message, true)
     }
     let rs = null;
-    if(rq){
+    if (rq) {
       rs = parseChartString(rq.text);
     }
     return rs;
-     
+
   }
-  
-  
-  
+
+
+
 
   async function logoutClicked() {
     await signOut();
@@ -1358,7 +1353,7 @@ function addInputToLocalStorage(inputValue: string): void {
     }
   }
   const handleOutput = (command: string, error: string = "", eye: boolean = false): void => {
-    setOutput((prevOutput:any) => {
+    setOutput((prevOutput: any) => {
       const lastOutput = prevOutput[prevOutput.length - 1];
       const isNewOutput = lastOutput?.input !== input.trim() || lastOutput?.command !== command;
 
@@ -1416,11 +1411,11 @@ function addInputToLocalStorage(inputValue: string): void {
   };
 
 
-  const addTask = async (task:any) => {
+  const addTask = async (task: any) => {
     try {
       await axios.post(`${ACCOUNT_MANAGEMENT}/api/tasks`, task);
       //console.log('Task saved successfully!');
-    } catch (error:any) {
+    } catch (error: any) {
       //console.log(error?.message);
     }
   };
@@ -1436,20 +1431,20 @@ function addInputToLocalStorage(inputValue: string): void {
     // Regular expressions to check for duration and repetitive task patterns in the string
     const durationRegex = /(\d+(\.\d+)?)(\s*(min|minute|hour|hr|h))/i;
     const repetitiveRegex = /(repetitive|repeat|daily|weekly|monthly|yearly)/i;
-  
+
     // Check for duration in the string and extract the number value
     const durationMatch = taskString.match(durationRegex);
     
     if (durationMatch) {
       duration = parseFloat(durationMatch[1]);
     }
-  
+
     // Check for repetitive task keywords in the string
     const repetitiveMatch = taskString.match(repetitiveRegex);
     if (repetitiveMatch) {
       isRepetitiveTask = true;
     }
-  
+
     // Return the object with the parsed values
     return { duration, isRepetitiveTask };
 
@@ -1496,23 +1491,23 @@ function parseBotchart1(inputString: string): { alerteTelegram: boolean } {
   
 
   function parseChartString(inputString: string): { Chart: number } {
-    
-    let chartNumber : number = 0;
+
+    let chartNumber: number = 0;
     // Regular expression to match the object pattern
     const regex = /{*\n*\s*"*Chart"*\s*:\s*(\d+)\n*}*/;
-  
+
     // Search for the object pattern in the input string
     const match = inputString.match(regex);
-  
+
     if (match) {
       // Extract the number from the matched object
       chartNumber = parseFloat(match[1]);
     }
-  
+
     // Create and return the object
     return { Chart: chartNumber };
   }
-  
+
 
 
   /*  const _getStatics = async (
@@ -1552,7 +1547,6 @@ function parseBotchart1(inputString: string): { alerteTelegram: boolean } {
 
     
     <div className="terminal">
-      <SideBar remaining={remainingRequests} disabled={isOpen} />
       <div className="mobile-hamburger">
            <Hamburger toggled={isOpen} toggle={setOpen} />
       </div> 
@@ -1599,7 +1593,7 @@ function parseBotchart1(inputString: string): { alerteTelegram: boolean } {
             {showMarketCapCharts ? <div className="marketcap-charts">
               <CryptomarketCapChart />
             </div> : null}
-            
+
 
             {/* {showBarChart ? <div className="bar-chart">
               <BarChart/>
@@ -1611,15 +1605,15 @@ function parseBotchart1(inputString: string): { alerteTelegram: boolean } {
           </div>
           
         </form>
-       {/*  <div>
+        {/*  <div>
       <input type="text" onChange={handleInput} />
       </div> */}
 
       </div>
-     
+
     </div>
-      
-   
+
+
 
   )
 };
