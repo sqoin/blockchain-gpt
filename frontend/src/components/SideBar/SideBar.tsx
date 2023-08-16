@@ -25,7 +25,7 @@ const SideBar: React.FC<{ remaining: number , disabled: boolean}> = ({ remaining
     setShowMenu(!showMenu);
   };
 
-<<<<<<< HEAD
+
   const session=useSessionContext();
  // const [userId, setUserId] = useState('');
   const [userEmail, setUserEmail] = useState('');
@@ -59,8 +59,7 @@ const SideBar: React.FC<{ remaining: number , disabled: boolean}> = ({ remaining
   }, [userId]);
 
 
-=======
->>>>>>> e124c01a80
+
 
   function redirectToAccDetails() {
     // window.open(SERVER_DOMAIN+"/accountdetails","_blank")
