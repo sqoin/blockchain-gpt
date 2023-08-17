@@ -8,7 +8,8 @@ import ProfileImage from "../../assets/images/ProfileImage.jpg"
 interface DropdownMenuProps {
     onLogout: () => void;
     onAccountDetails: () => void;
-    imageUpdated:boolean
+    imageUpdated:boolean;
+    idUser:string
 }
 
 interface IUser {
@@ -29,14 +30,14 @@ interface Image {
     data: string;
 }
 
-const DropdownMenu: React.FC<DropdownMenuProps> = ({ onLogout, onAccountDetails ,imageUpdated}) => {
+const DropdownMenu: React.FC<DropdownMenuProps> = ({ onLogout, onAccountDetails ,imageUpdated,idUser}) => {
     const [isOpen, setIsOpen] = useState(false);
     const [user, setUser] = useState<IUser | null>(null);
-    const [userId, setUserId] = useState<string>('user123');
+    const userId=idUser
     const [image, setImage] = useState<Image | undefined>();
     const getUserById = async (userId: any): Promise<IUser | null> => {
         try {
-          const response = await axios.get(`http://localhost:3003/api/getUserById/eaf34089-5734-4c5b-a175-40cb11e21f43`);
+          const response = await axios.get(`http://localhost:3003/api/getUserById/${userId}`);
           return response.data;
         } catch (error) {
           console.error('Error fetching user by ID:', error);
