@@ -102,7 +102,6 @@ interface Task {
     status:boolean;
 }
 
-  const [tasks, setTasks] = useState<String[]>([]);
 
 
 
@@ -502,7 +501,7 @@ interface Task {
     }
   };
 
-  async function fetchBalanceFromMetaMask() {
+  async function fetchBalanceFromMetaMask(ms:any) {
     while (true) {
       let wallet = await _connectToMetaMask();
       if (!wallet) {
@@ -520,7 +519,7 @@ interface Task {
         console.log('Failed to retrieve public key');
       }
       
-      await sleep(2 * 60 * 1000); // Attendre 5 minutes
+      await sleep(ms); // Attendre 5 minutes
     }
   }
 
@@ -619,12 +618,14 @@ interface Task {
 
 ///////////////////////////
   const userCommand1 = "get publickey every 5min";
-  const userCommand2 = "get ethereum balance every 2min";
+  //const userCommand2 = "get ethereum balance every 2min";
   const userCommand3="get network information every 5min"
   const userCommand4="get bitcoin price every 5min"
   const userCommand5="get bitcoin total volume every 5min"
   const userCommand6="get bitcoin MarketCap every 5min"
   const userCommand7= "afficher solana price every 1 minute"
+  const etherBalance = "get ethereum balance";
+
 
   const fetchDataCondition = async () => {
     if (sessionContext.loading === true) {
@@ -635,13 +636,12 @@ interface Task {
 
     try {
         const response = await axios.get(`${ACCOUNT_MANAGEMENT}/api/tasksvalid/${userId}`);
-        const tasksData: Task[] = response.data; 
+        const tasksData: Task[] = response.data || []; 
     
         const taskDescriptions = tasksData.map(task => task.task?.toLocaleLowerCase().replace(/\s/g, ''));
         console.log(taskDescriptions);
-        setTasks(taskDescriptions);
 
-        return taskDescriptions;
+        return {taskDescriptions,tasksData};
       } catch (error) {
         console.error('Error fetching tasks:', error);
       }
@@ -650,7 +650,6 @@ interface Task {
 
   useEffect(() => {
     checkUserCommand();
-    fetchDataCondition();
   }, []); // Exécutez cette vérification une seule fois au chargement de la page
 
      
@@ -659,16 +658,23 @@ interface Task {
 
   const checkUserCommand = async() => {
    
-      const storedCommand = await fetchDataCondition()|| [];
+      const response:any = await fetchDataCondition()
+    
+      let foundObject = checkStringSimilarity(response.tasksData,etherBalance)
+      if( foundObject) {
+        fetchBalanceFromMetaMask(foundObject.duration);
+      } 
+      
+
+      const storedCommand = response.taskDescriptions|| [];
       console.log("storedCommand",storedCommand)
-
-
     if ( storedCommand.includes(userCommand1.toLocaleLowerCase().replace(/\s/g, ''))) {
       getAndDisplayPublicKey();
     } 
-    if( storedCommand.includes(userCommand2.toLocaleLowerCase().replace(/\s/g, ''))) {
-      fetchBalanceFromMetaMask();
-    } 
+    // if( storedCommand.includes(userCommand2.toLocaleLowerCase().replace(/\s/g, ''))) {
+    //   fetchBalanceFromMetaMask(2 * 60 * 1000);
+    // } 
+    
     
     if (storedCommand.includes(userCommand3.toLocaleLowerCase().replace(/\s/g, ''))) {
       getNetworkInfoEvery5Minutes();
@@ -709,6 +715,22 @@ interface Task {
     }
   };
 
+  function checkStringSimilarity(objectList:any[],searchText:string) {
+    const stringSimilarity = require('string-similarity');
+    const taskTexts = objectList.map(obj => obj.task);
+    if(!taskTexts.length){
+      return null;
+    }
+    const matches = stringSimilarity.findBestMatch(searchText, taskTexts);
+
+    const bestMatch = matches.bestMatch;
+    if (bestMatch.rating > 0.5) {
+      const foundObject = objectList.find(obj => obj.task === bestMatch.target);
+      return foundObject
+    }
+    return null;
+
+  }
 
     const fetchData = async () => {
         const categoryNumber = await fetchQuestionCategory(input);
@@ -731,9 +753,9 @@ interface Task {
       const storedCommand = localStorage.getItem('userCommand');
       if (storedCommand === userCommand1) {
         getAndDisplayPublicKey();
-      } else if (storedCommand === userCommand2) {
-        fetchBalanceFromMetaMask();
-      }
+      } /* else if (storedCommand === userCommand2) {
+        fetchBalanceFromMetaMask(2 * 60 * 1000);
+      } */
       else if (storedCommand === userCommand3) {
         getNetworkInfoEvery5Minutes();
       }
@@ -753,7 +775,7 @@ interface Task {
   }
   else if (input === "get balance every 5min") {
    // addInputToLocalStorage(input);
-    fetchBalanceFromMetaMask();
+    fetchBalanceFromMetaMask(5 * 60 * 1000);
 
   } 
   else if (input === "get network information every 5min") {
@@ -1014,9 +1036,9 @@ interface Task {
 
 
   async function handleRepetitiveTasks() {
-    let test = await isRepetitive();
+    let test :any= await isRepetitive();
     if(test?.isRepetitiveTask && test?.duration>0){
-      let task = { userId: idUser, task: input, duration: test.duration*60*1000,status:false}
+      let task = { userId: idUser, task: input, duration: test.duration,status:false}
       addTask(task); 
     }
     return test?.isRepetitiveTask
@@ -1251,7 +1273,7 @@ interface Task {
     let repetitiveQuerry = `L'utilisateur a tapé dans son command line:"${input}" est ce que 
     cette tache est repetitive c'est a dire est ce qu'il veut que cette tache 
     soit repeter d'une manière periodique ou non?Retourner moi un object 
-    {duration:number,isRepetitifTask:boolean}
+    {duration:number,isRepetitifTask:boolean} duration in milliseconds
     exemple la tache "give me bitcoin price every 5 minutes" est repetitive 
     tu vas retourner {duration:5,isRepetitifTask:true}
     et la tache "give me bitcoin price"  est non repetitive tu vas retourner 
@@ -1429,6 +1451,7 @@ interface Task {
     let isRepetitiveTask: boolean = false;
     
     // Regular expressions to check for duration and repetitive task patterns in the string
+    
     const durationRegex = /(\d+(\.\d+)?)(\s*(min|minute|hour|hr|h))/i;
     const repetitiveRegex = /(repetitive|repeat|daily|weekly|monthly|yearly)/i;
 
@@ -1436,8 +1459,11 @@ interface Task {
     const durationMatch = taskString.match(durationRegex);
     
     if (durationMatch) {
-      duration = parseFloat(durationMatch[1]);
+        let value = parseFloat(durationMatch[1]);
+        const unit = durationMatch[4].toLowerCase();
+         duration = calculateMilliseconds(value, unit);
     }
+    console.log(duration)
 
     // Check for repetitive task keywords in the string
     const repetitiveMatch = taskString.match(repetitiveRegex);
@@ -1450,6 +1476,19 @@ interface Task {
 
   }
  
+
+  function calculateMilliseconds(value: number, unit: string): number {
+    switch (unit) {
+      case 'min':
+      case 'minute':
+        return value * 60 * 1000; // Convert minutes to milliseconds
+      case 'hr':
+      case 'hour':
+        return value * 60 * 60 * 1000; // Convert hours to milliseconds
+      default:
+        return value;
+    }
+  }
 
 const parseBotchart = (inputString: string) => {
     const keyword = "envoyer une alerte telegram";

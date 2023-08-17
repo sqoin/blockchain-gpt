@@ -19,7 +19,9 @@ const ImageUpload: React.FC<any> = ({ updateImage, idUser }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchImagesByUser(userId);
+    if(userId){
+      fetchImagesByUser(userId);
+    }
   }, [userId]);
 
   const fetchImagesByUser = async (userId: string) => {

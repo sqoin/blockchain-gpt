@@ -54,11 +54,15 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ onLogout, onAccountDetails 
     
     
       useEffect(() => {
-        fetchUser();
+          if(userId){
+            fetchUser();
+          }
       }, [userId]);
 
     useEffect(() => {
-        fetchImagesByUser(userId);
+        if(userId){
+            fetchImagesByUser(userId);
+        }
     }, [userId,imageUpdated]);
 
     const fetchImagesByUser = async (userId: string) => {
