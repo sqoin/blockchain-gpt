@@ -43,7 +43,7 @@ function App() {
     function updateImage() {
         setImageUpdated(!imageUpdated);
     }
-
+    const [remainingRequests, setRemainingRequests] = useState(20);
     return (
         <SuperTokensWrapper>
             <div className="App app-container">
@@ -55,12 +55,12 @@ function App() {
                             {getSuperTokensRoutesForReactRouterDom(require("react-router-dom"))}
                             <div className="fix">
                                 <div className="sidebar-container">
-                                    <SideBar remaining={20} imageUpdated={imageUpdated} />
+                                    <SideBar remaining={remainingRequests} imageUpdated={imageUpdated} />
                                 </div>
                                 <div className="pages-container">
                                     <Route exact path="/">
                                         <SessionAuth>
-                                            <Home />
+                                            <Home remainingRequests={remainingRequests} setRemainingRequests={setRemainingRequests}/>
                                         </SessionAuth>
 
                                     </Route>
@@ -91,7 +91,6 @@ function App() {
 
 
                                     </Route>
-
                                     <Route
                                         path="/accountdetails"><AccountDetails userId={user.userId} updateImage={updateImage} /></Route>
 

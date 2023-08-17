@@ -18,8 +18,8 @@ interface ILink {
   icon: string;
 }
 
-export default function SuccessView(props: { userId: string }) {
-  let userId = props.userId;
+const SuccessView: React.FC<{ idUser: string, remainingRequests: any, setRemainingRequests: any }> = ({ idUser, remainingRequests, setRemainingRequests }) => {
+  let userId = idUser;
 
   const history = useHistory();
 
@@ -58,14 +58,14 @@ export default function SuccessView(props: { userId: string }) {
       icon: SignOutIcon,
     },
   ];
-  
+
   return (
     <>
       <div className="main-container">
-        <Terminal idUser={userId}></Terminal>
+        <Terminal idUser={userId} remainingRequests={remainingRequests} setRemainingRequests={setRemainingRequests} ></Terminal>
       </div>
 
-      
+
       {/* <div className="bottom-links-container">
         {links.map((link) => (
           <div className="link" key={link.name}>
@@ -80,4 +80,4 @@ export default function SuccessView(props: { userId: string }) {
   );
 }
 
-
+export default SuccessView

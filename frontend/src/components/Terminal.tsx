@@ -59,7 +59,7 @@ interface Output {
   eye: boolean;
 }
 
-const Terminal: React.FC<{ idUser: string }> = ({ idUser }:any) => {
+const Terminal: React.FC<{ idUser: string,remainingRequests:any ,setRemainingRequests :any }> = ({ idUser ,remainingRequests ,setRemainingRequests}) => {
 
   const [questionCategory, setQuestionCategory] = useState<number | null>(null);
   const [showEye, setShowEye] = useState(false);
@@ -70,7 +70,6 @@ const Terminal: React.FC<{ idUser: string }> = ({ idUser }:any) => {
 
   const [showChart, setShowChart] = useState(false);
   const [output, setOutput] = useState<Output[]>([]);
-  const [remainingRequests, setRemainingRequests] = useState(20); 
   const [solanaNetwork, setSolanaNetwork] = useState<string>(
     "https://api.mainnet-beta.solana.com"
   );
