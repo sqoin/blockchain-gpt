@@ -87,8 +87,22 @@ body{
     margin-top: 4px;
 }
 
-@media only screen and (max-width: 1200px) {
-    .sidebar{
-        width: 400px;
+.sidebar.hidden {
+    display: none; /* Hide the sidebar */
+    position: absolute; /* Ensure it doesn't take up space */
+    top: -100%; /* Position it off-screen */
+    opacity: 0; /* Make it completely invisible */
+    pointer-events: none; /* Disable interactions */
+    transition: opacity 0.3s ease-out; /* Add a smooth transition */
+  }
+
+
+@media only screen and (max-width: 400px) {
+    .sidebar {
+      display: none; /* Hide the entire sidebar */
     }
-}
+  
+    .mobile-hamburger {
+      display: block; /* Show the hamburger menu */
+    }
+  }

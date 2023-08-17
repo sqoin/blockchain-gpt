@@ -254,26 +254,46 @@
 }
 
 
-/* .toggle-button {
-  font-size: 16px;
-  padding: 10px 20px;
-  background-color: #adadad; 
-  color: #fff; 
-  border: none;
-  border-radius: 1000px; 
-  cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
-  margin-left: 0px;
-
-
-
-}
-.toggle-container {
-  display: flex;
-  justify-content: flex-end; 
-  margin-right: 0px; 
+@media (max-width: 1200px) {
+  .accountdetails .form {
+    width: 90%; /* Reduce the width */
+    max-width: 600px; /* Set a maximum width */
+  }
 }
 
-.toggle-button.on {
-  background-color: #2ECC71; 
-} */
+@media (max-width: 768px) {
+  /* Adjust styles for screens up to 768px wide */
+  .accountdetails .form {
+    transform: translateY(50px); /* Adjust the vertical position */
+    width: 80%; /* Reduce the width further */
+    max-width: 400px; /* Set a maximum width */
+  }
+
+  .accountdetails h1 {
+    font-size: 24px; /* Adjust font size */
+  }
+}
+
+@media (max-width: 400px) {
+  /* Adjust styles for screens up to 576px wide */
+  .accountdetails .form {
+    transform: translateY(20px); /* Adjust the vertical position */
+    width: 100%; /* Take full width */
+    max-width: none; /* Reset max width */
+  }
+
+  .accountdetails h1 {
+    font-size: 20px; /* Adjust font size */
+  }
+
+  .button-container {
+    flex-direction: row; /* Align buttons horizontally */
+    align-items: center;
+  }
+
+  .first-button-container {
+    flex-direction: column; /* Stack buttons vertically */
+    gap: 10px;
+  }
+}
+
