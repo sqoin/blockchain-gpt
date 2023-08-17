@@ -72,23 +72,18 @@ function App() {
                             <TelegramMessage/>
                         
                         </SessionAuth></Route> 
-                       <Route path="/history">
 
-                       <SessionAuth>
-                        <History/>
+                       <Route path="/history">
+                        <SessionAuth>
+                        <div className="fix">
+                                    <SideBar remaining={20} disabled={false}/>
+                                    <History/>
+                                    </div>
+
                        </SessionAuth>
 
 
                        </Route>
-
-
-
-
-
-
-
-
-
                             
                            <Route
                                 path="/ServiceUnavailable"><ServiceNotAvailable /></Route>
