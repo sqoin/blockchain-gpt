@@ -3,6 +3,9 @@ import axios, { AxiosResponse } from 'axios';
 import { useSessionContext } from 'supertokens-auth-react/recipe/session';
 import { ACCOUNT_MANAGEMENT } from '../../utils/constants';
 import './history.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendarAlt, faSearch,faPen ,faTable } from '@fortawesome/free-solid-svg-icons';
+
 
 const History: React.FC = () => {
   const [inputHistory, setInputHistory] = useState<{ input: string, date: string }[]>([]);
@@ -25,7 +28,7 @@ const History: React.FC = () => {
         const data = response.data;
         setInputHistory(data.map((item: { input: string, date: string }) => ({
           input: item.input,
-          date: new Date(item.date).toLocaleString() // Formatez la date comme vous le souhaitez
+          date: new Date(item.date).toLocaleDateString('fr-FR', {  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
         })));
       })
       .catch((error:any) => {
@@ -33,43 +36,53 @@ const History: React.FC = () => {
       });
   }, []);
   const handleSearchChange = (event:any) => {
-    setSearchTerm(event.target.value.toLowerCase());
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredHistory = inputHistory.filter((item:any) =>
+    item.input.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  const countRows = () => {
+    return inputHistory.length;
   };
 
 return (
-    <div className='history-container'>
+<div className='history-container'>
 
-        <div className="box-container">
-          
-        <div className="search-bar">
-    <svg className="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-      <path d="M10 18a8 8 0 1 1 8-8h-2a6 6 0 1 0-6 6v2zm-7.5-4a7.5 7.5 0 0 1 11.971-6.042l4.256 4.256a1 1 0 0 1-1.414 1.414l-4.256-4.256A7.5 7.5 0 0 1 2.5 14z"/>
-    </svg>
-    
-    <input
-          type="text"
-          className="search-input"
-          placeholder="Rechercher..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-        />  </div>
+    <div className="horizontal-container ">
+      
 
-        {inputHistory.map((item:any, index:any) => (
-        <div className="box" key={index}>
-          <ul>
-            <li>
-              <p><strong>Input:</strong> {item.input}</p>
-              <p><strong>Date:</strong> {item.date}</p>
-            </li>
-          </ul>
-        </div>
-  ))}
-        </div>
+    <div className="search-bar" >
+    <FontAwesomeIcon icon={faSearch} className="custom-icon" />
+    <input type="text" className="search-input" placeholder="Rechercher..." value={searchTerm}
+            onChange={handleSearchChange}
+   />  
+    </div>
+
+
+    <div className="right-section">
+    <p style={{ fontSize: '20px' }}><FontAwesomeIcon icon={faTable}/> {countRows()}</p>
     </div>
 
 
 
+    </div> 
+
+
+    <div className="box-container">
+    {inputHistory.map((item:any, index:any) => (
+    <div className="box" key={index}>
    
+       
+          <p><FontAwesomeIcon icon={faPen }className="custom-icon1" />{item.input}</p>
+          <p><FontAwesomeIcon icon={faCalendarAlt} className="custom-icon1"  /> {item.date}</p>
+
+       
+     </div>
+    ))}
+    </div>
+</div>
+
 );
 
 };
