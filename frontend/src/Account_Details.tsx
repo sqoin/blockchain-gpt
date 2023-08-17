@@ -184,7 +184,7 @@ const AccountDetails: React.FC<any> = ({ userId ,updateImage}) => {
               aria-labelledby="account-tab"
             >
               <div className="profile-image-container">
-                <ImageUpload updateImage={updateImage}/>
+                <ImageUpload updateImage={updateImage} idUser={userId}/>
               </div>
               <h2 className="mb-4">Account Details</h2>
               <div className="row">

@@ -11,9 +11,10 @@ interface Image {
   data: string;
 }
 
-const ImageUpload: React.FC <any>= ({updateImage}) => {
+const ImageUpload: React.FC<any> = ({ updateImage, idUser }) => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [userId, setUserId] = useState<string>('user123');
+  const [previewImage, setPreviewImage] = useState<string | null>(null); 
+  const userId = idUser;
   const [image, setImage] = useState<Image | undefined>();
   const [loading, setLoading] = useState(true);
 
@@ -34,7 +35,9 @@ const ImageUpload: React.FC <any>= ({updateImage}) => {
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setSelectedImage(e.target.files[0]);
+      const selectedFile = e.target.files[0];
+      setSelectedImage(selectedFile);
+      setPreviewImage(URL.createObjectURL(selectedFile)); 
     }
   };
 
@@ -54,7 +57,7 @@ const ImageUpload: React.FC <any>= ({updateImage}) => {
 
       console.log('Image uploaded successfully');
       setImage(response.data);
-      updateImage()
+      updateImage();
     } catch (error) {
       console.error('Error uploading image', error);
     }
@@ -66,10 +69,16 @@ const ImageUpload: React.FC <any>= ({updateImage}) => {
         <div>Loading...</div>
       ) : (
         <>
-          {image?.data ? (
-            <img className='profile' src={`data:image/jpeg;base64,${image?.data}`} alt={image?.name} />
+          {previewImage ? (
+            <img className='profile' src={previewImage} alt='Preview' />
           ) : (
-            <img className='profile' src={ProfileImage} alt='Default' />
+            <>
+              {image?.data ? (
+                <img className='profile' src={`data:image/jpeg;base64,${image?.data}`} alt={image?.name} />
+              ) : (
+                <img className='profile' src={ProfileImage} alt='Default' />
+              )}
+            </>
           )}
           <div className='file-input-container'>
             <input type='file' accept='image/*' onChange={handleImageChange} className='file-input' />
