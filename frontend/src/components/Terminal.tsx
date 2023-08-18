@@ -5,10 +5,9 @@ import { Connection, PublicKey, Version } from "@solana/web3.js";
 import { useHistory, useLocation } from "react-router-dom";
 import { signOut } from "supertokens-auth-react/recipe/session";
 import { SignOutIcon } from "../assets/images";
-import SideBar from "./SideBar/SideBar"
 import CmdOutput from "./CmdOutput/CmdOutput";
 import { _getCryptoCurrencyQuote } from "../adapters/market";
-import { TELEGRAM_NOTIFICATION } from '../../src/utils/constants';
+import { PAID_NODE_URL, TELEGRAM_NOTIFICATION } from '../../src/utils/constants';
 import getChatIdFromTelegram  from "../components/telegram-message/TelegramMessage";
 
 /// @ts-ignore
@@ -26,6 +25,7 @@ import { ACCOUNT_MANAGEMENT } from "../utils/constants";
 import { fetchQuestionCategory } from "./QuestionCategory";
 import axios, { AxiosResponse } from 'axios'; 
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
+import { createWSEndpoint } from "../utils/headers";
 
 let id='';
 
@@ -140,6 +140,7 @@ interface Task {
           } else {
 
             setIsTyping(false)
+            
             popLastItem();
             resolve(res);
           }
@@ -157,12 +158,12 @@ interface Task {
         .end((err: any, res: any) => {
           if (err) {
 
-            setIsTyping(false)
+            //setIsTyping(false)
             //popLastItemCustomised();
             reject(err);
           } else {
 
-            setIsTyping(false)
+            //setIsTyping(false)
             //popLastItemCustomised();
             resolve(res);
           }
@@ -501,8 +502,8 @@ interface Task {
     }
   };
 
-  async function fetchBalanceFromMetaMask(ms:any) {
-    while (true) {
+  async function fetchBalanceFromMetaMask(ms?:any) {
+    do {
       let wallet = await _connectToMetaMask();
       if (!wallet) {
         console.log('Failed to connect to MetaMask');
@@ -513,14 +514,14 @@ interface Task {
       const balance = await _getBalance(publicKey);
 
       if (balance) {
-        console.log('balance:', balance);
+        //console.log('balance:', balance);
         handleOutput(`my ethereum balance: ${balance}`);
       } else {
         console.log('Failed to retrieve public key');
       }
       
       await sleep(ms); // Attendre 5 minutes
-    }
+    }while (ms)
   }
 
   async function getNetworkInfoEvery5Minutes() {
@@ -625,7 +626,7 @@ interface Task {
   const userCommand6="get bitcoin MarketCap every 5min"
   const userCommand7= "afficher solana price every 1 minute"
   const etherBalance = "get ethereum balance";
-
+  const solanaBalance = "get solana balance";
 
   const fetchDataCondition = async () => {
     if (sessionContext.loading === true) {
@@ -665,6 +666,10 @@ interface Task {
         fetchBalanceFromMetaMask(foundObject.duration);
       } 
       
+      foundObject = checkStringSimilarity(response.tasksData,solanaBalance)
+      if( foundObject) {
+        repeatGetSolanaBalance(foundObject.duration);
+      } 
 
       const storedCommand = response.taskDescriptions|| [];
       console.log("storedCommand",storedCommand)
@@ -947,14 +952,24 @@ interface Task {
 
   const _getSolanaBalance = async (address: string): Promise<null | number> => {
     try {
-      let connection = new Connection(/* solanaNetwork */rpcUrlInitial)
+     // let connection = new Connection(/* solanaNetwork */rpcUrlInitial)
+     const rpcUrl:any = PAID_NODE_URL;
+    const username = process.env.REACT_APP_RPC_USERNAME;
+    const password = process.env.REACT_APP_RPC_PASSWORD;
+      const connection = new Connection(rpcUrl, {
+        httpHeaders: {
+          Authorization: `Basic ${btoa(`${username}:${password}`)}`,
+          Origin: "https://app.novafi.xyz",
+        },
+        wsEndpoint: createWSEndpoint(rpcUrl),
+      });
       const publicKey = address ? new PublicKey(address) : solanaWallet.publicKey;
       const balance = await connection.getBalance(publicKey);
       if (!balance || typeof balance != 'number')
         return null
 
       const lamportsToSol = balance / 1e9;
-      handleOutput("Your balance is " + lamportsToSol)
+      handleOutput("my solana balance is " + lamportsToSol)
       return lamportsToSol;
     } catch (error: any) {
       return null;
@@ -992,6 +1007,23 @@ interface Task {
     }
   };
 
+  async function repeatGetSolanaBalance(ms?:any) {
+    
+
+    do {
+      let wallet: any = await _connectToPhantomWallet();
+      let balance = await _getSolanaBalance(wallet?.publicKey?.toBase58());
+
+      if (balance) {
+        console.log('balance:', balance);
+      } else {
+        console.log('Failed to retrieve solana balance');
+      }
+      
+      await sleep(ms); // Attendre ms 
+    }while (ms)
+
+  }
   async function connecttobot() {
 
     // Add the static response to the output
@@ -1220,14 +1252,29 @@ interface Task {
                   if(bool) {
                     //alert("repetetive task")
                   }
-                  await handleChartType()
-                  await handletelegram()
+                  //await handleChartType()
+                  //await handletelegram()
 
 
                  
-                   
+                    let foundObject = checkStringSimilarity([{task:input}],etherBalance)
+                    if( foundObject) {
+                      await fetchBalanceFromMetaMask();
+                      return;
+                    }
+
+                    foundObject = checkStringSimilarity([{task:input}],solanaBalance)
+                    if( foundObject) {
+                      await repeatGetSolanaBalance();
+                      return;
+                    }
+
                     const resData = await getData(input);
                     result = await processServerResponse(resData.text, handleOutput);
+
+
+                    
+
                   } catch (error: any) {
                     setError(error.message);
                     setShowEye(true)
@@ -1452,7 +1499,7 @@ interface Task {
     
     // Regular expressions to check for duration and repetitive task patterns in the string
     
-    const durationRegex = /(\d+(\.\d+)?)(\s*(min|minute|hour|hr|h))/i;
+    const durationRegex = /(\d+(\.\d+)?)(\s*(s|sec|seconds|min|minute|hour|hr|h))/i;
     const repetitiveRegex = /(repetitive|repeat|daily|weekly|monthly|yearly)/i;
 
     // Check for duration in the string and extract the number value
@@ -1479,6 +1526,10 @@ interface Task {
 
   function calculateMilliseconds(value: number, unit: string): number {
     switch (unit) {
+      case 's':
+      case 'sec':
+        case 'seconds':
+        return value * 1000; // Convert minutes to milliseconds
       case 'min':
       case 'minute':
         return value * 60 * 1000; // Convert minutes to milliseconds
