@@ -50,6 +50,7 @@ body{
 .sidebar .options{
     border-top: 1px solid rgba(195, 195, 195, 0.56);
     padding-top: 2px;
+    gap: 2px;
 }
 
 .sidebar .sidebar-btn, .sidebar .sidebar-text{
