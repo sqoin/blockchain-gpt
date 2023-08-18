@@ -39,43 +39,31 @@ const History: React.FC = () => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredHistory = inputHistory.filter((item:any) =>
-    item.input.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  
   const countRows = () => {
     return inputHistory.length;
   };
-
+ 
 return (
 <div className='history-container'>
 
     <div className="horizontal-container ">
-      
-
     <div className="search-bar" >
     <FontAwesomeIcon icon={faSearch} className="custom-icon" />
     <input type="text" className="search-input" placeholder="Rechercher..." value={searchTerm}
-            onChange={handleSearchChange}
-   />  
+            onChange={handleSearchChange} />  
     </div>
-
-
     <div className="right-section">
     <p style={{ fontSize: '20px' }}><FontAwesomeIcon icon={faTable}/> {countRows()}</p>
     </div>
-
-
-
     </div> 
-
-
     <div className="box-container">
-    {inputHistory.map((item:any, index:any) => (
-    <div className="box" key={index}>
+      {inputHistory.map((item:any, index:any) => (
+     <div className="box" key={index}>
    
        
-          <p><FontAwesomeIcon icon={faPen }className="custom-icon1" />{item.input}</p>
-          <p><FontAwesomeIcon icon={faCalendarAlt} className="custom-icon1"  /> {item.date}</p>
+      <p><FontAwesomeIcon icon={faPen }className="custom-icon1" />{item.input}</p>
+      <p><FontAwesomeIcon icon={faCalendarAlt} className="custom-icon1"  /> {item.date}</p>
 
        
      </div>
