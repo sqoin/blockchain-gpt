@@ -1,32 +1,33 @@
 import mongoose from 'mongoose'
 
-interface IRegister{
+interface IUser{
     ID: string,
     creation_date: Date,
     expiration_date: Date,
     name: string,
-    lastName: string
-    email: string
-    account_status: string
-    telegram_user_name: string
-    github_account: string
+    lastName: string,
+    email: string,
+    account_status: string,
+    telegram_user_name: string,
+    github_account: string,
+    paymentDate?: Date
   }
-  interface RegisterModelInterface extends mongoose.Model<RegistertDoc> {
-    build(attr: IRegister):RegistertDoc
+  interface UserModelInterface extends mongoose.Model<UsertDoc> {
+    build(attr: IUser):UsertDoc
   }
-  interface RegistertDoc extends mongoose.Document {
+  interface UsertDoc extends mongoose.Document {
     ID: string,
     creation_date: Date,
     expiration_date: Date,
     name: string,
-    lastName: string
-    email :string
-    account_status: string
-    telegram_user_name :string
-    github_account: string
-
+    lastName: string,
+    email :string,
+    account_status: string,
+    telegram_user_name :string,
+    github_account: string,
+    paymentDate?: Date
   }
-const registerSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     ID: {
         type: String,
         required: false
@@ -62,12 +63,16 @@ const registerSchema = new mongoose.Schema({
     github_account:{
       type: String,
       required:false
+    },
+    paymentDate: {
+      type: Date,
+      required: false,
     }
   })
-  registerSchema.statics.build = (attr: IRegister) => {
-    return new Register(attr)
+  userSchema.statics.build = (attr: IUser) => {
+    return new User(attr)
   }
-  const Register = mongoose.model<RegistertDoc, RegisterModelInterface>('register', registerSchema)
+  const User = mongoose.model<UsertDoc, UserModelInterface>('User', userSchema)
  
 
-  export { Register , IRegister}
+  export { User , IUser}

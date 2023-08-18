@@ -1,15 +1,15 @@
-import {IRegister, Register} from "./models/model";
+import { User,IUser } from './models/user';
 
 require('./config.js');
-async function insertData(data: IRegister) {
+async function insertData(data: IUser) {
   try {
-    const existingUser = await Register.findOne({ ID: data.ID });
+    const existingUser = await User.findOne({ ID: data.ID });
     if (existingUser) {
       return;
     }
 
     data.creation_date = new Date();
-    const insertResult = await Register.create(data);
+    const insertResult = await User.create(data);
     console.log('Inserted document:', insertResult);
   } catch (error) {
     console.error('Error inserting data:', error);

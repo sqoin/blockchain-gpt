@@ -1,10 +1,23 @@
+import { Request, Response } from 'express';
+import axios from 'axios';
 var express = require("express");
 const cors = require('cors');
-
 var bodyParser = require("body-parser");
-
+interface IUser{
+  ID: string,
+  creation_date: Date,
+  expiration_date: Date,
+  name: string,
+  lastName: string,
+  email: string,
+  account_status: string,
+  telegram_user_name: string,
+  github_account: string,
+  paymentDate?: Date
+}
 let PORT=3033;
 var app = express();
+
 app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -62,18 +75,58 @@ app.get("/user-behaviour/getRequestNumberPerDay", (req:any, res:any) => {
 app.get("/user-behaviour/PaidAccounts", (req:any, res:any) => {let result = [
   { name: "freeAccounts", count: 15 },
   { name: "PaidAccounts", count:30 }]
-
-  
-
-    
-
   res.send(result);
-
-
-
-  
-
 });
+
+app.get('/userStatusCounts', async (req: Request, res: Response) => {
+  try {
+    const apiEndpoint = 'http://localhost:3003/api/getAllUsers'; 
+
+    const response = await axios.get(apiEndpoint);
+    const users = response.data;
+
+    const year = new Date().getUTCFullYear();
+    const counts: { name: string; count: number; date: string }[] = [];
+
+    for (let month = 0; month < 12; month++) {
+      const startDate = new Date(Date.UTC(year, month, 1, 0, 0, 0));
+      const endDate = new Date(Date.UTC(year, month + 1, 0, 23, 59, 59));
+
+      const freeAccountsCount = users.filter((usr: IUser) =>
+        usr.account_status === 'freeAccount' &&
+        new Date(usr.creation_date) >= startDate &&
+        new Date(usr.creation_date) <= endDate
+      ).length;
+
+      const paidAccountsCount = users.filter((usr: IUser) =>
+        usr.account_status === 'PaidAccount' &&
+        new Date(usr.creation_date) >= startDate &&
+        new Date(usr.creation_date) <= endDate
+      ).length;
+
+      const formattedDate = startDate.toISOString().slice(0, 10).replace(/-/g, '') + '000000';
+
+      counts.push({
+        name: 'freeAccounts',
+        count: freeAccountsCount,
+        date: formattedDate,
+      });
+
+      counts.push({
+        name: 'PaidAccounts',
+        count: paidAccountsCount,
+        date: formattedDate,
+      });
+    }
+
+    res.json( counts );
+  } catch (error) {
+    console.error('Error fetching user status counts:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
 
 
 

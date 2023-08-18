@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express';
-import { Register, IRegister } from '../models/model';
+import { User,IUser } from '../models/user';
 import { insertData } from "../databaseManager";
 import ThirdPartyEmailPassword from "supertokens-node/recipe/thirdpartyemailpassword";
 import SuperTokens from 'supertokens-node';
@@ -42,7 +42,7 @@ router.post('/saveUserId', async (req: Request, res: Response) => {
   const { userId } = req.body;
 
   try {
-    const existingUser = await Register.findOne({ ID: userId });
+    const existingUser = await User.findOne({ ID: userId });
     if (existingUser) {
       console.log("existing user: " + JSON.stringify(existingUser))
       name = existingUser.name;
@@ -81,7 +81,7 @@ router.post('/saveUserId', async (req: Request, res: Response) => {
     ID_user = userId;
     console.log('User information: ', userInfo);
 
-    const dataToInsert: IRegister = {
+    const dataToInsert: IUser = {
       creation_date: new Date(), ID: userId, name: '', lastName: '', email: userEmail, expiration_date: new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000),
       account_status: 'freeAccount', telegram_user_name: '', github_account: githubaccount
     };
@@ -99,7 +99,7 @@ router.get('/getUserById/:id', async (req: Request, res: Response) => {
   try {
     const userId: string = req.params.id;
     console.log("found user: ",userId);
-    const user = await Register.findOne({ ID: userId });
+    const user = await User.findOne({ ID: userId });
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -111,13 +111,22 @@ router.get('/getUserById/:id', async (req: Request, res: Response) => {
   }
 });
 
+router.get('/getAllUsers', async (req: Request, res: Response) => {
+  try {
+    const users = await User.find({});
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch users' });
+  }
+});
+
 
 router.put('/updateUser', async (req: Request, res: Response) => {
 
   try {
 
     const userId = req.body.userId;
-    const user = await Register.findOne({ ID: userId });
+    const user = await User.findOne({ ID: userId });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -138,7 +147,7 @@ router.post('/updateUserStatus', async (req: Request, res: Response) => {
   const id = req.body.id;
 
   try {
-    const user = await Register.findOne({ ID: id });
+    const user = await User.findOne({ ID: id });
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
@@ -149,6 +158,7 @@ router.post('/updateUserStatus', async (req: Request, res: Response) => {
 
     user.expiration_date = expirationDate;
     user.account_status = "PaidAccount";
+    user.paymentDate = new Date();
 
     await user.save();
 
