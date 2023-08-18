@@ -185,12 +185,8 @@ router.get('/getInputHistory/:userId', async (req: Request, res: Response) => {
 
 
 
-
-
-
 router.post('/tasks', tasksController.createTask);
 router.get('/tasks/:userId', tasksController.getTasksByUserId);
-
 router.put('/tasks/stopTask', tasksController.updateTaskStopped);
 
 
@@ -198,6 +194,7 @@ router.get('/tasksvalid/:userId',tasksController.getTasksWithNonZeroDuration);
 
 router.delete('/tasks/:userId/:taskId',tasksController.deleteTask);
 
+router.put('/tasks/upduration/:newDuration', tasksController.updateTaskDuration);
 
 
 router.post('/uploadimage', upload.single('image'), imageController.uploadImage);
