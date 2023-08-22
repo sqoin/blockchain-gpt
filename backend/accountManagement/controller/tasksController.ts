@@ -41,7 +41,6 @@ exports.updateTaskStopped = async (req: Request, res: Response) => {
 
     const filter = { _id: taskId, userId: userId };
     
-    // Find the task and get its current status
     const task = await TaskModel.findOne(filter);
     if (!task) {
       return res.status(404).json({ message: "Task not found." });
@@ -49,7 +48,7 @@ exports.updateTaskStopped = async (req: Request, res: Response) => {
 
     const newStatus = !task.status;
 
-    // Update the status field
+    
     const update = { status: newStatus };
 
     const updatedTask = await TaskModel.findOneAndUpdate(filter, update, {
@@ -80,7 +79,7 @@ exports.deleteTask = async (req: Request, res: Response) => {
     const taskId = req.params.taskId;
     const userId = req.params.userId;
 
-    // Find the task by its ID and user ID
+   
     const taskToDelete = await TaskModel.findOneAndDelete({ _id: taskId, userId });
 
     if (!taskToDelete) {
@@ -91,5 +90,33 @@ exports.deleteTask = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Failed to delete task." });
+  }
+};
+exports.updateTaskDuration = async (req: Request, res: Response) => {
+  try {
+    const taskId = req.body.taskId;
+    const userId = req.body.userId;
+    const newDuration = req.params.newDuration;  // Use params to get newDuration
+
+    const filter = { _id: taskId, userId: userId };
+
+    const task = await TaskModel.findOne(filter);
+    if (!task) {
+      return res.status(404).json({ message: "Task not found." });
+    }
+
+    const update = { duration: newDuration };
+
+    const updatedTask = await TaskModel.findOneAndUpdate(filter, update, {
+      new: true
+    });
+
+    res.status(200).json({
+      message: "Task duration updated successfully.",
+      updatedTask: updatedTask
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Failed to update task duration." });
   }
 };

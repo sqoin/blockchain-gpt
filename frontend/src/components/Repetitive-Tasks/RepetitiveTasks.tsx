@@ -17,7 +17,10 @@ const RepetitiveTasks: React.FC = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
     const sessionContext = useSessionContext();
     const [userId, setUserId] = useState("");
-
+    const [showModal, setShowModal] = useState(false);
+    const [editedDuration, setEditedDuration] = useState('');
+    const [editingTaskId, setEditingTaskId] = useState('');
+    
 
    const fetchTasksByUserId = async () => {
         if (sessionContext.loading === true) {
@@ -91,9 +94,25 @@ const RepetitiveTasks: React.FC = () => {
         }
       };
       
+      const updateTaskDuration = async (taskId:any, newDuration:any) => {
+        try {
+          const userId = "yourUserId"; 
       
+          const object = { "userId": userId, "taskId": taskId, "newDuration": newDuration };
+          const url = `${ACCOUNT_MANAGEMENT}/api/tasks/upduration`;
       
-    
+          const response = await axios.put(url, object);
+      
+          if (response.status === 200) {
+            console.log('Task duration updated successfully:', response.data);
+            fetchTasksByUserId()
+            } else {
+            console.log('Unexpected response status:', response.status);
+          }
+        } catch (error) {
+          console.error('Error updating task duration:', error);
+        }
+      };
      
     return (
         <div className='repetitiveTasks'>
@@ -122,6 +141,7 @@ const RepetitiveTasks: React.FC = () => {
                                 </td>
                                 <td >
                                     {formatDuration(task.duration)}
+                                    
                                 </td>
                                 <td >
                                 {/* <span >{task.status}</span> */}
@@ -143,14 +163,36 @@ const RepetitiveTasks: React.FC = () => {
                                 <td >
                                 <button onClick={() => { handleDeleteTask (task.userId, task._id); }} className="common-button button-1">
                                     Delete
-                                    </button>
+                                  </button>
+                                 
+                                <button
+                                  onClick={() => {
+                                    setEditingTaskId(task._id);
+                                    setShowModal(true);
+                                    setEditedDuration(task.duration);
+                                  }}>
+                                  Update Duration
+                                </button>
                                 </td>
                             </tr>
                         ))}
-
+                        {showModal && (
+                          <div className="modal">
+                            <div className="modal-content">
+                              <h2>Modifier la durée de la tâche</h2>
+                              <p>Saisissez la nouvelle durée en millisecondes :</p>
+                              <input
+                                type="text"
+                                value={editedDuration}
+                                onChange={(e) => setEditedDuration(e.target.value)}
+                              />
+                              <button onClick={() => updateTaskDuration(editingTaskId, editedDuration)}>Valider</button>
+                              <button onClick={() => setShowModal(false)}>Annuler</button>
+                            </div>
+                          </div>
+                        )}
                     </tbody>
                 </table>
-
                
             </div>
         </div>
