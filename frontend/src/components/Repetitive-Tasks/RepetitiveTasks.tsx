@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import { ACCOUNT_MANAGEMENT } from '../../utils/constants';
 
+
 interface Task {
     _id: string;
     userId: string;
@@ -14,13 +15,12 @@ interface Task {
 
 
 const RepetitiveTasks: React.FC = () => {
-    const [tasks, setTasks] = useState<Task[]>([]);
-    const sessionContext = useSessionContext();
-    const [userId, setUserId] = useState("");
-    const [showModal, setShowModal] = useState(false);
-    const [editedDuration, setEditedDuration] = useState('');
-    const [editingTaskId, setEditingTaskId] = useState('');
-    
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const sessionContext = useSessionContext();
+  const [userId, setUserId] = useState("");
+  const [showInput, setShowInput] = useState(false);
+  const [newDuration, setNewDuration] = useState(0);
+  
 
    const fetchTasksByUserId = async () => {
         if (sessionContext.loading === true) {
@@ -31,11 +31,7 @@ const RepetitiveTasks: React.FC = () => {
         try {
             const response = await axios.get(`${ACCOUNT_MANAGEMENT}/api/tasks/${sessionContext.userId}`);
             setTasks(response.data);
-            // Extract the status from tasks and store it in a variable
-        if (response.data.length > 0) {
-            const taskStatus = response.data[0].status;
-            // Now you can use 'taskStatus' variable as needed
-        }
+       
         } catch (error) {
             console.error('Error fetching tasks:', error);
         }
@@ -78,7 +74,6 @@ const RepetitiveTasks: React.FC = () => {
           console.error('Error updating task:', error);
         }
       };
-      
 
       const handleUpdateTask = async (taskId: any) => {
         await updateTaskStopped(taskId);
@@ -87,32 +82,43 @@ const RepetitiveTasks: React.FC = () => {
       const handleDeleteTask = async (userId:any, taskId:any) => {
         try {
           const response = await axios.delete(`${ACCOUNT_MANAGEMENT}/api/tasks/${userId}/${taskId}`);
-          console.log(response.data); // Assuming you want to log the response data
-          fetchTasksByUserId(); // To refresh the task list
+          console.log(response.data); 
+          fetchTasksByUserId(); 
         } catch (error) {
           console.error('Error deleting task:', error);
         }
       };
       
-      const updateTaskDuration = async (taskId:any, newDuration:any) => {
+  
+      const updateTaskDuration = async (taskId:any, newDuration:any, userId:any) => {
         try {
-          const userId = "yourUserId"; 
-      
-          const object = { "userId": userId, "taskId": taskId, "newDuration": newDuration };
           const url = `${ACCOUNT_MANAGEMENT}/api/tasks/upduration`;
-      
-          const response = await axios.put(url, object);
-      
-          if (response.status === 200) {
-            console.log('Task duration updated successfully:', response.data);
-            fetchTasksByUserId()
-            } else {
-            console.log('Unexpected response status:', response.status);
-          }
+          const requestData = { taskId: taskId, userId: userId, newDuration: newDuration };
+          await axios.put(url, requestData);
+          fetchTasksByUserId()
+          console.log(`Task ${taskId} duration updated to ${newDuration}`);
+          
         } catch (error) {
-          console.error('Error updating task duration:', error);
+          console.error(`Error updating task ${taskId} duration:`, error);
         }
       };
+      
+    
+    const handleDurationChange = (e:any) => {
+      const value = parseInt(e.target.value);
+      setNewDuration(value);
+    };
+  
+    
+  
+    const handleEditClick = () => {
+      setShowInput(true);
+    };
+  
+    const handleUpdateClick = () => {
+      setShowInput(false); // Hide the input field after updating
+    };
+   
      
     return (
         <div className='repetitiveTasks'>
@@ -140,9 +146,31 @@ const RepetitiveTasks: React.FC = () => {
                                     {task.task}
                                 </td>
                                 <td >
-                                    {formatDuration(task.duration)}
-                                    
-                                </td>
+                                {/* {formatDuration(task.duration)}
+                                <input type="number" onChange={handleDurationChange} />
+                                <button onClick={() => updateTaskDuration(task._id, newDuration,userId)}>Editer</button> */}
+<div>
+      <td>
+        {formatDuration(task.duration)}
+        {showInput ? (
+          <input type="number" onChange={handleDurationChange} />
+        ) : null}
+      </td>
+      
+        {showInput ? (
+         <button onClick={() => {
+          updateTaskDuration(task._id, newDuration, userId);
+          handleUpdateClick();
+        }}>Sauvegarder</button>
+        
+        ) : (
+          <button onClick={handleEditClick}>Editer</button>
+        )}
+    
+    </div>
+                              </td>
+
+
                                 <td >
                                 {/* <span >{task.status}</span> */}
                                 
@@ -152,7 +180,7 @@ const RepetitiveTasks: React.FC = () => {
                                     </button>
                                    
                                 )}
-                                 {(task.status == undefined || task.status === true ) && (
+                                 {(task.status === undefined || task.status === true ) && (
                                     <button onClick={() => { handleUpdateTask(task._id); }} className="common-button button-3">
                                     Restart
                                     </button>
@@ -164,33 +192,12 @@ const RepetitiveTasks: React.FC = () => {
                                 <button onClick={() => { handleDeleteTask (task.userId, task._id); }} className="common-button button-1">
                                     Delete
                                   </button>
-                                 
-                                <button
-                                  onClick={() => {
-                                    setEditingTaskId(task._id);
-                                    setShowModal(true);
-                                    setEditedDuration(task.duration);
-                                  }}>
-                                  Update Duration
-                                </button>
+
+                                
                                 </td>
                             </tr>
                         ))}
-                        {showModal && (
-                          <div className="modal">
-                            <div className="modal-content">
-                              <h2>Modifier la durée de la tâche</h2>
-                              <p>Saisissez la nouvelle durée en millisecondes :</p>
-                              <input
-                                type="text"
-                                value={editedDuration}
-                                onChange={(e) => setEditedDuration(e.target.value)}
-                              />
-                              <button onClick={() => updateTaskDuration(editingTaskId, editedDuration)}>Valider</button>
-                              <button onClick={() => setShowModal(false)}>Annuler</button>
-                            </div>
-                          </div>
-                        )}
+                       
                     </tbody>
                 </table>
                
