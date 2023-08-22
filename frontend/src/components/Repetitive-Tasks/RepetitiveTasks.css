@@ -223,3 +223,6 @@
 .modal button:last-child {
   background-color: #ccc;
 }
+.editIcon{
+  margin-left: 5%;
+}

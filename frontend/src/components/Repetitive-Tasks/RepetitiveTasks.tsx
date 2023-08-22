@@ -3,6 +3,9 @@ import "./RepetitiveTasks.css";
 import axios from 'axios';
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import { ACCOUNT_MANAGEMENT } from '../../utils/constants';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPen  } from '@fortawesome/free-solid-svg-icons';
+import { Placeholder } from 'reactstrap';
 
 
 interface Task {
@@ -116,7 +119,7 @@ const RepetitiveTasks: React.FC = () => {
     };
   
     const handleUpdateClick = () => {
-      setShowInput(false); // Hide the input field after updating
+      setShowInput(false);
     };
    
      
@@ -145,30 +148,30 @@ const RepetitiveTasks: React.FC = () => {
                                 <td >
                                     {task.task}
                                 </td>
-                                <td >
-                                {/* {formatDuration(task.duration)}
-                                <input type="number" onChange={handleDurationChange} />
-                                <button onClick={() => updateTaskDuration(task._id, newDuration,userId)}>Editer</button> */}
-<div>
-      <td>
-        {formatDuration(task.duration)}
-        {showInput ? (
-          <input type="number" onChange={handleDurationChange} />
-        ) : null}
-      </td>
-      
-        {showInput ? (
-         <button onClick={() => {
-          updateTaskDuration(task._id, newDuration, userId);
-          handleUpdateClick();
-        }}>Sauvegarder</button>
-        
-        ) : (
-          <button onClick={handleEditClick}>Editer</button>
-        )}
-    
-    </div>
-                              </td>
+                             
+                                <td>
+                                    {showInput ? (
+                                     <div>
+                                     <span>La durée en millisecondes</span>
+                                     <input type="number" onChange={handleDurationChange}/>
+                                   </div>
+                                  ) : (
+                                    <span>{formatDuration(task.duration)}</span>
+                                  )}
+                                    
+                                    {showInput ? (
+                                      <button onClick={() => {
+                                        updateTaskDuration(task._id, newDuration, userId);
+                                        handleUpdateClick();
+                                      }}>Sauvegarder</button>
+                                      
+                                      ) : (
+                                        <FontAwesomeIcon icon={faPen} onClick={handleEditClick} className='editIcon' />
+
+                                      )}
+                                  
+                                </td>
+                                
 
 
                                 <td >
