@@ -4,8 +4,8 @@ import axios from 'axios';
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import { ACCOUNT_MANAGEMENT } from '../../utils/constants';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPen  } from '@fortawesome/free-solid-svg-icons';
-import { Placeholder } from 'reactstrap';
+import { faPen,faSave } from '@fortawesome/free-solid-svg-icons';
+
 
 
 interface Task {
@@ -22,6 +22,7 @@ const RepetitiveTasks: React.FC = () => {
   const sessionContext = useSessionContext();
   const [userId, setUserId] = useState("");
   const [showInput, setShowInput] = useState(false);
+   const [itemMap, setItemMap] = useState<{ [key: string]: boolean }>({});
   const [newDuration, setNewDuration] = useState(0);
   
 
@@ -98,8 +99,12 @@ const RepetitiveTasks: React.FC = () => {
           const url = `${ACCOUNT_MANAGEMENT}/api/tasks/upduration`;
           const requestData = { taskId: taskId, userId: userId, newDuration: newDuration };
           await axios.put(url, requestData);
-          fetchTasksByUserId()
+          await fetchTasksByUserId()
           console.log(`Task ${taskId} duration updated to ${newDuration}`);
+           setItemMap((prevItemMap) => ({
+          ...prevItemMap,
+          [taskId]: false,
+          }));
           
         } catch (error) {
           console.error(`Error updating task ${taskId} duration:`, error);
@@ -114,7 +119,12 @@ const RepetitiveTasks: React.FC = () => {
   
     
   
-    const handleEditClick = () => {
+    const handleEditClick = (taskId:any) => {
+  
+      setItemMap((prevItemMap) => ({
+      ...prevItemMap,
+      [taskId]: true,
+      }));
       setShowInput(true);
     };
   
@@ -142,7 +152,7 @@ const RepetitiveTasks: React.FC = () => {
             <div className="tbl-content">
                 <table className='task-table' cellPadding="0" cellSpacing="0" >
                     <tbody>
-
+                    
                         {tasks.map((task:any) => (
                             <tr key={task._id}>
                                 <td >
@@ -150,27 +160,36 @@ const RepetitiveTasks: React.FC = () => {
                                 </td>
                              
                                 <td>
-                                    {showInput ? (
-                                     <div>
-                                     <span>La durée en millisecondes</span>
-                                     <input type="number" onChange={handleDurationChange}/>
-                                   </div>
-                                  ) : (
-                                    <span>{formatDuration(task.duration)}</span>
-                                  )}
-                                    
-                                    {showInput ? (
-                                      <button onClick={() => {
-                                        updateTaskDuration(task._id, newDuration, userId);
-                                        handleUpdateClick();
-                                      }}>Sauvegarder</button>
-                                      
-                                      ) : (
-                                        <FontAwesomeIcon icon={faPen} onClick={handleEditClick} className='editIcon' />
+                                <div>
+                                  {itemMap[task._id] ? (
+                                    <div>
+                                    <p className='span'>La durée en millisecondes</p>
+                                    <div className='input-container'>
+                                      <input type='number' className='input' onChange={handleDurationChange} />
+                                      <FontAwesomeIcon
+                                        icon={faSave}
+                                        className='saveIcon'
+                                        onClick={() => {
+                                          updateTaskDuration(task._id, newDuration, userId);
+                                          handleUpdateClick();
+                                        }}
+                                      />
+                                    </div>
+                                    </div>
 
-                                      )}
-                                  
-                                </td>
+                                  ) : (
+                                    <div>
+                                      <span>{formatDuration(task.duration)}</span>
+                                      <FontAwesomeIcon
+                                        icon={faPen}
+                                        onClick={() => handleEditClick(task._id)}
+                                        className='editIcon'
+                                      />
+                                    </div>
+                                  )}
+                                </div>
+                              </td>
+
                                 
 
 
