@@ -1,29 +1,29 @@
 import React, { useEffect } from 'react';
 import "./SideBar.css";
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useHistory } from "react-router-dom";
 import { signOut } from "supertokens-auth-react/recipe/session";
 import { BiConversation, BiTask } from "react-icons/bi"
 import { FaHistory } from 'react-icons/fa';
 import { FaRegEnvelope } from "react-icons/fa"
 import { ImExit } from "react-icons/im"
+import { MdClose } from 'react-icons/md';
 import { CiSquareQuestion } from "react-icons/ci"
 import { AiOutlineBarChart, AiOutlineInfoCircle } from "react-icons/ai"
-import Hamburger from 'hamburger-react';
 import { useSessionContext } from 'supertokens-auth-react/recipe/session';
 import { ACCOUNT_MANAGEMENT } from '../../utils/constants';
 import axios from 'axios';
 import DropdownMenu from '../DropDownMenu/DropDownMenu';
 
-const SideBar: React.FC<{ remaining: number, imageUpdated: boolean }> = ({ remaining, imageUpdated }) => {
-  const [currentWindow, setCurrentWindow] = useState(window.location.pathname);
-  const [showMenu, setShowMenu] = useState(false);
-  const history = useHistory(); // Use the useHistory hook here
+interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+  remaining: number;
+  imageUpdated: boolean;
+}
 
-  const handleMainButtonClick = () => {
-    setShowMenu(!showMenu);
-  };
-
+const SideBar: React.FC<SidebarProps> = ({ isOpen, onClose, remaining, imageUpdated }) => {
+  const currentWindow = window.location.pathname;
   const session = useSessionContext();
   const [userEmail, setUserEmail] = useState('');
   let userId: any = null;
@@ -48,39 +48,58 @@ const SideBar: React.FC<{ remaining: number, imageUpdated: boolean }> = ({ remai
     }
   }, [userId]);
 
-  function redirectToAccDetails() {
-    history.push("/accountdetails"); // Use history.push for navigation
-    setCurrentWindow("/accountdetails");
-  }
+  const history = useHistory();
 
-  function redirectToTasks() {
-    history.push("/repetitivetasks"); // Use history.push for navigation
-    setCurrentWindow("/repetitivetasks");
-  }
+  const redirectToAccDetails = useCallback(() => {
+    history.push("/accountdetails");
+  }, []);
 
-  function redirectToHistory() {
-    history.push("/history"); // Use history.push for navigation
-    setCurrentWindow("/history");
-  }
+  const redirectToTasks = useCallback(() => {
+    history.push("/repetitivetasks");
+  }, []);
 
-  async function logoutClicked() {
+  const redirectToHistory = useCallback(() => {
+    history.push("/history");
+  }, []);
+
+  const logoutClicked = useCallback(async () => {
     await signOut();
-    history.push("/auth"); // Use history.push for navigation
-  }
+    history.push("/auth");
+  }, []);
 
-  const toStatistic = () => {
-    history.push("/statistics"); // Use history.push for navigation
-    setCurrentWindow("/statistics");
-  };
+  const toStatistic = useCallback(() => {
+    history.push("/statistics");
+  }, []);
 
-  const toChat = () => {
-    history.push("/"); // Use history.push for navigation
-    setCurrentWindow("/");
-  };
+  const toChat = useCallback(() => {
+    history.push("/");
+  }, []);
+
+  const shouldHideSidebar = window.innerWidth <= 768 || window.navigator.userAgent.toLowerCase().includes('mobi');
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (isOpen && shouldHideSidebar) {
+        onClose();
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [isOpen, onClose,shouldHideSidebar]);
 
   return (
-    <div className="sidebar">
+    <div className={`sidebar ${isOpen ? 'open' : ''}`}>
+      
       <div className="chats">
+      {isOpen && shouldHideSidebar && (
+        <button className="close-button" onClick={onClose}>
+          <MdClose />
+        </button>
+      )}
         <button className="sidebar-btn add-chat" style={{ backgroundColor: currentWindow === "/" ? "#73648A" : "" }} onClick={toChat}>
           <span className="icons">+</span>New chat
         </button>
