@@ -165,7 +165,7 @@ const RepetitiveTasks: React.FC = () => {
                                     <div>
                                     <p className='span'>La durée en millisecondes</p>
                                     <div className='input-container'>
-                                      <input type='number' className='input' onChange={handleDurationChange} />
+                                      <input type='number' className='input' min='0'  onChange={handleDurationChange} />
                                       <FontAwesomeIcon
                                         icon={faSave}
                                         className='saveIcon'
