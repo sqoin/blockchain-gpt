@@ -21,8 +21,7 @@ const RepetitiveTasks: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const sessionContext = useSessionContext();
   const [userId, setUserId] = useState("");
-  const [showInput, setShowInput] = useState(false);
-   const [itemMap, setItemMap] = useState<{ [key: string]: boolean }>({});
+  const [itemMap, setItemMap] = useState<{ [key: string]: boolean }>({});
   const [newDuration, setNewDuration] = useState(0);
   
 
@@ -111,27 +110,17 @@ const RepetitiveTasks: React.FC = () => {
         }
       };
       
-    
     const handleDurationChange = (e:any) => {
       const value = parseInt(e.target.value);
       setNewDuration(value);
     };
   
-    
-  
     const handleEditClick = (taskId:any) => {
-  
       setItemMap((prevItemMap) => ({
       ...prevItemMap,
       [taskId]: true,
       }));
-      setShowInput(true);
     };
-  
-    const handleUpdateClick = () => {
-      setShowInput(false);
-    };
-   
      
     return (
         <div className='repetitiveTasks'>
@@ -171,7 +160,6 @@ const RepetitiveTasks: React.FC = () => {
                                         className='saveIcon'
                                         onClick={() => {
                                           updateTaskDuration(task._id, newDuration, userId);
-                                          handleUpdateClick();
                                         }}
                                       />
                                     </div>
@@ -189,10 +177,6 @@ const RepetitiveTasks: React.FC = () => {
                                   )}
                                 </div>
                               </td>
-
-                                
-
-
                                 <td >
                                 {/* <span >{task.status}</span> */}
                                 
