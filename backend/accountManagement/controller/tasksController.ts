@@ -92,25 +92,23 @@ exports.deleteTask = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Failed to delete task." });
   }
 };
+
 exports.updateTaskDuration = async (req: Request, res: Response) => {
   try {
     const taskId = req.body.taskId;
     const userId = req.body.userId;
-    const newDuration = req.params.newDuration;  // Use params to get newDuration
-
+    const newDuration = req.body.newDuration;
     const filter = { _id: taskId, userId: userId };
 
     const task = await TaskModel.findOne(filter);
     if (!task) {
       return res.status(404).json({ message: "Task not found." });
     }
-
     const update = { duration: newDuration };
 
     const updatedTask = await TaskModel.findOneAndUpdate(filter, update, {
       new: true
     });
-
     res.status(200).json({
       message: "Task duration updated successfully.",
       updatedTask: updatedTask

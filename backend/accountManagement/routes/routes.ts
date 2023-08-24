@@ -204,7 +204,7 @@ router.get('/tasksvalid/:userId',tasksController.getTasksWithNonZeroDuration);
 
 router.delete('/tasks/:userId/:taskId',tasksController.deleteTask);
 
-router.put('/tasks/upduration/:newDuration', tasksController.updateTaskDuration);
+router.put('/tasks/upduration', tasksController.updateTaskDuration);
 
 
 router.post('/uploadimage', upload.single('image'), imageController.uploadImage);
