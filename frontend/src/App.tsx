@@ -22,8 +22,8 @@ import PayWithMetamask from "./components/pay-with-metamask/PayWithMetamask";
 import RepetitiveTasks from "./components/Repetitive-Tasks/RepetitiveTasks";
 import History from "./components/history/history";
 import ImageUpload from "./components/ImageUpload/ImageUpload";
-import { useState } from "react";
-
+import { useState,useEffect } from "react";
+import { GiHamburgerMenu } from "react-icons/gi"
 
 SuperTokens.init(SuperTokensConfig);
 
@@ -44,6 +44,32 @@ function App() {
         setImageUpdated(!imageUpdated);
     }
     const [remainingRequests, setRemainingRequests] = useState(20);
+
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const isMobileDevice = window.navigator.userAgent.toLowerCase().includes('mobi');
+    const isMobileView = window.innerWidth <= 768;
+
+
+    const toggleSidebar = () => {
+        setSidebarOpen(!sidebarOpen);
+    };
+
+    const closeSidebar = () => {
+        setSidebarOpen(false);
+    };
+    useEffect(() => {
+        const handleResize = () => {
+          if ((isMobileView || isMobileDevice) && sidebarOpen) {
+            setSidebarOpen(false);
+          }
+        };
+    
+        window.addEventListener('resize', handleResize);
+    
+        return () => {
+          window.removeEventListener('resize', handleResize);
+        };
+      }, [sidebarOpen, isMobileView, isMobileDevice]);
     return (
         <SuperTokensWrapper>
             <div className="App app-container">
@@ -54,13 +80,20 @@ function App() {
                             {/* This shows the login UI on "/auth" route */}
                             {getSuperTokensRoutesForReactRouterDom(require("react-router-dom"))}
                             <div className="fix">
-                                <div className="sidebar-container">
-                                    <SideBar remaining={remainingRequests} imageUpdated={imageUpdated} />
+                                <div className={`sidebar-container ${sidebarOpen ? '' : 'closed'}`}>
+                                    <button onClick={toggleSidebar}>
+                                        <span ><GiHamburgerMenu /></span>
+                                    </button>
+                                    <SideBar
+                                        onClose={closeSidebar}
+                                        isOpen={sidebarOpen}
+                                        remaining={remainingRequests}
+                                        imageUpdated={imageUpdated} />
                                 </div>
-                                <div className="pages-container">
+                                <div className={`pages-container ${sidebarOpen ? '' : 'closed'}`}>
                                     <Route exact path="/">
                                         <SessionAuth>
-                                            <Home remainingRequests={remainingRequests} setRemainingRequests={setRemainingRequests}/>
+                                            <Home remainingRequests={remainingRequests} setRemainingRequests={setRemainingRequests} />
                                         </SessionAuth>
 
                                     </Route>

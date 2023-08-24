@@ -26,17 +26,28 @@
     font-size: 17px;
 }  */
 
-.fix{
-    display: flex;
-    flex-direction: row;
-}
+ .fix {
+     display: flex;
+     flex-direction: row;
+ }
 
-.sidebar-container{
-    display: flex;
-    width: 20vw;
-}
+ .sidebar-container {
+     display: flex;
+     width: 20vw;
+     transition: width 0.3s;
+ }
 
-.pages-container{
-    display: flex;
-    width: 80vw;
-}
+ .pages-container {
+     display: flex;
+     width: 80vw;
+     transition: width 0.3s;
+ }
+
+ 
+ .sidebar-closed {
+     width: 1vw;
+ }
+
+ .pages-container-closed {
+     width: 99vw;
+ }
