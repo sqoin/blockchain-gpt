@@ -9,11 +9,17 @@ import { FaRegEnvelope } from "react-icons/fa"
 import { ImExit } from "react-icons/im"
 import { CiSquareQuestion } from "react-icons/ci"
 import {AiOutlineBarChart, AiOutlineInfoCircle } from "react-icons/ai"
-import Hamburger from 'hamburger-react';
+// import Hamburger from 'hamburger-react';
 import { useSessionContext } from 'supertokens-auth-react/recipe/session';
 import { ACCOUNT_MANAGEMENT } from '../../utils/constants';
 import axios from 'axios';
 import DropdownMenu from '../DropDownMenu/DropDownMenu';
+
+
+interface SideBarProps {
+  remaining: number;
+  disabled: boolean; // Add this line
+}
 
 
 const SideBar: React.FC<{ remaining: number ,imageUpdated:boolean}> = ({ remaining , imageUpdated}) => {

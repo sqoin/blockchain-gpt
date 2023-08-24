@@ -40,3 +40,13 @@
     display: flex;
     width: 80vw;
 }
+
+.mobile-hamburger {
+    display: block;
+}
+
+.sidebar-open {
+    transform: translateX(0); 
+  transition: transform 0.3s ease-in-out;
+  }
+  

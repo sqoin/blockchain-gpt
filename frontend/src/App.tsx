@@ -10,7 +10,6 @@ import ServiceNotAvailable from "./error_pages/Service_Unavailable";
 import ServerErrorPage from "./error_pages/Internal_Server_Error";
 import NotAuthorized from "./error_pages/Unauthorized";
 import AccountDetails from "./Account_Details";
-import { loadStripe } from '@stripe/stripe-js';
 import Payment from "./payment";
 import Completion from "./Completion";
 import Charts from './components/Statistic/Charts';
@@ -22,10 +21,8 @@ import PayWithMetamask from "./components/pay-with-metamask/PayWithMetamask";
 import RepetitiveTasks from "./components/Repetitive-Tasks/RepetitiveTasks";
 import History from "./components/history/history";
 import ImageUpload from "./components/ImageUpload/ImageUpload";
-import { useState } from "react";
-
-
-SuperTokens.init(SuperTokensConfig);
+import Hamburger from 'hamburger-react'
+import React, { useState, useEffect } from 'react';
 
 
 SuperTokens.init(SuperTokensConfig);
@@ -44,23 +41,54 @@ function App() {
         setImageUpdated(!imageUpdated);
     }
     const [remainingRequests, setRemainingRequests] = useState(20);
+
+    const [isMobile, setIsMobile] = useState(false);
+    const [isOpen, setOpen] = useState(false);
+
+    useEffect(() => {
+        const handleWindowSizeChange = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+
+        handleWindowSizeChange();
+
+        window.addEventListener("resize", handleWindowSizeChange);
+        return () => {
+            window.removeEventListener("resize", handleWindowSizeChange);
+        };
+    }, []);
+
+    const handleHamburgerClick = () => {
+        if (!isMobile) {
+            return; // Don't toggle isOpen in desktop mode
+        }
+        setOpen(!isOpen);
+    
+    };
+
     return (
         <SuperTokensWrapper>
             <div className="App app-container">
-
+                {isMobile && (
+                    <div className="mobile-hamburger" onClick={handleHamburgerClick}>
+                        <Hamburger toggled={isOpen} />
+                    </div>
+                )}
                 <Router>
                     <div className="fill">
                         <Switch>
                             {/* This shows the login UI on "/auth" route */}
                             {getSuperTokensRoutesForReactRouterDom(require("react-router-dom"))}
-                            <div className="fix">
-                                <div className="sidebar-container">
-                                    <SideBar remaining={remainingRequests} imageUpdated={imageUpdated} />
-                                </div>
+                            <div className={`fix ${isOpen && isMobile ? "sidebar-open" : ""}`}>
+                                <div className={`sidebar-container ${isOpen || !isMobile ? "open" : ""}`}>
+                                {isOpen || !isMobile ? (
+                                        <SideBar remaining={remainingRequests} imageUpdated={imageUpdated} />
+                                     ) : null}
+                                 </div>
                                 <div className="pages-container">
                                     <Route exact path="/">
                                         <SessionAuth>
-                                            <Home remainingRequests={remainingRequests} setRemainingRequests={setRemainingRequests}/>
+                                            <Home remainingRequests={remainingRequests} setRemainingRequests={setRemainingRequests} />
                                         </SessionAuth>
 
                                     </Route>
@@ -133,14 +161,12 @@ function App() {
                                         path="/imageupload"><ImageUpload /></Route>
                                 </div>
 
-
                             </div>
                         </Switch>
                     </div >
                 </Router >
-            </div >
+            </div>
         </SuperTokensWrapper >
-
     );
 }
 
