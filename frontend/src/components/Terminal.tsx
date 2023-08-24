@@ -18,7 +18,6 @@ import BitcoinChart from "../charts.tsx";
 import PieChart from "../pieChart.tsx"
 /// @ts-ignore
 import CryptomarketCapChart from "../cryptoMarketCapChart.tsx";
-import Hamburger from 'hamburger-react'
 import  DataSets  from "./datasets";
 import CryptoChart from "../cryptoCharts";
 import { ACCOUNT_MANAGEMENT } from "../utils/constants";
@@ -1637,9 +1636,6 @@ function parseBotchart1(inputString: string): { alerteTelegram: boolean } {
 
     
     <div className="terminal">
-      <div className="mobile-hamburger">
-           <Hamburger toggled={isOpen} toggle={setOpen} />
-      </div> 
 
       <div className="input-output">
         <div className="output-result">
