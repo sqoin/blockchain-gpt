@@ -82,7 +82,7 @@ function App() {
                             <div className="fix">
                                 <div className={`sidebar-container ${sidebarOpen ? '' : 'closed'}`}>
                                     <button onClick={toggleSidebar}>
-                                        <span ><GiHamburgerMenu /></span>
+                                        <GiHamburgerMenu className="hamburger-icon"/>
                                     </button>
                                     <SideBar
                                         onClose={closeSidebar}

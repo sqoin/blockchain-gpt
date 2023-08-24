@@ -28,26 +28,39 @@
 
  .fix {
      display: flex;
-     flex-direction: row;
+
  }
 
  .sidebar-container {
-     display: flex;
-     width: 20vw;
-     transition: width 0.3s;
+    display: flex;
+    flex-direction: column;
+    width: 20vw;
+    transition: width 0.3s;
+    padding: 20px;
+
  }
 
  .pages-container {
+    flex-direction: column;
+    padding: 20px;
      display: flex;
      width: 80vw;
-     transition: width 0.3s;
- }
+     flex-grow: 1;
+     transition: margin-left 0.3s;
 
+ }
+ .hamburger-icon {
+    font-size: 20px;
+    color: #212134;
+    cursor: pointer;
+}
  
  .sidebar-closed {
-     width: 1vw;
- }
+    width: 1vw;
+    padding: 20px;
+    overflow: hidden; }
 
  .pages-container-closed {
-     width: 99vw;
- }
+    width: 1vw;
+    padding: 20px;
+    overflow: hidden; }

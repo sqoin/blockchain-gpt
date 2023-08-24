@@ -160,6 +160,7 @@ body {
 
     .sidebar.open {
         transform: translateX(0);
+        width: 75%;
     }
 
     .sidebar-btn {

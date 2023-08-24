@@ -2,25 +2,23 @@
 .repetitiveTasks{
   background: var(--color3); 
   font-family: 'Roboto', sans-serif;
-  height: 100vh;
+  height: 100%;
   width: 100%;
-  padding: 40px;
-  align-items: start;
-  justify-content: start;
-
 }
 
 .title{
-    font-size: 50px;
+    font-size: 5vw; 
     color: #fff;
     text-transform: uppercase;
-    font-weight: 300;
+    font-weight: 500;
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: 1.5vw;
   }
   .task-table{
     width:100%;
     table-layout: fixed;
+    border-collapse: collapse;
+
   }
   .tbl-header{
     background-color: rgba(151, 151, 151, 0.8);
@@ -30,24 +28,30 @@
   overflow: auto;
   max-height: 65vh;
   margin-top: 0px;
-  border: 1px solid rgba(151, 151, 151, 0.8);
+  border-bottom: solid 0.1vw rgba(255, 255, 255, 0.1);
 }
 .task-table th,
 .task-table td {
+  padding: 1vw;
   color:#fff;
   padding: 10px;
   text-align: center;
   vertical-align: middle;
   word-wrap: break-word;
   white-space: normal; 
+  border-bottom: solid 1px rgba(255, 255, 255, 0.1);
+
 }
     
 @media (max-width: 767px) {
   .task-table th,
   .task-table td {
-    padding: 5px;
+    padding: 0.5vw;
+    font-size: 2vw; 
     word-wrap: break-word;
-    font-size: 14px;
+  }
+  .common-button {
+    font-size: 4vw; /* Taille de police plus petite pour les petits écrans */
   }
 }
 
@@ -95,9 +99,9 @@
   cursor: pointer;
   display: inline-block;
   font-family: -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 20px;
+  font-size: 1.8vw;
+  font-weight: 300;
+  line-height: vw;
   padding: 6px 16px;
   width: 80%;
   position: relative;
@@ -147,22 +151,22 @@
   height: 100%;
 }
 .input{
-height: 28px;
+height: 2.8vw;
 width: 50%;
 }
 .span{
-  font-size: 14px;
+  font-size: 1.4vw;
 }
 
 .editIcon{
   cursor: pointer;
-  margin-left: 5%;
+  margin-left: 1.25vw; 
   }
  
 .saveIcon {
   cursor: pointer;
-  margin-left: 5%;
-  font-size: 25px;
+  margin-left: 1.25vw; 
+  font-size: 2.5vw;
 
   }
   
