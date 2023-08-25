@@ -99,7 +99,10 @@ body {
 }
 
 .close-button {
-    margin-bottom: 8px;
+    position: absolute;
+    top: 16px;
+    right: 0;
+    padding: 8px;
     background-color: transparent; 
     border: none;
     cursor: pointer;

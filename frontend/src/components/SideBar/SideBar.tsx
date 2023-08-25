@@ -100,10 +100,21 @@ const SideBar: React.FC<SidebarProps> = ({ isOpen, onClose, remaining, imageUpda
           <MdClose />
         </button>
       )}
-        <button className="sidebar-btn add-chat" style={{ backgroundColor: currentWindow === "/" ? "#73648A" : "" }} onClick={toChat}>
-          <span className="icons">+</span>New chat
-        </button>
+      <button
+        className={`${
+          isOpen ? "sidebar-btn-re chat " : " sidebar-btn add-chat"
+        }`}
+        style={{ backgroundColor: currentWindow === "/" ? "#73648A" : "" }}
+        onClick={toChat}
+      >
+        <span 
+        className={`${
+          isOpen ? "icon" : "icons"
+        }`}>+</span>
+        {isOpen ? "New chat" : "New chat"}
+      </button>
       </div>
+
       <div className="options">
         <p className="sidebar-text"><span className="icons"><CiSquareQuestion /></span>Remaining Requests: {remaining}</p>
         <p className="sidebar-text"><span className="icons"><FaRegEnvelope /></span>{userEmail}</p>
