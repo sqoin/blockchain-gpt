@@ -2,18 +2,18 @@
   background: var(--color3); 
   font-family: 'Roboto', sans-serif;
   height: 100vh;
-  width: 80vw;
+  width: 90vw;
   padding: 40px;
 } 
 .accountdetails .form {
   display: flex;
   background-color: #ffffff;
-  height: 740px; /* 90vh */;
+  height: 640px; /* 90vh */;
   border-radius: 15px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  padding: 10px;
   width: 50vw;
-  margin: 0 auto;
+  margin: 10px auto auto 360px;
 }
 
 .accountdetails h1 {
@@ -31,7 +31,13 @@
 
 
 .accountdetails .tab-content {
-  padding: 20px;
+  padding: 10px;
+  width: 100%;
+
+}
+
+.form-container{
+  width: 100%;
 }
 
 .accountdetails .form-group {
@@ -39,10 +45,10 @@
 }
 
 .accountdetails .form-control {
-  width: 100%;
   height: 35px;
   padding: 8px;
   border-radius: 3px;
+  width:100% ;
   border: 1px solid #ccc;
 }
 
@@ -64,10 +70,11 @@
 
 .accountdetails .input-container input,
 .input-container select {
-  width: 100%;
+  width: 80%;
   padding: 8px;
   border-radius: 3px;
   border: 1px solid #ccc;
+  box-sizing: border-box; 
 }
 
 .accountdetails .input-container select {
@@ -76,6 +83,7 @@
   background-position: right 8px center;
   background-size: 16px;
   padding-right: 25px;
+  box-sizing: border-box;
 }
 
 .accountdetails textarea.form-control {
@@ -165,11 +173,13 @@
   padding-left: 20px;
   padding-right: 20px;
   display: flex;
+  width: 160px;
   justify-content: start;
   align-items: center;
   height: 52px;
   border-color: white;
   font-size: 1.1em;
+  margin: 0 auto;
 
 }
 .confirm:hover{
@@ -188,15 +198,17 @@
 
 .first-button-container{
   display: flex;
+  width: 90%;
   justify-content: center;
   align-items: center;
   flex-direction: row;
-  gap: 20px;
+  gap: 10px;
 }
 
 .on-off-container{
   display: flex;
   justify-content: center;
+  width: 96%;
   align-items: center;
   gap: 10px;
   border: 2px solid var(--color2);
@@ -278,9 +290,28 @@
 .toggle-button.on {
   background-color: #2ECC71; 
 } */
+
+
+
 .profile-image-container{
   display: flex;
   justify-content: start;
   align-items: center;
   margin-bottom:10px ;
 }
+
+
+@media screen and (max-width: 768px) {
+  .tab-content {
+    width: 400px;
+  }
+  .first-button-container{
+    flex-direction: column;
+  }
+  .accountdetails .form{
+    height: 720px;
+    margin: 0 auto;
+  }
+}
+
+

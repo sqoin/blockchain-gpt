@@ -90,7 +90,7 @@ function App() {
                                         remaining={remainingRequests}
                                         imageUpdated={imageUpdated} />
                                 </div>
-                                <div className={`pages-container ${sidebarOpen ? '' : 'closed'}`}>
+                                <div className={`pages-container ${sidebarOpen ? '' : 'pages-container-closed'}`}>
                                     <Route exact path="/">
                                         <SessionAuth>
                                             <Home remainingRequests={remainingRequests} setRemainingRequests={setRemainingRequests} />
