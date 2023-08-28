@@ -8,7 +8,7 @@ import { SignOutIcon } from "../assets/images";
 import CmdOutput from "./CmdOutput/CmdOutput";
 import { _getCryptoCurrencyQuote } from "../adapters/market";
 import { PAID_NODE_URL, TELEGRAM_NOTIFICATION } from '../../src/utils/constants';
-import getChatIdFromTelegram  from "../components/telegram-message/TelegramMessage";
+import getChatIdFromTelegram from "../components/telegram-message/TelegramMessage";
 
 /// @ts-ignore
 import BarChart from "./Statistic/AccountChart.tsx";
@@ -18,15 +18,15 @@ import BitcoinChart from "../charts.tsx";
 import PieChart from "../pieChart.tsx"
 /// @ts-ignore
 import CryptomarketCapChart from "../cryptoMarketCapChart.tsx";
-import  DataSets  from "./datasets";
+import DataSets from "./datasets";
 import CryptoChart from "../cryptoCharts";
 import { ACCOUNT_MANAGEMENT } from "../utils/constants";
 import { fetchQuestionCategory } from "./QuestionCategory";
-import axios, { AxiosResponse } from 'axios'; 
+import axios, { AxiosResponse } from 'axios';
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import { createWSEndpoint } from "../utils/headers";
 
-let id='';
+let id = '';
 
 
 interface ILink {
@@ -50,7 +50,7 @@ let showBitcoinChart = false;
 let showPieChart = false;
 let showCharts = false
 let showMarketCapCharts = false;
-let showDataSet=false;
+let showDataSet = false;
 interface Output {
   input: string;
   command: string;
@@ -58,7 +58,7 @@ interface Output {
   eye: boolean;
 }
 
-const Terminal: React.FC<{ idUser: string,remainingRequests:any ,setRemainingRequests :any }> = ({ idUser ,remainingRequests ,setRemainingRequests}) => {
+const Terminal: React.FC<{ idUser: string, remainingRequests: any, setRemainingRequests: any }> = ({ idUser, remainingRequests, setRemainingRequests }) => {
 
   const [questionCategory, setQuestionCategory] = useState<number | null>(null);
   const [showEye, setShowEye] = useState(false);
@@ -85,35 +85,34 @@ const Terminal: React.FC<{ idUser: string,remainingRequests:any ,setRemainingReq
 
   const MAX_REQUESTS_FREE_USER = 2;
   const MAX_REQUESTS_PAID_USER = 10;
-  const session=useSessionContext();
-  if(!session.loading)
-  {
-    id=session.userId;
+  const session = useSessionContext();
+  if (!session.loading) {
+    id = session.userId;
   }
-  const userId = id; 
+  const userId = id;
   let userRequestCount: Map<string, number> = new Map();
 
-interface Task {
+  interface Task {
     _id: string;
     userId: string;
     task: string;
     duration: number;
-    status:boolean;
-}
+    status: boolean;
+  }
 
 
 
 
-  
+
   useEffect(() => {
-    const userId = id; 
+    const userId = id;
 
     axios.get(`${ACCOUNT_MANAGEMENT}/api/getInputHistory/${userId}`)
-      .then((response :AxiosResponse)=> {
+      .then((response: AxiosResponse) => {
         const data = response.data;
         setInputHistory(data.map((item: { input: string }) => item.input));
       })
-      .catch((error:any) => {
+      .catch((error: any) => {
         console.error('Error fetching input history:', error);
       });
   }, []);
@@ -139,7 +138,7 @@ interface Task {
           } else {
 
             setIsTyping(false)
-            
+
             popLastItem();
             resolve(res);
           }
@@ -501,7 +500,7 @@ interface Task {
     }
   };
 
-  async function fetchBalanceFromMetaMask(ms?:any) {
+  async function fetchBalanceFromMetaMask(ms?: any) {
     do {
       let wallet = await _connectToMetaMask();
       if (!wallet) {
@@ -518,9 +517,9 @@ interface Task {
       } else {
         console.log('Failed to retrieve public key');
       }
-      
+
       await sleep(ms); // Attendre 5 minutes
-    }while (ms)
+    } while (ms)
   }
 
   async function getNetworkInfoEvery5Minutes() {
@@ -614,102 +613,102 @@ interface Task {
   }
 
 
-//console.log(allInputs);
+  //console.log(allInputs);
 
-///////////////////////////
+  ///////////////////////////
   const userCommand1 = "get publickey every 5min";
   //const userCommand2 = "get ethereum balance every 2min";
-  const userCommand3="get network information every 5min"
-  const userCommand4="get bitcoin price every 5min"
-  const userCommand5="get bitcoin total volume every 5min"
-  const userCommand6="get bitcoin MarketCap every 5min"
-  const userCommand7= "afficher solana price every 1 minute"
+  const userCommand3 = "get network information every 5min"
+  const userCommand4 = "get bitcoin price every 5min"
+  const userCommand5 = "get bitcoin total volume every 5min"
+  const userCommand6 = "get bitcoin MarketCap every 5min"
+  const userCommand7 = "afficher solana price every 1 minute"
   const etherBalance = "get ethereum balance";
   const solanaBalance = "get solana balance";
 
   const fetchDataCondition = async () => {
     if (sessionContext.loading === true) {
-        return null;
+      return null;
     }
     console.log(sessionContext?.userId)
     let userId = sessionContext?.userId.toString()
 
     try {
-        const response = await axios.get(`${ACCOUNT_MANAGEMENT}/api/tasksvalid/${userId}`);
-        const tasksData: Task[] = response.data || []; 
-    
-        const taskDescriptions = tasksData.map(task => task.task?.toLocaleLowerCase().replace(/\s/g, ''));
-        console.log(taskDescriptions);
+      const response = await axios.get(`${ACCOUNT_MANAGEMENT}/api/tasksvalid/${userId}`);
+      const tasksData: Task[] = response.data || [];
 
-        return {taskDescriptions,tasksData};
-      } catch (error) {
-        console.error('Error fetching tasks:', error);
-      }
-    };
- 
+      const taskDescriptions = tasksData.map(task => task.task?.toLocaleLowerCase().replace(/\s/g, ''));
+      console.log(taskDescriptions);
+
+      return { taskDescriptions, tasksData };
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+    }
+  };
+
 
   useEffect(() => {
     checkUserCommand();
   }, []); // Exécutez cette vérification une seule fois au chargement de la page
 
-     
-  
- 
 
-  const checkUserCommand = async() => {
-   
-      const response:any = await fetchDataCondition()
-    
-      let foundObject = checkStringSimilarity(response.tasksData,etherBalance)
-      if( foundObject) {
-        fetchBalanceFromMetaMask(foundObject.duration);
-      } 
-      
-      foundObject = checkStringSimilarity(response.tasksData,solanaBalance)
-      if( foundObject) {
-        repeatGetSolanaBalance(foundObject.duration);
-      } 
 
-      const storedCommand = response.taskDescriptions|| [];
-      console.log("storedCommand",storedCommand)
-    if ( storedCommand.includes(userCommand1.toLocaleLowerCase().replace(/\s/g, ''))) {
+
+
+  const checkUserCommand = async () => {
+
+    const response: any = await fetchDataCondition()
+
+    let foundObject = checkStringSimilarity(response.tasksData, etherBalance)
+    if (foundObject) {
+      fetchBalanceFromMetaMask(foundObject.duration);
+    }
+
+    foundObject = checkStringSimilarity(response.tasksData, solanaBalance)
+    if (foundObject) {
+      repeatGetSolanaBalance(foundObject.duration);
+    }
+
+    const storedCommand = response.taskDescriptions || [];
+    console.log("storedCommand", storedCommand)
+    if (storedCommand.includes(userCommand1.toLocaleLowerCase().replace(/\s/g, ''))) {
       getAndDisplayPublicKey();
-    } 
+    }
     // if( storedCommand.includes(userCommand2.toLocaleLowerCase().replace(/\s/g, ''))) {
     //   fetchBalanceFromMetaMask(2 * 60 * 1000);
     // } 
-    
-    
+
+
     if (storedCommand.includes(userCommand3.toLocaleLowerCase().replace(/\s/g, ''))) {
       getNetworkInfoEvery5Minutes();
     }
-    if ( storedCommand.includes(userCommand4.toLocaleLowerCase().replace(/\s/g, ''))) {
+    if (storedCommand.includes(userCommand4.toLocaleLowerCase().replace(/\s/g, ''))) {
       while (true) {
         const price = await _getCryptoCurrencyQuote("bitcoin", "price");
         handleOutput(`Bitcoin Price: ${price}`);
-        console.log('Bitcoin Price: ',price);
-  
+        console.log('Bitcoin Price: ', price);
+
         await sleep(5 * 60 * 1000); // Attendre 5 minutes
       }
-    } 
-    
-    if ( storedCommand.includes(userCommand7.toLocaleLowerCase().replace(/\s/g, ''))) {
+    }
+
+    if (storedCommand.includes(userCommand7.toLocaleLowerCase().replace(/\s/g, ''))) {
       while (true) {
         const price = await _getCryptoCurrencyQuote("solana", "price");
         handleOutput(`Bitcoin Price: ${price}`);
-        console.log('Bitcoin Price: ',price);
-  
+        console.log('Bitcoin Price: ', price);
+
         await sleep(5 * 60 * 1000); // Attendre 5 minutes
       }
-    } 
-    if (storedCommand.includes(userCommand5.toLocaleLowerCase().replace(/\s/g, ''))){
+    }
+    if (storedCommand.includes(userCommand5.toLocaleLowerCase().replace(/\s/g, ''))) {
       while (true) {
         const volume = await _getCryptoCurrencyQuote("bitcoin", 'volume');
         handleOutput(`Bitcoin Total Volume: ${volume}`);
         await sleep(5 * 60 * 1000); // Attendre 5 minutes
       }
     }
-    if (storedCommand.includes(userCommand6.toLocaleLowerCase().replace(/\s/g, ''))){
+    if (storedCommand.includes(userCommand6.toLocaleLowerCase().replace(/\s/g, ''))) {
       console.log("666666666")
       while (true) {
         const marketCap = await _getCryptoCurrencyQuote("bitcoin", "marketCap");
@@ -719,10 +718,10 @@ interface Task {
     }
   };
 
-  function checkStringSimilarity(objectList:any[],searchText:string) {
+  function checkStringSimilarity(objectList: any[], searchText: string) {
     const stringSimilarity = require('string-similarity');
     const taskTexts = objectList.map(obj => obj.task);
-    if(!taskTexts.length){
+    if (!taskTexts.length) {
       return null;
     }
     const matches = stringSimilarity.findBestMatch(searchText, taskTexts);
@@ -736,20 +735,19 @@ interface Task {
 
   }
 
-    const fetchData = async () => {
-        const categoryNumber = await fetchQuestionCategory(input);
-        setQuestionCategory(categoryNumber);
+  const fetchData = async () => {
+    const categoryNumber = await fetchQuestionCategory(input);
+    setQuestionCategory(categoryNumber);
 
-        //alert(categoryNumber);
-      };
-    
-      const questionRegex = /\?\s*$/;
-      if(questionRegex.test(input))
-      {
-        fetchData();
-        
-        setInput("");
-      }
+    //alert(categoryNumber);
+  };
+
+  const questionRegex = /\?\s*$/;
+  if (questionRegex.test(input)) {
+    fetchData();
+
+    setInput("");
+  }
 
   // Mettre à jour le stockage local toutes les 5 minutes
   useEffect(() => {
@@ -763,33 +761,33 @@ interface Task {
       else if (storedCommand === userCommand3) {
         getNetworkInfoEvery5Minutes();
       }
-      
-      
+
+
     }, 5 * 60 * 10000); // 5 minutes en millisecondes
 
     return () => clearInterval(interval);
   }, []);
 
-/** handle some static user input */
- async function handleUserStaticInputRep(input:string) {
-  if (input === "get publickey every 5 min") {
-    //addInputToLocalStorage(input);
-    getAndDisplayPublicKey();
+  /** handle some static user input */
+  async function handleUserStaticInputRep(input: string) {
+    if (input === "get publickey every 5 min") {
+      //addInputToLocalStorage(input);
+      getAndDisplayPublicKey();
 
+    }
+    else if (input === "get balance every 5min") {
+      // addInputToLocalStorage(input);
+      fetchBalanceFromMetaMask(5 * 60 * 1000);
+
+    }
+    else if (input === "get network information every 5min") {
+      //addInputToLocalStorage(input);
+      getNetworkInfoEvery5Minutes();
+    }
   }
-  else if (input === "get balance every 5min") {
-   // addInputToLocalStorage(input);
-    fetchBalanceFromMetaMask(5 * 60 * 1000);
+  async function handleUserInputQ(input: string) {
 
-  } 
-  else if (input === "get network information every 5min") {
-    //addInputToLocalStorage(input);
-    getNetworkInfoEvery5Minutes();
-  }
-}
- async function handleUserInputQ(input:string) {
-
-  if (input === "What is Bitcoin") {
+    if (input === "What is Bitcoin") {
 
       handleOutput(`Bitcoin is a decentralized cryptocurrency based on blockchain technology. It is a form of digital currency that enables peer-to-peer transactions without the need for a central authority such as a bank.`);
     }
@@ -825,14 +823,14 @@ interface Task {
     else if (input === "get Latest Transactions") {
       fetchAndDisplayTransactions();
 
-  } 
-  
-   else {
-    // Handle other cases if needed
-    console.log("Unknown input:", input);
-    return false;
+    }
+
+    else {
+      // Handle other cases if needed
+      console.log("Unknown input:", input);
+      return false;
+    }
   }
-}
   //solana functions
   const _connectToPhantomWallet = async (): Promise<null | PhantomWalletAdapter> => {
 
@@ -951,10 +949,10 @@ interface Task {
 
   const _getSolanaBalance = async (address: string): Promise<null | number> => {
     try {
-     // let connection = new Connection(/* solanaNetwork */rpcUrlInitial)
-     const rpcUrl:any = PAID_NODE_URL;
-    const username = process.env.REACT_APP_RPC_USERNAME;
-    const password = process.env.REACT_APP_RPC_PASSWORD;
+      // let connection = new Connection(/* solanaNetwork */rpcUrlInitial)
+      const rpcUrl: any = PAID_NODE_URL;
+      const username = process.env.REACT_APP_RPC_USERNAME;
+      const password = process.env.REACT_APP_RPC_PASSWORD;
       const connection = new Connection(rpcUrl, {
         httpHeaders: {
           Authorization: `Basic ${btoa(`${username}:${password}`)}`,
@@ -1006,8 +1004,8 @@ interface Task {
     }
   };
 
-  async function repeatGetSolanaBalance(ms?:any) {
-    
+  async function repeatGetSolanaBalance(ms?: any) {
+
 
     do {
       let wallet: any = await _connectToPhantomWallet();
@@ -1018,9 +1016,9 @@ interface Task {
       } else {
         console.log('Failed to retrieve solana balance');
       }
-      
+
       await sleep(ms); // Attendre ms 
-    }while (ms)
+    } while (ms)
 
   }
   async function connecttobot() {
@@ -1031,17 +1029,17 @@ interface Task {
       let wallet: any = await _connectToPhantomWallet();
       let balance = await _getSolanaBalance(wallet?.publicKey?.toBase58());
       await sleep(15 * 1000);
-     // console.log(balance)
+      // console.log(balance)
       if (!balance) {
         try {
           window.open('http://t.me/sqoin2aout_bot', '_blank');
-        const chatId = await getChatIdFromTelegram();
-        await axios.post(`${TELEGRAM_NOTIFICATION}/api/telegram/chat`, { chatId,userId });
+          const chatId = await getChatIdFromTelegram();
+          await axios.post(`${TELEGRAM_NOTIFICATION}/api/telegram/chat`, { chatId, userId });
 
-        }catch (error) {
+        } catch (error) {
           console.error('Error handling button click:', error);
         }
-        
+
       }
     }
   }
@@ -1061,23 +1059,23 @@ interface Task {
     setInput(event.target.value);
   };
 
-  
-  
+
+
 
 
 
   async function handleRepetitiveTasks() {
-    let test :any= await isRepetitive();
-    if(test?.isRepetitiveTask && test?.duration>0){
-      let task = { userId: idUser, task: input, duration: test.duration,status:false}
-      addTask(task); 
+    let test: any = await isRepetitive();
+    if (test?.isRepetitiveTask && test?.duration > 0) {
+      let task = { userId: idUser, task: input, duration: test.duration, status: false }
+      addTask(task);
     }
     return test?.isRepetitiveTask
 
 
 
   }
-  const toMessage = async() => {
+  const toMessage = async () => {
     try {
       // Call the backend API to send hello messages to all chats
       await axios.post(`${TELEGRAM_NOTIFICATION}/sendHelloToAll`);
@@ -1095,7 +1093,7 @@ interface Task {
     let telegramQ = `L'utilisateur a tapé dans son command line:"${input}"  c'est a dire est ce qu'il s'agit d'une alerte telegram ou non?Retourner moi un object 
     {alerteTelegram:boolean} exemple la tache "Renvoie-moi une alerte Telegram "  
     tu vas retourner {alerteTelegram: true} `
-    let rq ;
+    let rq;
     try {
       rq = await getDataCustmised(telegramQ);
       console.log("data received")
@@ -1103,63 +1101,63 @@ interface Task {
       handleOutput("", error.message, true)
     }
     let rs = null;
-    if(rq){
+    if (rq) {
       rs = parseBotchart1(rq.text);
     }
-    console.log("****rs***",rs)
+    console.log("****rs***", rs)
     return rs;
   }
   async function handletelegram() {
     try {
-        const test: any = await notifs();
+      const test: any = await notifs();
 
-        if (test?.alerteTelegram) {
-            toMessage();
-        }
+      if (test?.alerteTelegram) {
+        toMessage();
+      }
 
-        return test?.alerteTelegram;
+      return test?.alerteTelegram;
     } catch (error: any) {
-        setError(error.message);
-        handleOutput("", error.message, true);
+      setError(error.message);
+      handleOutput("", error.message, true);
     }
-}
-
-
- async function handleChartType(){
-   //Chart Type  
-   try {
-    const res :any = await chartType();
-    let chartNmbr = getChartType(parseFloat(res.Chart))
-    //alert(chartNmbr)
-
-    //console.log(JSON.stringify(res1));
   }
-   catch (error: any) {
-    setError(error.message);
-    handleOutput("", error.message, true)
-   }
- }
 
- function getChartType(n:number) {
-   switch (n) {
+
+  async function handleChartType() {
+    //Chart Type  
+    try {
+      const res: any = await chartType();
+      let chartNmbr = getChartType(parseFloat(res.Chart))
+      //alert(chartNmbr)
+
+      //console.log(JSON.stringify(res1));
+    }
+    catch (error: any) {
+      setError(error.message);
+      handleOutput("", error.message, true)
+    }
+  }
+
+  function getChartType(n: number) {
+    switch (n) {
       case -1:
-       return "it's not about chart "
+        return "it's not about chart "
       case 0:
         return "it's not about chart "
       case 1:
-       return "Bar Chart"
+        return "Bar Chart"
       case 2:
-       return "Line Chart"
+        return "Line Chart"
       case 3:
-       return "Pie Chart"
+        return "Pie Chart"
       case 4:
-       return "Scatter Plot"
+        return "Scatter Plot"
       case 5:
-       return "Bubble Chart"
+        return "Bubble Chart"
       case 6:
-       return "Histogram"
+        return "Histogram"
       case 7:
-       return "Gantt Chart"
+        return "Gantt Chart"
       case 8:
         return "Radar Chart "
       case 9:
@@ -1178,8 +1176,8 @@ interface Task {
         return "Area Chart"
       default:
         return "it's not about chart "
-   }
- }
+    }
+  }
   const handleInputSubmit = async (
     event: FormEvent<HTMLFormElement>
   ): Promise<void> => {
@@ -1194,10 +1192,10 @@ interface Task {
         try {
           axios.post(`${ACCOUNT_MANAGEMENT}/api/saveInput`, { userId, input: input })
             .then(() => {
-              setInputHistory((prevInputHistory:any) => [...prevInputHistory, input]);
+              setInputHistory((prevInputHistory: any) => [...prevInputHistory, input]);
               setInput('');
             })
-            .catch((error:any) => {
+            .catch((error: any) => {
               console.error('Error saving input:', error);
             });
           let result;
@@ -1217,7 +1215,7 @@ interface Task {
                 // sleep(5000)
                 setShowChart(true)
               }
-              
+
               else if (input === "Quelles ont été les nouvelles les plus importantes dans la blockchain ces trois derniers jours") {
                 // Add the static response to the output
                 sleep(5000)
@@ -1225,7 +1223,7 @@ interface Task {
               }
               else if (input === "Vérifier la valeur de mon portefeuille toutes les  15 secondes et m'envoyer une alerte Telegram si la valeur de mon portefeuille en dollars augmente de plus de 200$.") {
                 // Add the static response to the output
-               
+
                 sleep(5000)
                 while (true) {
                   let wallet: any = await _connectToPhantomWallet()
@@ -1241,45 +1239,46 @@ interface Task {
               else if (input !== "") {
 
                 try {
-                  let res :any = await handleUserStaticInputRep(input);
+                  let res: any = await handleUserStaticInputRep(input);
                   res = await handleUserInputQ(input);
-                  if(res){
+                  if (res) {
                     return;
                   }
 
-                  let bool = await handleRepetitiveTasks();
-                  if(bool) {
-                    //alert("repetetive task")
-                  }
+                  // let bool = await handleRepetitiveTasks();
+                  // if(bool) {
+                  //   alert("repetetive task")
+                  // }
                   //await handleChartType()
-                  //await handletelegram()
+                  // await handletelegram()
+                  await combinedFunction();
 
 
-                 
-                    let foundObject = checkStringSimilarity([{task:input}],etherBalance)
-                    if( foundObject) {
-                      await fetchBalanceFromMetaMask();
-                      return;
-                    }
 
-                    foundObject = checkStringSimilarity([{task:input}],solanaBalance)
-                    if( foundObject) {
-                      await repeatGetSolanaBalance();
-                      return;
-                    }
+                  let foundObject = checkStringSimilarity([{ task: input }], etherBalance)
+                  if (foundObject) {
+                    await fetchBalanceFromMetaMask();
+                    return;
+                  }
 
-                    const resData = await getData(input);
-                    result = await processServerResponse(resData.text, handleOutput);
+                  foundObject = checkStringSimilarity([{ task: input }], solanaBalance)
+                  if (foundObject) {
+                    await repeatGetSolanaBalance();
+                    return;
+                  }
+
+                  const resData = await getData(input);
+                  result = await processServerResponse(resData.text, handleOutput);
 
 
-                    
 
-                  } catch (error: any) {
-                    setError(error.message);
-                    setShowEye(true)
-                    handleOutput("", error.message, true)
-                  } 
-                
+
+                } catch (error: any) {
+                  setError(error.message);
+                  setShowEye(true)
+                  handleOutput("", error.message, true)
+                }
+
               }
 
 
@@ -1315,6 +1314,71 @@ interface Task {
 
     }
   };
+
+
+  const combinedFunction = async () => {
+
+    const repetitiveQuery = `L'utilisateur a tapé dans son command line:"${input}" est ce que 
+    cette tache est repetitive c'est a dire est ce qu'il veut que cette tache 
+    soit repeter d'une manière periodique ou non?Retourner moi un object 
+    {duration:number,isRepetitifTask:boolean} duration in milliseconds
+    exemple la tache "give me bitcoin price every 5 minutes" est repetitive 
+    tu vas retourner {duration:5,isRepetitifTask:true}
+    et la tache "give me bitcoin price"  est non repetitive tu vas retourner 
+    {duration:0,isRepetitifTask:false}`;
+
+    const chartQuery = `the user asked me this question:"${input}" , could you decide if it's about draw a chart,
+    if so can you just give me the type of chart, answer me as follows no further text should be included in the answer: 
+    {"Chart": number}
+    -1: it's not about chart 
+    1:Bar Chart
+    2:Line Chart
+    3:Pie Chart
+    4:Scatter Plot
+    5:Bubble Chart
+    6:Histogram
+    7:Gantt Chart
+    8:Radar Chart 
+    9:Box Plot 
+    10:Waterfall Chart
+    11:Heatmap
+    12:TreeMap
+    13:Donut Chart
+    14:Funnel Chart
+    15:Area Chart`;
+    const telegramQuery = `L'utilisateur a tapé dans son command line:"${input}"  c'est a dire est ce qu'il s'agit d'une alerte telegram ou non?Retourner moi un object 
+    {alerteTelegram:boolean} exemple la tache "Renvoie-moi une alerte Telegram "  
+    tu vas retourner {alerteTelegram: true} `;
+
+    const combinedQuery = `${repetitiveQuery}\n${chartQuery}\n${telegramQuery}`;
+
+    let rs = {
+      repetitiveTask: {},
+      chartType: {},
+      alerteTelegram: {},
+    };
+
+    try {
+      const rq = await getDataCustmised(combinedQuery);
+      console.log("data received");
+
+      if (rq) {
+        console.log("req = ",rq.text);
+        rs.repetitiveTask = parseTaskString(rq.text);
+        rs.chartType = parseChartString(rq.text);
+        rs.alerteTelegram = parseBotchart1(rq.text);
+      }
+    } catch (error) {
+      // handleOutput("", error.message, true);
+    }
+
+    console.log("****rs***", rs);
+    return rs;
+  };
+
+
+
+
   const isRepetitive = async () => {
     let repetitiveQuerry = `L'utilisateur a tapé dans son command line:"${input}" est ce que 
     cette tache est repetitive c'est a dire est ce qu'il veut que cette tache 
@@ -1487,27 +1551,27 @@ interface Task {
       //console.log(error?.message);
     }
   };
-  
- 
 
-  
+
+
+
   function parseTaskString(taskString: string): { duration: number; isRepetitiveTask: boolean } {
     // Initialize default values for the properties
     let duration: number = 0;
     let isRepetitiveTask: boolean = false;
-    
+
     // Regular expressions to check for duration and repetitive task patterns in the string
-    
+
     const durationRegex = /(\d+(\.\d+)?)(\s*(s|sec|seconds|min|minute|hour|hr|h))/i;
     const repetitiveRegex = /(repetitive|repeat|daily|weekly|monthly|yearly)/i;
 
     // Check for duration in the string and extract the number value
     const durationMatch = taskString.match(durationRegex);
-    
+
     if (durationMatch) {
-        let value = parseFloat(durationMatch[1]);
-        const unit = durationMatch[4].toLowerCase();
-         duration = calculateMilliseconds(value, unit);
+      let value = parseFloat(durationMatch[1]);
+      const unit = durationMatch[4].toLowerCase();
+      duration = calculateMilliseconds(value, unit);
     }
     console.log(duration)
 
@@ -1521,13 +1585,13 @@ interface Task {
     return { duration, isRepetitiveTask };
 
   }
- 
+
 
   function calculateMilliseconds(value: number, unit: string): number {
     switch (unit) {
       case 's':
       case 'sec':
-        case 'seconds':
+      case 'seconds':
         return value * 1000; // Convert minutes to milliseconds
       case 'min':
       case 'minute':
@@ -1540,44 +1604,44 @@ interface Task {
     }
   }
 
-const parseBotchart = (inputString: string) => {
+  const parseBotchart = (inputString: string) => {
     const keyword = "envoyer une alerte telegram";
     const regex = new RegExp(`\\b${escapeRegExp(keyword)}\\b`, 'i');
 
     if (regex.test(inputString)) {
-        return { alerteTelegram: true };
+      return { alerteTelegram: true };
     } else {
-        return { alerteTelegram: false };
+      return { alerteTelegram: false };
     }
-};
-const escapeRegExp = (str: string): string => {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escapes special characters
-};
+  };
+  const escapeRegExp = (str: string): string => {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escapes special characters
+  };
 
 
 
 
-  
-function parseBotchart1(inputString: string): { alerteTelegram: boolean } {
-  // Regular expression to match the phrase "alerte telegram" (case-insensitive)
-  const regex = /\balerte\s+telegram\b/i;
 
-  // Search for the phrase in the input string
-  const match = inputString.match(regex);
+  function parseBotchart1(inputString: string): { alerteTelegram: boolean } {
+    // Regular expression to match the phrase "alerte telegram" (case-insensitive)
+    const regex = /\balerte\s+telegram\b/i;
 
-  let alerte: boolean = false;
-  if (match) {
+    // Search for the phrase in the input string
+    const match = inputString.match(regex);
+
+    let alerte: boolean = false;
+    if (match) {
       // If the phrase is found, set alerte to true
       alerte = true;
+    }
+
+    // Create and return the object
+    return { alerteTelegram: alerte };
   }
 
-  // Create and return the object
-  return { alerteTelegram: alerte };
-}
 
 
-  
-  
+
 
   function parseChartString(inputString: string): { Chart: number } {
 
@@ -1616,25 +1680,25 @@ function parseBotchart1(inputString: string): { alerteTelegram: boolean } {
     // window.open(SERVER_DOMAIN+"/accountdetails","_blank")
     history.push("/accountdetails");
   }
- 
-  
-    const [showSection, setShowSection] = useState(true);
-    const [isOpen, setOpen]=useState(false);
-  
-    const toggleSection = () => {
-      setShowSection(!showSection);
-    };
- 
 
-    useEffect(() => {
-      const isMobile = window.innerWidth <= 768; 
-      setOpen(isMobile);
-      console.log("not a mobile")
-    }, []); 
+
+  const [showSection, setShowSection] = useState(true);
+  const [isOpen, setOpen] = useState(false);
+
+  const toggleSection = () => {
+    setShowSection(!showSection);
+  };
+
+
+  useEffect(() => {
+    const isMobile = window.innerWidth <= 768;
+    setOpen(isMobile);
+    console.log("not a mobile")
+  }, []);
 
   return (
 
-    
+
     <div className="terminal">
 
       <div className="input-output">
@@ -1684,12 +1748,12 @@ function parseBotchart1(inputString: string): { alerteTelegram: boolean } {
             {/* {showBarChart ? <div className="bar-chart">
               <BarChart/>
             </div> : null} */}
-            {showDataSet? <div className="dataset">
-            <DataSets/>
-          </div>:null}
+            {showDataSet ? <div className="dataset">
+              <DataSets />
+            </div> : null}
 
           </div>
-          
+
         </form>
         {/*  <div>
       <input type="text" onChange={handleInput} />
