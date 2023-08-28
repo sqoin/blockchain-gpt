@@ -1251,7 +1251,7 @@ const Terminal: React.FC<{ idUser: string, remainingRequests: any, setRemainingR
                   // }
                   //await handleChartType()
                   // await handletelegram()
-                  await combinedFunction();
+                  await handleCombinedFunction();
 
 
 
@@ -1346,7 +1346,8 @@ const Terminal: React.FC<{ idUser: string, remainingRequests: any, setRemainingR
     13:Donut Chart
     14:Funnel Chart
     15:Area Chart`;
-    const telegramQuery = `L'utilisateur a tapé dans son command line:"${input}"  c'est a dire est ce qu'il s'agit d'une alerte telegram ou non?Retourner moi un object 
+    const telegramQuery = `L'utilisateur a tapé dans son command line:"${input}"  c'est a dire est ce 
+    qu'il s'agit d'une alerte telegram ou non?Retourner moi un object 
     {alerteTelegram:boolean} exemple la tache "Renvoie-moi une alerte Telegram "  
     tu vas retourner {alerteTelegram: true} `;
 
@@ -1363,7 +1364,7 @@ const Terminal: React.FC<{ idUser: string, remainingRequests: any, setRemainingR
       console.log("data received");
 
       if (rq) {
-        console.log("req = ",rq.text);
+        console.log("req = ", rq.text);
         rs.repetitiveTask = parseTaskString(rq.text);
         rs.chartType = parseChartString(rq.text);
         rs.alerteTelegram = parseBotchart1(rq.text);
@@ -1376,6 +1377,40 @@ const Terminal: React.FC<{ idUser: string, remainingRequests: any, setRemainingR
     return rs;
   };
 
+
+  async function handleCombinedFunction() {
+    try {
+      const test: any = await combinedFunction();
+      if (test.repetitiveTask?.isRepetitiveTask && test.repetitiveTask?.duration > 0) {
+        const task = {
+          userId: idUser,
+          task: input,
+          duration: test.repetitiveTask.duration,
+          status: false
+        };
+        addTask(task);
+        alert("task added")
+      }
+      else {
+        alert("task not added")
+      }
+      try {
+        const chartNmbr = getChartType(parseFloat(test.chartType.Chart));
+        alert(chartNmbr);
+      } catch (error: any) {
+        setError(error.message);
+        handleOutput("", error.message, true);
+      }
+
+      if (test.alerteTelegram?.alerteTelegram) {
+        toMessage();
+      }
+    } catch (error: any) {
+      setError(error.message);
+      handleOutput("", error.message, true);
+      return null;
+    }
+  }
 
 
 

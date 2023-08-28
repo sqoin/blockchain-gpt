@@ -183,14 +183,15 @@ router.post('/saveInput', async (req: Request, res: Response) => {
 
 router.get('/getInputHistory/:userId', async (req: Request, res: Response) => {
   const { userId } = req.params;
-
   try {
-    const inputHistory = await Input.find({ userId }).sort({ date: -1 });
-    res.status(200).json(inputHistory);
+    const inputHistory = await Input.find({ userId });
+    const sortedInputHistory = inputHistory.sort((a : any, b : any) => b.date - a.date);
+    res.status(200).json(sortedInputHistory);
   } catch (error) {
     res.status(500).json({ error: 'Error fetching input history' });
   }
 });
+
 
 
 
