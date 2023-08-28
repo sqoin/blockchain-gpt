@@ -27,6 +27,8 @@ const AccountDetails: React.FC<any> = ({ userId ,updateImage}) => {
   const [userInfo, setUserInfo] = useState({ email: '', githubAccount: '', userName: '', userLastName: '', telegram_user_name: '' });
   const [lastName, setLastName] = useState('');
   const [Name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [github, setGithub] = useState('');
   const session = useSessionContext();
   if (!session.loading) {
     userId = session.userId;
@@ -35,6 +37,16 @@ const AccountDetails: React.FC<any> = ({ userId ,updateImage}) => {
   const handleLastNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setLastName(event.target.value);
   };
+
+  const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+  };
+
+  const handleGithubChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setGithub(event.target.value);
+  };
+  
+
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
   };
@@ -88,6 +100,8 @@ const AccountDetails: React.FC<any> = ({ userId ,updateImage}) => {
       return null;
     }
   };
+
+  console.log(updateImage)
 
   const fetchUser = async () => {
     console.log("fetching user by the id: ",userId)
@@ -175,8 +189,8 @@ const AccountDetails: React.FC<any> = ({ userId ,updateImage}) => {
   return (
     <div className="accountdetails">
       <div className="form">
-        <div className="bg-white shadow rounded-lg d-block d-sm-flex">
-          <div className="tab-content p-4 p-md-5" id="v-pills-tabContent">
+        <div className="form-container bg-white shadow rounded-lg d-block d-sm-flex">
+          <div className="tab-content" id="v-pills-tabContent">
             <div
               className="tab-pane fade show active"
               id="account"
@@ -189,62 +203,96 @@ const AccountDetails: React.FC<any> = ({ userId ,updateImage}) => {
               <h2 className="mb-4">Account Details</h2>
               <div className="row">
                 <div className="col-md-6">
+
+
+
                   <div className="form-group">
                     <label htmlFor="name">Name</label>
-                    <input
-                      className="form-control"
-                      id="name"
-                      defaultValue={user?.name}
-                      onChange={handleNameChange}
-                    ></input>
+                        <input
+                          className="form-control"
+                          id="name"
+                          defaultValue={user?.name}
+                          onChange={handleNameChange}
+                        ></input>
                   </div>
+
+
+
+
                 </div>
 
 
                 <div className="col-md-6">
                   <div className="form-group">
                     <label htmlFor="lastName">Last name </label>
-                    <input
-                      className="form-control"
-                      id="lastName"
-                      defaultValue={user?.lastName}
-                      onChange={handleLastNameChange}
-                    ></input>
+                        <input
+                          className="form-control"
+                          id="lastName"
+                          defaultValue={user?.lastName}
+                          onChange={handleLastNameChange}
+                       ></input>
                   </div>
                 </div>
+
+                
+
+
+
 
                 <div className="col-md-6">
                   <div className="form-group">
                     <label htmlFor="email">Email</label>
-                    <div
-                      className="form-control"
-                      id="email"
-                    >{user?.email}
-                    </div>
+                    <input
+                          className="form-control"
+                          id="email"
+                          defaultValue={user?.email}
+                          onChange={handleEmailChange}
+                          type="email"
+                       ></input>
                   </div>
-                </div>
+                </div> 
+
+
+
+
+
+
+
+
                 <div className="col-md-6">
                   <div className="form-group">
                     <label htmlFor="githubAccount">Github Account</label>
-                    <div className="account-links-container">
-                      <a href={user?.github_account} className="account-link github-account-link">
-                        {user?.github_account}
-                      </a>
-                    </div>
+                    <input
+                          className="form-control"
+                          id="github"
+                          defaultValue={user?.github_account}
+                          onChange={handleGithubChange}
+                          type="github"
+                       ></input>
                   </div>
-                </div>
+                </div>  
+
+
+
 
 
                 <div className="col-md-6">
                   <div className="form-group">
                     <label htmlFor="lastName">Telegram User Name</label>
-                    <input
-                      className="form-control"
-                      id="lastName"
-                      defaultValue={user?.telegram_user_name}
-                    ></input>
+                        <input
+                          className="form-control"
+                          id="lastName"
+                          defaultValue={user?.telegram_user_name}
+                        ></input>
                   </div>
-                </div>
+                </div>  
+
+
+
+
+
+
+                
 
 
                 <div className="col-md-6">
