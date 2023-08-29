@@ -13,14 +13,16 @@ interface Image {
 
 const ImageUpload: React.FC<any> = ({ updateImage, idUser }) => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [previewImage, setPreviewImage] = useState<string | null>(null); 
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
   const userId = idUser;
   const [image, setImage] = useState<Image | undefined>();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if(userId){
+    if (userId) {
       fetchImagesByUser(userId);
+    } else {
+      alert("no userid")
     }
   }, [userId]);
 
@@ -39,7 +41,7 @@ const ImageUpload: React.FC<any> = ({ updateImage, idUser }) => {
     if (e.target.files && e.target.files.length > 0) {
       const selectedFile = e.target.files[0];
       setSelectedImage(selectedFile);
-      setPreviewImage(URL.createObjectURL(selectedFile)); 
+      setPreviewImage(URL.createObjectURL(selectedFile));
     }
   };
 
@@ -66,35 +68,40 @@ const ImageUpload: React.FC<any> = ({ updateImage, idUser }) => {
   };
 
   return (
-    <div className='ImageUpload'>
-      {loading ? (
-        <div>Loading...</div>
-      ) : (
-        <>
-          {previewImage ? (
-            <img className='profile' src={previewImage} alt='Preview' />
-          ) : (
-            <>
-              {image?.data ? (
-                <img className='profile' src={`data:image/jpeg;base64,${image?.data}`} alt={image?.name} />
-              ) : (
-                <img className='profile' src={ProfileImage} alt='Default' />
-              )}
-            </>
-          )}
-          <div className='file-input-container'>
-            <input type='file' accept='image/*' onChange={handleImageChange} className='file-input' />
-            <label className='file-input-label' htmlFor='fileInput'>
-              Choose Image
-            </label>
-          </div>
-          <button className='confirm' onClick={handleUpload}>
-            Upload Image
-          </button>
-        </>
-      )}
-    </div>
-  );
+
+      <div className='ImageUpload'>
+        {loading ? (
+          <div>Loading...</div>
+        ) : (
+          <>
+            {previewImage ? (
+              <img className='profile' src={previewImage} alt='Preview' />
+            ) : (
+              <>
+                {image?.data ? (
+                  <img className='profile' src={`data:image/jpeg;base64,${image?.data}`} alt={image?.name} />
+                ) : (
+                  <img className='profile' src={ProfileImage} alt='Default' />
+                )}
+              </>
+            )}
+
+
+            <div className='button_label-container'>
+              <div className='file-input-container'>
+                <input type='file' accept='image/*' onChange={handleImageChange} className='file-input' />
+                <label className='file-input-label' htmlFor='fileInput'>
+                  Choose Image
+                </label>
+              </div>
+              <button className='confirm' onClick={handleUpload}>
+                Upload Image
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+      );
 };
 
-export default ImageUpload;
+      export default ImageUpload;

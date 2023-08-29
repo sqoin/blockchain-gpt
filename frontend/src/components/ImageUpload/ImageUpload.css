@@ -8,7 +8,7 @@
 }
 
 
-.profile {
+.ImageUpload .profile {
     width: 130px;
     height: 130px;
     border-radius: 50%;
@@ -18,7 +18,7 @@
 }
 
 
-.confirm {
+.ImageUpload .confirm {
     background: #6b5c80;
     color: white;
     border-radius: 10px;
@@ -28,24 +28,25 @@
     justify-content: start;
     align-items: center;
     height: 52px;
-    
     border-color: white;
     font-size: 1.1em;
   }
-  .confirm:hover{
+
+
+  .ImageUpload .confirm:hover{
     cursor: pointer;
     background-color: var(--color2);
   
   }
   
   /* Styles for the file input container */
-.file-input-container {
+  .ImageUpload .file-input-container {
     position: relative;
     display: inline-block;
   }
   
   /* Styles for the actual file input element */
-  .file-input {
+  .ImageUpload .file-input {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -54,7 +55,7 @@
   }
   
   /* Styles for the custom button-like element */
-  .file-input-label {
+  .ImageUpload .file-input-label {
     background: #6b5c80;
     color: white;
     border-radius: 10px;
@@ -67,7 +68,40 @@
     cursor: pointer;
   }
   
-  .file-input-label:hover {
+  .ImageUpload .file-input-label:hover {
     background-color: var(--color2);
   }
   
+
+  .ImageUpload .button_label-container {
+    display: flex;
+    width: 90%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 10px;
+}
+
+
+@media screen and (max-width: 768px) {
+
+  .ImageUpload .button_label-container{
+    flex-direction: column;
+  }
+  .ImageUpload .profile {
+    margin-right:0px ;
+}
+  .ImageUpload .file-input-label {
+    padding-left: 5px;
+    padding-right: 10px;
+    width: 90%;
+    font-size: 1.1em;
+  }
+  .ImageUpload .confirm {
+    padding-left: 5px;
+    padding-right: 10px;
+    width: 90%;
+    font-size: 1.1em;
+  }
+  
+}
