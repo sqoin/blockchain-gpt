@@ -1,19 +1,19 @@
 .accountdetails {
   background: var(--color3); 
   font-family: 'Roboto', sans-serif;
-  height: 100vh;
   width: 90vw;
   padding: 40px;
 } 
 .accountdetails .form {
   display: flex;
-  background-color: #ffffff;
-  height: 640px; /* 90vh */;
+  background-color: #fff;
+  height: 800px; /* 90vh */;
   border-radius: 15px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 10px;
   width: 50vw;
-  margin: 10px auto auto 360px;
+  transform: translateX(-40px);
+  margin: 10px auto auto 60px;
 }
 
 .accountdetails h1 {
@@ -36,7 +36,7 @@
 
 }
 
-.form-container{
+.accountdetails .form-container{
   width: 100%;
 }
 
@@ -166,7 +166,7 @@
 .accountdetails .account-links-container .account-link:last-child {
   border-right: none;
 } 
-.confirm {
+.accountdetails .confirm {
   background: #6b5c80;
   color: white;
   border-radius: 10px;
@@ -188,7 +188,7 @@
 
 }
 
-.button-container{
+.accountdetails .button-container{
   display: flex;
   gap: 20px;
   justify-content: center;
@@ -196,16 +196,17 @@
   flex-direction: column;
 }
 
-.first-button-container{
+.accountdetails .first-button-container{
   display: flex;
   width: 90%;
   justify-content: center;
   align-items: center;
   flex-direction: row;
   gap: 10px;
+  font-size: 0.8em;
 }
 
-.on-off-container{
+.accountdetails .on-off-container{
   display: flex;
   justify-content: center;
   width: 96%;
@@ -216,13 +217,13 @@
   padding: 5px;
 }
 
-.on-off-input[type=checkbox]{
+.accountdetails .on-off-input[type=checkbox]{
   height: 0;
   width: 0;
   visibility: hidden;
 }
 
-.on-off-label {
+.accountdetails .on-off-label {
   cursor: pointer;
   text-indent: -9999px;
   width: 70px;
@@ -233,7 +234,7 @@
   position: relative;
 }
 
-.on-off-label:after {
+.accountdetails .on-off-label:after {
   content: '';
   position: absolute;
   top: 5px;
@@ -245,20 +246,20 @@
   transition: 0.4s;
 }
 
-.on-off-input:checked + .on-off-label {
+.accountdetails .on-off-input:checked + .accountdetails .on-off-label {
   background: var(--color2);
 }
 
-.on-off-input:checked + .on-off-label:after {
+.accountdetails .on-off-input:checked + .accountdetails .on-off-label:after {
   left: calc(100% - 5px);
   transform: translateX(-100%);
 }
 
-.on-off-label:active:after {
+.accountdetails .on-off-label:active:after {
   width: 70px;
 }
 
-.on-off-container .icons{
+.accountdetails .on-off-container .icons{
   display: flex;
   align-items: center;
   justify-content: center;
@@ -292,14 +293,20 @@
 } */
 
 
-
-.profile-image-container{
+.accountdetails .profile-image-container{
   display: flex;
   justify-content: start;
   align-items: center;
   margin-bottom:10px ;
 }
 
+
+
+@media screen and (max-width: 864px) {
+  .accountdetails .form{
+    width: 60vw;
+  }
+}
 
 @media screen and (max-width: 768px) {
   .tab-content {
@@ -309,7 +316,7 @@
     flex-direction: column;
   }
   .accountdetails .form{
-    height: 720px;
+    height: 800px;
     margin: 0 auto;
   }
 }

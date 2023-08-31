@@ -5,33 +5,35 @@
   height: 100%;
   width: 100%;
 }
-
-.title{
-    font-size: 5vw; 
+.repetitiveTasks .title{
+    font-size: 36px; 
     color: #fff;
     text-transform: uppercase;
     font-weight: 500;
     text-align: center;
     margin-bottom: 1.5vw;
   }
-  .task-table{
+  .repetitiveTasks .task-table{
     width:100%;
     table-layout: fixed;
     border-collapse: collapse;
 
   }
-  .tbl-header{
+  .repetitiveTasks .tbl-header{
     background-color: rgba(151, 151, 151, 0.8);
    }
-
-.tbl-content {
+.repetitiveTasks .tbl-content {
   overflow: auto;
   max-height: 65vh;
   margin-top: 0px;
   border-bottom: solid 0.1vw rgba(255, 255, 255, 0.1);
 }
-.task-table th,
-.task-table td {
+.repetitiveTasks .button_container{
+  display: flex;
+  transform: translateX(40px);
+  gap: 20px;
+}
+.repetitiveTasks .task-table th,.repetitiveTasks .task-table td {
   padding: 1vw;
   color:#fff;
   padding: 10px;
@@ -44,19 +46,16 @@
 }
     
 @media (max-width: 767px) {
-  .task-table th,
-  .task-table td {
+  .repetitiveTasks .task-table th,
+  .repetitiveTasks .task-table td {
     padding: 0.5vw;
     font-size: 2vw; 
     word-wrap: break-word;
   }
-  .common-button {
-    font-size: 4vw; /* Taille de police plus petite pour les petits écrans */
-  }
 }
 
   /* Styles for the label */
-  .label {
+  .repetitiveTasks .label {
     display: block;
     font-size: 16px;
     margin-bottom: 8px;
@@ -64,7 +63,7 @@
   }
 
 
-  .tbl-content{
+  .repetitiveTasks .tbl-content{
     height:65vh;
     overflow-x:auto;
     margin-top: 0px;
@@ -89,81 +88,57 @@
   }
    
   
-  /* Common button styles */
-.common-button {
-  appearance: none;
+  /* Common button styles */.repetitiveTasks .common-button {
+
   border: 1px solid rgba(27, 31, 35, .15);
-  border-radius: 6px;
+  border-radius: 2px;
   box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
-  box-sizing: border-box;
   cursor: pointer;
-  display: inline-block;
-  font-family: -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-  font-size: 1.8vw;
-  font-weight: 300;
-  line-height: vw;
-  padding: 6px 16px;
-  width: 80%;
-  position: relative;
+  font-size: 12px;
+  width: 60px;
+  height: 28px ;
   text-align: center;
-  text-decoration: none;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  vertical-align: middle;
-  white-space: nowrap;
   color: #fff;
-  margin-top: 1%;
 
 }
 
-.common-button:focus:not(:focus-visible):not(.focus-visible) {
+.repetitiveTasks .common-button:focus:not(:focus-visible):not(.focus-visible) {
   box-shadow: none;
   outline: none;
 }
-
-.common-button:focus {
+.repetitiveTasks .common-button:focus {
   box-shadow: rgba(46, 164, 79, .4) 0 0 0 3px;
   outline: none;
 }
 
-/* Apply specific colors to different buttons */
-.button-1 {
+/* Apply specific colors to different buttons */.repetitiveTasks .button-1 {
   background-color: #CB2027;
 }
-
-.button-1:hover {
+.repetitiveTasks .button-1:hover {
   background-color: #af1e1e;
 }
-
-.button-3 {
+.repetitiveTasks .button-3 {
   background-color: #2ea44f;
 }
-
-.button-3:hover {
+.repetitiveTasks .button-3:hover {
   background-color: #2c974b;
-}
-.input-container {
+}.repetitiveTasks .input-container {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center; 
   height: 100%;
-}
-.input{
+}.repetitiveTasks .input{
 height: 2.8vw;
 width: 50%;
-}
-.span{
+}.repetitiveTasks .span{
   font-size: 1.4vw;
 }
-
-.editIcon{
+.repetitiveTasks .editIcon{
   cursor: pointer;
   margin-left: 1.25vw; 
   }
- 
-.saveIcon {
+ .repetitiveTasks .saveIcon {
   cursor: pointer;
   margin-left: 1.25vw; 
   font-size: 2.5vw;

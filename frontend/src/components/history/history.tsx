@@ -4,74 +4,73 @@ import { useSessionContext } from 'supertokens-auth-react/recipe/session';
 import { ACCOUNT_MANAGEMENT } from '../../utils/constants';
 import './history.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendarAlt, faSearch,faPen ,faTable } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarAlt, faSearch, faPen, faTable } from '@fortawesome/free-solid-svg-icons';
 
 
 const History: React.FC = () => {
   const [inputHistory, setInputHistory] = useState<{ input: string, date: string }[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
 
-  let id='';
-  const session=useSessionContext();
+  let id = '';
+  const session = useSessionContext();
 
-  if(!session.loading)
-  {
-    id=session.userId;
+  if (!session.loading) {
+    id = session.userId;
   }
   console.log(id);
 
   useEffect(() => {
-    const userId = id; 
+    const userId = id;
 
-    axios.get(`${ACCOUNT_MANAGEMENT}/api/getInputHistory/${userId}`)
-      .then((response :AxiosResponse)=> {
+    axios.get(`${ACCOUNT_MANAGEMENT}/api/getInputHistory/5db187c7-3e59-4d05-b7e3-c8a5df74deed`)
+      .then((response: AxiosResponse) => {
         const data = response.data;
         setInputHistory(data.map((item: { input: string, date: string }) => ({
           input: item.input,
-          date: new Date(item.date).toLocaleDateString('fr-FR', {  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+          date: new Date(item.date).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
         })));
       })
-      .catch((error:any) => {
+      .catch((error: any) => {
         console.error('Error fetching input history:', error);
       });
   }, []);
-  const handleSearchChange = (event:any) => {
+  const handleSearchChange = (event: any) => {
     setSearchTerm(event.target.value);
   };
 
-  
+
   const countRows = () => {
     return inputHistory.length;
   };
- 
-return (
-<div className='history-container'>
 
-    <div className="horizontal-container ">
-    <div className="search-bar" >
-    <FontAwesomeIcon icon={faSearch} className="custom-icon" />
-    <input type="text" className="search-input" placeholder="Rechercher..." value={searchTerm}
-            onChange={handleSearchChange} />  
-    </div>
-    <div className="right-section">
-    <p style={{ fontSize: '20px' }}><FontAwesomeIcon icon={faTable}/> {countRows()}</p>
-    </div>
-    </div> 
-    <div className="box-container">
-      {inputHistory.map((item:any, index:any) => (
-     <div className="box" key={index}>
-   
-       
-      <p><FontAwesomeIcon icon={faPen }className="custom-icon1" />{item.input}</p>
-      <p><FontAwesomeIcon icon={faCalendarAlt} className="custom-icon1"  /> {item.date}</p>
+  return (
+    <div className='history-container'>
 
-       
-     </div>
-    ))}
-    </div>
-</div>
+      <div className="horizontal-container ">
+        <div className="search-bar" >
+          <FontAwesomeIcon icon={faSearch} className="custom-icon" />
+          <input type="text" className="search-input" placeholder="Rechercher..." value={searchTerm}
+            onChange={handleSearchChange} />
+        </div>
+        <div className="right-section">
+          <p style={{ fontSize: '20px' }}><FontAwesomeIcon icon={faTable} /> {countRows()}</p>
+        </div>
+      </div>
+      <div className="box-container">
+        {inputHistory.map((item: any, index: any) => (
+          <div className="box" key={index}>
 
-);
+
+            <p><FontAwesomeIcon icon={faPen} className="custom-icon1" />{item.input}</p>
+            <p><FontAwesomeIcon icon={faCalendarAlt} className="custom-icon1" /> {item.date}</p>
+
+
+          </div>
+        ))}
+      </div>
+    </div>
+
+  );
 
 };
 

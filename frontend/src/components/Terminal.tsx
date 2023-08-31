@@ -1750,7 +1750,7 @@ const Terminal: React.FC<{ idUser: string, remainingRequests: any, setRemainingR
               className="prompt"
               value={input}
               onChange={handleInputChange}
-              disabled={remainingRequests <= 0 /* || isTyping */}
+              disabled={remainingRequests <= 0}
             />
           </div>
 

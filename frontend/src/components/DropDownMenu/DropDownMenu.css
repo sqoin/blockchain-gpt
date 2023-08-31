@@ -31,21 +31,6 @@
 }
 
 .dropdown-item {
-    /* padding-left: 10px;
-    width: 100%;
-    text-align: left;
-    border: 1px solid rgba(195, 195, 195, 0.56);
-    margin-bottom: 10px;
-    background-color: var(--color2);
-    margin-top: 4px;
-    cursor: pointer;
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    height: 52px;
-    color: white;
-    font-size: 1.1em;
-    border-radius: 10px; */
     display: flex;
     justify-content: start;
     align-items: center;

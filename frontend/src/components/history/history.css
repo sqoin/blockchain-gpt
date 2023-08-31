@@ -10,7 +10,7 @@
   width: 80%;
   align-items: center;
   display: flex;
-  margin: 2% 0; /* Ajouter un espacement vertical */
+  margin: 10px 0; /* Ajouter un espacement vertical */
 }
 
 .right-section {

@@ -32,7 +32,7 @@ const RepetitiveTasks: React.FC = () => {
         console.log(sessionContext?.userId)
         setUserId(sessionContext?.userId.toString())
         try {
-            const response = await axios.get(`${ACCOUNT_MANAGEMENT}/api/tasks/${sessionContext.userId}`);
+            const response = await axios.get(`${ACCOUNT_MANAGEMENT}/api/tasks/5db187c7-3e59-4d05-b7e3-c8a5df74deed`);
             setTasks(response.data);
        
         } catch (error) {
@@ -132,7 +132,7 @@ const RepetitiveTasks: React.FC = () => {
                             <th>Task</th>
                             <th>Duration</th>
                             <th>Status</th> 
-                            <th></th>
+                            
 
                         </tr>
                     </thead>
@@ -176,8 +176,9 @@ const RepetitiveTasks: React.FC = () => {
                                     </div>
                                   )}
                                 </div>
+                                
                               </td>
-                                <td >
+                              <td className="button_container">
                                 {/* <span >{task.status}</span> */}
                                 
                                 {task.status === false&& (
@@ -190,17 +191,13 @@ const RepetitiveTasks: React.FC = () => {
                                     <button onClick={() => { handleUpdateTask(task._id); }} className="common-button button-3">
                                     Restart
                                     </button>
+                                    
                                    
                                 )}
-                                      
-                                </td>
-                                <td >
                                 <button onClick={() => { handleDeleteTask (task.userId, task._id); }} className="common-button button-1">
                                     Delete
                                   </button>
-
-                                
-                                </td>
+                              </td>
                             </tr>
                         ))}
                        
