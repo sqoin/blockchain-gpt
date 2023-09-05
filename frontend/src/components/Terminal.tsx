@@ -657,66 +657,69 @@ const Terminal: React.FC<{ idUser: string, remainingRequests: any, setRemainingR
 
   const checkUserCommand = async () => {
 
-    const response: any = await fetchDataCondition()
+    const response: any = await fetchDataCondition();
 
-    let foundObject = checkStringSimilarity(response.tasksData, etherBalance)
+    let foundObject = checkStringSimilarity(response.tasksData, etherBalance);
     if (foundObject) {
       fetchBalanceFromMetaMask(foundObject.duration);
     }
 
-    foundObject = checkStringSimilarity(response.tasksData, solanaBalance)
+    foundObject = checkStringSimilarity(response.tasksData, solanaBalance);
     if (foundObject) {
       repeatGetSolanaBalance(foundObject.duration);
     }
 
     const storedCommand = response.taskDescriptions || [];
-    console.log("storedCommand", storedCommand)
+    console.log("storedCommand", storedCommand);
+
     if (storedCommand.includes(userCommand1.toLocaleLowerCase().replace(/\s/g, ''))) {
       getAndDisplayPublicKey();
-    }
-    // if( storedCommand.includes(userCommand2.toLocaleLowerCase().replace(/\s/g, ''))) {
-    //   fetchBalanceFromMetaMask(2 * 60 * 1000);
-    // } 
-
-
-    if (storedCommand.includes(userCommand3.toLocaleLowerCase().replace(/\s/g, ''))) {
+    } else if (storedCommand.includes(userCommand3.toLocaleLowerCase().replace(/\s/g, ''))) {
       getNetworkInfoEvery5Minutes();
-    }
-    if (storedCommand.includes(userCommand4.toLocaleLowerCase().replace(/\s/g, ''))) {
+    } else if (storedCommand.includes(userCommand4.toLocaleLowerCase().replace(/\s/g, ''))) {
       while (true) {
         const price = await _getCryptoCurrencyQuote("bitcoin", "price");
         handleOutput(`Bitcoin Price: ${price}`);
         console.log('Bitcoin Price: ', price);
 
-        await sleep(5 * 60 * 1000); // Attendre 5 minutes
+        await sleep(5 * 60 * 1000); // Wait for 5 minutes
       }
-    }
-
-    if (storedCommand.includes(userCommand7.toLocaleLowerCase().replace(/\s/g, ''))) {
+    } else if (storedCommand.includes(userCommand7.toLocaleLowerCase().replace(/\s/g, ''))) {
       while (true) {
         const price = await _getCryptoCurrencyQuote("solana", "price");
-        handleOutput(`Bitcoin Price: ${price}`);
-        console.log('Bitcoin Price: ', price);
+        handleOutput(`Solana Price: ${price}`);
+        console.log('Solana Price: ', price);
 
-        await sleep(5 * 60 * 1000); // Attendre 5 minutes
+        await sleep(5 * 60 * 1000); // Wait for 5 minutes
       }
-    }
-    if (storedCommand.includes(userCommand5.toLocaleLowerCase().replace(/\s/g, ''))) {
+    } else if (storedCommand.includes(userCommand5.toLocaleLowerCase().replace(/\s/g, ''))) {
       while (true) {
         const volume = await _getCryptoCurrencyQuote("bitcoin", 'volume');
         handleOutput(`Bitcoin Total Volume: ${volume}`);
-        await sleep(5 * 60 * 1000); // Attendre 5 minutes
+        await sleep(5 * 60 * 1000); // Wait for 5 minutes
       }
-    }
-    if (storedCommand.includes(userCommand6.toLocaleLowerCase().replace(/\s/g, ''))) {
-      console.log("666666666")
+    } else if (storedCommand.includes(userCommand6.toLocaleLowerCase().replace(/\s/g, ''))) {
+      console.log("666666666");
       while (true) {
         const marketCap = await _getCryptoCurrencyQuote("bitcoin", "marketCap");
         handleOutput(`Bitcoin MarketCap: ${marketCap}`);
-        await sleep(5 * 60 * 1000); // Attendre 5 minutes
+        await sleep(5 * 60 * 1000); // Wait for 5 minutes
+      }
+    } else {
+      const tasksToExecute: Task[] = response.tasksData;
+      for (const task of tasksToExecute) {
+        executeTask(task);
       }
     }
   };
+  async function executeTask(task: Task) {
+    do {
+      const resData = await getData(task.task);
+      await processServerResponse(resData, handleOutput);
+      await sleep(task.duration);
+    }
+    while (task.duration)
+  }
 
   function checkStringSimilarity(objectList: any[], searchText: string) {
     const stringSimilarity = require('string-similarity');
